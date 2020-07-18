@@ -27,7 +27,7 @@ dotnet publish "Supercell.Life.Server.csproj" -c Release -o app
 
 To configure Mongo, download and run the installer, then create a database called `SmashLand`. The server will automatically create the collections on its first run.
 
-Since Apple decided to remove 32-bit app support for iOS 11 and above, to use this server, you must have a 32-bit iOS device or a 64-bit device running iOS 10 or under. Since Cydia Impactor is broken, you'll need to use AltDeploy to install the [Smash Land IPA file](https://mega.nz/file/PlNlkCxa#-921zVTKWrTiWrkv4QQOX9Epl-6bX4aLZw3Qnz1gq9U). 
+Since Apple decided to remove 32-bit app support for iOS 11 and above, to use this server, you must have a 32-bit iOS device or a 64-bit device running iOS 10 or under. You will also need AltDeploy to install the [Smash Land IPA file](https://mega.nz/file/PlNlkCxa#-921zVTKWrTiWrkv4QQOX9Epl-6bX4aLZw3Qnz1gq9U), and you must also be jailbroken in order to edit the hosts file to point the game to your computer's IP. (The original host is `game.smashlandgame.com`)
 
 ### Other Credits
 I have received great advice from my friends of many years in this [Discord](https://discord.gg/XdTw2PZ) server.
