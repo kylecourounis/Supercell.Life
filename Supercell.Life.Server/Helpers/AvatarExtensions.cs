@@ -1,5 +1,7 @@
 ﻿namespace Supercell.Life.Server.Helpers
 {
+    using System;
+
     using Supercell.Life.Titan.Logic.Enums;
 
     using Supercell.Life.Server.Core;
@@ -103,7 +105,7 @@
         /// <summary>
         /// Adds the experience.
         /// </summary>
-        internal static void AddXP(this LogicClientAvatar avatar, int value = 0)
+        internal static void AddXP(this LogicClientAvatar avatar, int value)
         {
             if (value > 0)
             {
@@ -112,7 +114,14 @@
                     return;
                 }
 
-                avatar.ExpPoints += value;
+                double finalValue = value;
+
+                if (avatar.Booster.BoostActive)
+                {
+                    finalValue *= avatar.Booster.BoostPackage.Boost;
+                }
+
+                avatar.ExpPoints += (int)Math.Round(finalValue);
 
                 LogicExperienceLevelData experienceLevels = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataWithID(avatar.ExpLevel - 1);
 
@@ -129,7 +138,7 @@
         /// <summary>
         /// Adds the gold.
         /// </summary>
-        internal static void AddGold(this LogicClientAvatar avatar, int value = 0)
+        internal static void AddGold(this LogicClientAvatar avatar, int value)
         {
             if (value > 0)
             {
@@ -141,10 +150,15 @@
         /// <summary>
         /// Adds the diamonds.
         /// </summary>
-        internal static void AddDiamonds(this LogicClientAvatar avatar, int value = 0)
+        internal static void AddDiamonds(this LogicClientAvatar avatar, int value, bool free = false)
         {
             if (value > 0)
             {
+                if (free)
+                {
+                    avatar.FreeDiamonds += value;
+                }
+
                 avatar.Diamonds += value;
                 avatar.Save();
             }

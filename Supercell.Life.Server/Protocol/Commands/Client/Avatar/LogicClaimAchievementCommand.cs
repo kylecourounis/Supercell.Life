@@ -32,8 +32,8 @@
             {
                 this.Connection.Avatar.AchievementProgress.AddItem(this.Achievement.GlobalID, this.Achievement.ActionCount);
                 
-                this.Connection.Avatar.ExpPoints += this.Achievement.ExpReward;
-                this.Connection.Avatar.Diamonds  += this.Achievement.DiamondReward;
+                this.Connection.Avatar.AddXP(this.Achievement.ExpReward);
+                this.Connection.Avatar.AddDiamonds(this.Achievement.DiamondReward, true);
 
                 this.Connection.Avatar.Save();
             }

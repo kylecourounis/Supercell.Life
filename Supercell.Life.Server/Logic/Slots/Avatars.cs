@@ -71,7 +71,7 @@ namespace Supercell.Life.Server.Logic.Slots
                     {
                         if (dbEntry != null)
                         {
-                            LogicClientAvatar avatar = new LogicClientAvatar(null, new LogicLong(dbEntry.HighId, dbEntry.LowId));
+                            LogicClientAvatar avatar = new LogicClientAvatar(null, new LogicLong(dbEntry.HighID, dbEntry.LowID));
 
                             JsonConvert.PopulateObject(dbEntry.Profile.ToJson(), avatar, AvatarDb.JsonSettings);
 
@@ -159,7 +159,7 @@ namespace Supercell.Life.Server.Logic.Slots
                 {
                     case DBMS.Mongo:
                     {
-                        AvatarDb save = Mongo.Avatars.Find(T => T.HighId == id.High && T.LowId == id.Low).SingleOrDefault();
+                        AvatarDb save = Mongo.Avatars.Find(db => db.HighID == id.High && db.LowID == id.Low).SingleOrDefault();
 
                         if (save != null)
                         {

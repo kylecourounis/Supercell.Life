@@ -37,7 +37,6 @@ namespace Supercell.Life.Server.Logic.Avatar
         [JsonProperty] internal bool NameSetByUser;
 
         [JsonProperty] internal string Token;
-        [JsonProperty] internal string Password;
 
         [JsonProperty] internal string Name = string.Empty;
         [JsonProperty] internal string Region;
@@ -45,6 +44,7 @@ namespace Supercell.Life.Server.Logic.Avatar
         [JsonProperty] internal int ExpLevel = 1;
         [JsonProperty] internal int ExpPoints;
         [JsonProperty] internal int Diamonds;
+        [JsonProperty] internal int FreeDiamonds;
         [JsonProperty] internal int Score;
         [JsonProperty] internal int League;
 
@@ -214,7 +214,7 @@ namespace Supercell.Life.Server.Logic.Avatar
 
                 foreach (Item item in this.EnergyPackages.Values)
                 {
-                    LogicEnergyPackageData package = (LogicEnergyPackageData) item.Data;
+                    LogicEnergyPackageData package = (LogicEnergyPackageData)item.Data;
 
                     for (int i = 0; i < item.Count; i++)
                     {
@@ -294,6 +294,8 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.Facebook             = new Facebook(this);
 
             this.Diamonds             = Globals.StartingDiamonds;
+            this.FreeDiamonds         = Globals.StartingDiamonds;
+
             this.OngoingQuestData     = Globals.StartingQuest.GlobalID;
         }
 
@@ -377,7 +379,7 @@ namespace Supercell.Life.Server.Logic.Avatar
             stream.WriteString(this.Facebook.Identifier); // Facebook ID
 
             stream.WriteInt(this.Diamonds);
-            stream.WriteInt(this.Diamonds);
+            stream.WriteInt(this.FreeDiamonds);
             stream.WriteInt(this.ExpLevel);
             stream.WriteInt(this.ExpPoints);
             stream.WriteInt(this.Score);

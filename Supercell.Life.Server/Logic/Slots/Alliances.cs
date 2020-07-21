@@ -69,7 +69,7 @@
                     {
                         if (dbEntry != null)
                         {
-                            Alliance alliance = new Alliance(dbEntry.HighId, dbEntry.LowId);
+                            Alliance alliance = new Alliance(dbEntry.HighID, dbEntry.LowID);
 
                             JsonConvert.PopulateObject(dbEntry.Profile.ToJson(), alliance, AllianceDb.JsonSettings);
 
@@ -190,7 +190,7 @@
                 {
                     case DBMS.Mongo:
                     {
-                        AllianceDb save = Mongo.Alliances.Find(T => T.HighId == highId && T.LowId == lowId).SingleOrDefault();
+                        AllianceDb save = Mongo.Alliances.Find(db => db.HighID == highId && db.LowID == lowId).SingleOrDefault();
 
                         if (save != null)
                         {

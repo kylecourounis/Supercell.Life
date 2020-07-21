@@ -48,5 +48,31 @@ namespace Supercell.Life.Server.Files.CsvLogic
         {
             get; set;
         }
+
+        internal double Boost
+        {
+            get
+            {
+                switch (this.BoostPercentage)
+                {
+                    case 100:
+                    {
+                        return 2;
+                    }
+                    case 150:
+                    {
+                        return 2.5;
+                    }
+                    case 200:
+                    {
+                        return 3;
+                    }
+                    default:
+                    {
+                        return 1;
+                    }
+                }
+            }
+        }
     }
 }
