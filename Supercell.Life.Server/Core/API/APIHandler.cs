@@ -69,7 +69,7 @@
             }
             catch
             {
-                Console.WriteLine("Failed to start the listener!");
+                // Do nothing. There's no harm if it doesn't start.
             }
         }
 
