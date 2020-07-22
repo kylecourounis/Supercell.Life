@@ -8,6 +8,9 @@
 
     internal static class Mongo
     {
+        internal static IMongoCollection<AvatarDb> Avatars;
+        internal static IMongoCollection<AllianceDb> Alliances;
+
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="Mongo"/> has been already initialized.
         /// </summary>
@@ -16,9 +19,6 @@
             get;
             set;
         }
-
-        internal static IMongoCollection<AvatarDb> Avatars;
-        internal static IMongoCollection<AllianceDb> Alliances;
 
         /// <summary>
         /// Initializes the <see cref="Mongo"/> class.

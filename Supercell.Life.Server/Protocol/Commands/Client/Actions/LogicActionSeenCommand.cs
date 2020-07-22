@@ -41,7 +41,10 @@
                         {
                             this.Connection.Avatar.QuestUnlockSeens.Set(quest.GlobalID, 1);
                         }
-                        else Debugger.Error("QuestData is null or not valid.");
+                        else
+                        {
+                            Debugger.Error("QuestData is null or not valid.");
+                        }
 
                         break;
                     }
@@ -51,7 +54,10 @@
                         {
                             this.Connection.Avatar.HeroUnlockSeens.Set(hero.GlobalID, 1);
                         }
-                        else Debugger.Error("HeroData is null or not valid.");
+                        else
+                        {
+                            Debugger.Error("HeroData is null or not valid.");
+                        }
 
                         break;
                     }
