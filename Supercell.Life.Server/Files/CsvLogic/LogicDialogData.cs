@@ -6,7 +6,7 @@ namespace Supercell.Life.Server.Files.CsvLogic
 
     internal class LogicDialogData : LogicData
     {
-		/// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="LogicDialogData"/> class.
         /// </summary>
         public LogicDialogData(Row row, LogicDataTable dataTable) : base(row, dataTable)

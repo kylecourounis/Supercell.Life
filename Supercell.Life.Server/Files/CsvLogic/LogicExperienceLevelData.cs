@@ -6,7 +6,7 @@ namespace Supercell.Life.Server.Files.CsvLogic
 
     internal class LogicExperienceLevelData : LogicData
     {
-		/// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="LogicExperienceLevelData"/> class.
         /// </summary>
         public LogicExperienceLevelData(Row row, LogicDataTable dataTable) : base(row, dataTable)

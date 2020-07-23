@@ -6,7 +6,7 @@ namespace Supercell.Life.Server.Files.CsvLogic
 
     internal class LogicEnemyCharacterData : LogicData
     {
-		/// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="LogicEnemyCharacterData"/> class.
         /// </summary>
         public LogicEnemyCharacterData(Row row, LogicDataTable dataTable) : base(row, dataTable)

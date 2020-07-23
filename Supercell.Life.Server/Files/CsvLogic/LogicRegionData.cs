@@ -6,7 +6,7 @@ namespace Supercell.Life.Server.Files.CsvLogic
 
     internal class LogicRegionData : LogicData
     {
-		/// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="LogicRegionData"/> class.
         /// </summary>
         public LogicRegionData(Row row, LogicDataTable dataTable) : base(row, dataTable)

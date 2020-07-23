@@ -6,7 +6,7 @@ namespace Supercell.Life.Server.Files.CsvLogic
 
     internal class LogicVariableData : LogicData
     {
-		/// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="LogicVariableData"/> class.
         /// </summary>
         public LogicVariableData(Row row, LogicDataTable dataTable) : base(row, dataTable)

@@ -6,7 +6,7 @@ namespace Supercell.Life.Server.Files.CsvLogic
 
     internal class LogicAllianceRoleData : LogicData
     {
-		/// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="LogicAllianceRoleData"/> class.
         /// </summary>
         public LogicAllianceRoleData(Row row, LogicDataTable dataTable) : base(row, dataTable)

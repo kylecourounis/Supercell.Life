@@ -6,7 +6,7 @@ namespace Supercell.Life.Server.Files.CsvLogic
 
     internal class LogicParticleEmitterData : LogicData
     {
-		/// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="LogicParticleEmitterData"/> class.
         /// </summary>
         public LogicParticleEmitterData(Row row, LogicDataTable dataTable) : base(row, dataTable)

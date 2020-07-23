@@ -6,7 +6,7 @@ namespace Supercell.Life.Server.Files.CsvLogic
 
     internal class LogicObstacleData : LogicData
     {
-		/// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="LogicObstacleData"/> class.
         /// </summary>
         public LogicObstacleData(Row row, LogicDataTable dataTable) : base(row, dataTable)

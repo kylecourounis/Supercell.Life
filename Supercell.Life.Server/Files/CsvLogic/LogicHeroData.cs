@@ -8,7 +8,7 @@ namespace Supercell.Life.Server.Files.CsvLogic
 
     internal class LogicHeroData : LogicData
     {
-		/// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="LogicHeroData"/> class.
         /// </summary>
         public LogicHeroData(Row row, LogicDataTable dataTable) : base(row, dataTable)

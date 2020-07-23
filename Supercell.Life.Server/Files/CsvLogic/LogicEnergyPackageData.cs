@@ -7,7 +7,7 @@ namespace Supercell.Life.Server.Files.CsvLogic
 
     internal class LogicEnergyPackageData : LogicData
     {
-		/// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="LogicEnergyPackageData"/> class.
         /// </summary>
         public LogicEnergyPackageData(Row row, LogicDataTable dataTable) : base(row, dataTable)

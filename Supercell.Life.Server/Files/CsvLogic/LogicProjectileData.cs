@@ -6,7 +6,7 @@ namespace Supercell.Life.Server.Files.CsvLogic
 
     internal class LogicProjectileData : LogicData
     {
-		/// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="LogicProjectileData"/> class.
         /// </summary>
         public LogicProjectileData(Row row, LogicDataTable dataTable) : base(row, dataTable)
