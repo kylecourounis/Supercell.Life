@@ -312,7 +312,7 @@ namespace Supercell.Life.Server.Logic.Avatar
         /// <summary>
         /// Sets this <see cref="LogicClientAvatar"/>'s JSON.
         /// </summary>
-        internal string SetAvatarJSON()
+        internal void SetAvatarJSON(ByteStream stream)
         {
             LogicJSONObject json = new LogicJSONObject();
 
@@ -363,7 +363,7 @@ namespace Supercell.Life.Server.Logic.Avatar
 
             json.Put("tutorial_mask", new LogicJSONNumber(this.TutorialMask));
 
-            return json.ToString();
+            stream.WriteCompressedString(json.ToString());
         }
 
         /// <summary>
@@ -450,7 +450,7 @@ namespace Supercell.Life.Server.Logic.Avatar
 
             stream.WriteInt(0); // ?
 
-            stream.WriteCompressedString(this.SetAvatarJSON());
+            this.SetAvatarJSON(stream);
         }
 
         /// <summary>

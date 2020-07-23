@@ -29,6 +29,8 @@ namespace Supercell.Life.Server.Logic.Slots
     {
         private static ConcurrentDictionary<long, LogicClientAvatar> Pool;
 
+        private static int Seed;
+
         /// <summary>
         /// Gets the count.
         /// </summary>
@@ -39,8 +41,6 @@ namespace Supercell.Life.Server.Logic.Slots
                 return Avatars.Pool.Count;
             }
         }
-
-        private static int Seed;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="Avatars"/> is initialized.
@@ -67,7 +67,7 @@ namespace Supercell.Life.Server.Logic.Slots
             {
                 case DBMS.Mongo:
                 {
-                    foreach (AvatarDb dbEntry in Mongo.Avatars.Find(T => true).ToList())
+                    foreach (AvatarDb dbEntry in Mongo.Avatars.Find(db => true).ToList())
                     {
                         if (dbEntry != null)
                         {

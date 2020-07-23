@@ -12,14 +12,6 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicHeroLevels"/> class.
         /// </summary>
-        internal LogicHeroLevels(int capacity = 15) : base(capacity)
-        {
-            // LogicHeroLevels.
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LogicHeroLevels"/> class.
-        /// </summary>
         internal LogicHeroLevels(LogicClientAvatar avatar, int capacity = 15) : base(avatar, capacity)
         {
             // LogicHeroLevels.
@@ -32,9 +24,9 @@
         {
             this.Set(new Item(Globals.StartingCharacter.GlobalID, 0));
 
-            /* Characters.ForEach((Hero, Level) =>
+            /* LogicCharacters.ForEach((hero, level) =>
             {
-                this.Set(new Item(Hero.GlobalID, Level));
+                this.Set(new Item(hero.GlobalID, level));
             }); */
         }
 

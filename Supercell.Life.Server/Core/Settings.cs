@@ -25,7 +25,7 @@
         }
 
         /// <summary>
-        /// Array of IP Address authorized to log in the server even if it's in maintenance / updating / local.
+        /// Array of IP Address authorized to log in to the server even if it's in maintenance/updating/local.
         /// </summary>
         internal static readonly string[] AuthorizedIP =
         {

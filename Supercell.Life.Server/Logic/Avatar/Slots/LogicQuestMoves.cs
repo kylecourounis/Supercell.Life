@@ -7,15 +7,24 @@
 
     internal class LogicQuestMoves : LogicDataSlot
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogicQuestMoves"/> class.
+        /// </summary>
         internal LogicQuestMoves(LogicClientAvatar avatar) : base(avatar)
         {
             // LogicQuestMoves.
         }
 
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
         internal override void Initialize()
         {
         }
 
+        /// <summary>
+        /// Encodes this instance.
+        /// </summary>
         internal override void Encode(ByteStream stream)
         {
             stream.WriteInt(this.Count);
@@ -28,6 +37,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets the quest moves for the visited player as a <see cref="LogicJSONArray"/>.
+        /// </summary>
         internal LogicJSONArray QuestMovesVisit
         {
             get

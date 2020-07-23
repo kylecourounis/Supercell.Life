@@ -4,7 +4,7 @@ namespace Supercell.Life.Server.Files.CsvLogic
     using Supercell.Life.Titan.Logic;
 
     using Supercell.Life.Server.Files.CsvHelpers;
-    
+
     internal class LogicEnergyPackageData : LogicData
     {
 		/// <summary>

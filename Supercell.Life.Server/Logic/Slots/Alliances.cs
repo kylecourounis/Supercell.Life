@@ -26,7 +26,9 @@
     internal class Alliances
     {
         private static ConcurrentDictionary<long, Alliance> Pool;
-        
+
+        private static int Seed;
+
         /// <summary>
         /// Gets the count.
         /// </summary>
@@ -37,8 +39,6 @@
                 return Alliances.Pool.Count;
             }
         }
-
-        private static int Seed;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="Alliances"/> is initialized.
@@ -65,7 +65,7 @@
             {
                 case DBMS.Mongo:
                 {
-                    foreach (AllianceDb dbEntry in Mongo.Alliances.Find(T => true).ToList())
+                    foreach (AllianceDb dbEntry in Mongo.Alliances.Find(db => true).ToList())
                     {
                         if (dbEntry != null)
                         {

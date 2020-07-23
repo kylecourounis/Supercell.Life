@@ -1,8 +1,8 @@
 namespace Supercell.Life.Server.Files.CsvLogic
 {
-	using Supercell.Life.Titan.Files.CsvReader;
+    using Supercell.Life.Titan.Files.CsvReader;
 
-	using Supercell.Life.Server.Files.CsvHelpers;
+    using Supercell.Life.Server.Files.CsvHelpers;
 
     internal class LogicVariableData : LogicData
     {

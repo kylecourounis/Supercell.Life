@@ -1,11 +1,9 @@
 ﻿namespace Supercell.Life.Server.Logic.Game
 {
-    using System;
-    using System.Collections.Generic;
-
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic.Enums;
+    using Supercell.Life.Server.Logic.Game.Objects;
     using Supercell.Life.Server.Logic.Game.Objects.Quests;
 
     internal static class Globals
@@ -71,70 +69,10 @@
             Globals.ResourceDiamondCost500000  = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("RESOURCE_DIAMOND_COST_500000")).NumberValue;
             Globals.ResourceDiamondCost1000000 = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("RESOURCE_DIAMOND_COST_1000000")).NumberValue;
 
-            Characters.Init();
+            LogicCharacters.Init();
             LogicQuests.Init();
 
             Globals.Initialized = true;
-        }
-    }
-
-    internal static class Characters
-    {
-        private static readonly Dictionary<LogicHeroData, int> Heroes = new Dictionary<LogicHeroData, int>();
-
-        internal static readonly LogicHeroData AdventureBoy = (LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataByName("AdvBoy");
-        internal static readonly LogicHeroData Wizard       = (LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataByName("Wizard");
-        internal static readonly LogicHeroData Princess     = (LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataByName("Princess");
-        internal static readonly LogicHeroData Pirate       = (LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataByName("Pirate");
-        internal static readonly LogicHeroData Mummy        = (LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataByName("Mummy");
-        internal static readonly LogicHeroData Fairy        = (LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataByName("Fairy");
-        internal static readonly LogicHeroData Barrel       = (LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataByName("Barrel");
-        internal static readonly LogicHeroData SpaceGirl    = (LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataByName("SpaceGirl");
-        internal static readonly LogicHeroData Genie        = (LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataByName("Genie");
-        internal static readonly LogicHeroData Yeti         = (LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataByName("Yeti");
-
-        /// <summary>
-        /// Gets a value indicating whether this instance of <see cref="Characters"/> has been initialized.
-        /// </summary>
-        internal static bool Initialized
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Initializes the <see cref="Characters"/> class.
-        /// </summary>
-        internal static void Init()
-        {
-            if (Characters.Initialized)
-            {
-                return;
-            }
-            
-            Characters.Heroes.Add(Characters.AdventureBoy, 14);
-            Characters.Heroes.Add(Characters.Wizard,       14);
-            Characters.Heroes.Add(Characters.Princess,     12);
-            Characters.Heroes.Add(Characters.Pirate,       11);
-            Characters.Heroes.Add(Characters.Fairy,        7);
-            Characters.Heroes.Add(Characters.Mummy,        9);
-            Characters.Heroes.Add(Characters.Barrel,       6);
-            Characters.Heroes.Add(Characters.SpaceGirl,    5);
-            Characters.Heroes.Add(Characters.Genie,        4);
-            Characters.Heroes.Add(Characters.Yeti,         4);
-
-            Characters.Initialized = true;
-        }
-
-        /// <summary>
-        /// Executes an action on each of the heroes in the collection.
-        /// </summary>
-        internal static void ForEach(Action<LogicHeroData, int> action)
-        {
-            foreach (var hero in Characters.Heroes)
-            {
-                action.Invoke(hero.Key, hero.Value);
-            }
         }
     }
 }
