@@ -35,7 +35,7 @@
         /// </summary>
         internal static void WriteDataReference(this ByteStream stream, LogicData data)
         {
-            stream.WriteInt(data.GlobalID);
+            stream.WriteInt(data?.GlobalID ?? 0);
         }
     }
 }

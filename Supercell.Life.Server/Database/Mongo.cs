@@ -23,7 +23,7 @@
         /// <summary>
         /// Initializes the <see cref="Mongo"/> class.
         /// </summary>
-        public static void Init()
+        internal static void Init()
         {
             if (Mongo.Initialized)
             {

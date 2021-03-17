@@ -7,9 +7,10 @@
 
     internal class SendBattleEventMessage : PiranhaMessage
     {
-        private int Unknown_1;
-        private int Unknown_2;
-        private int Unknown_3;
+        private int Unknown;
+
+        private int X;
+        private int Y;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SendBattleEventMessage"/> class.
@@ -21,15 +22,33 @@
 
         internal override void Decode()
         {
-            this.Unknown_1 = this.Stream.ReadInt();
-            this.Unknown_2 = this.Stream.ReadInt();
-            this.Unknown_3 = this.Stream.ReadInt();
+            this.Unknown = this.Stream.ReadInt();
+            this.X       = this.Stream.ReadInt();
+            this.Y       = this.Stream.ReadInt();
         }
 
         internal override void Handle()
         {
-            if (this.Connection.Avatar.Battle != null)
+            this.ShowValues();
+
+            if (this.X != 0 && this.Y != 0)
             {
+                if (this.Connection.Avatar.Battle != null)
+                {
+                    new BattleEventMessage(this.Connection)
+                    {
+                        Unknown = this.Unknown,
+                        X       = this.X,
+                        Y       = this.Y
+                    }.Send();
+
+                    new BattleEventMessage(this.Connection.Avatar.Battle.Avatars.Find(avatar => avatar.Identifier != this.Connection.Avatar.Identifier).Connection)
+                    {
+                        Unknown = this.Unknown,
+                        X       = -this.X,
+                        Y       = -this.Y
+                    }.Send();
+                }
             }
         }
     }

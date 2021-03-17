@@ -50,12 +50,6 @@ namespace Supercell.Life.Server.Logic.Avatar
 
         [JsonProperty] internal int TutorialMask;
 
-        [JsonProperty] internal JObject CurrentArea = new JObject
-        { 
-            { "Name",  string.Empty },
-            { "Level", 0 }
-        };
-
         [JsonProperty] internal JArray Team;
 
         [JsonProperty] internal Rank Rank;
@@ -66,8 +60,6 @@ namespace Supercell.Life.Server.Logic.Avatar
 
         [JsonProperty] internal int ShipLevel;
         [JsonProperty] internal int Seasick;
-
-        [JsonProperty] internal int OngoingQuestData;
 
         [JsonProperty] internal Facebook Facebook;
 
@@ -89,6 +81,8 @@ namespace Supercell.Life.Server.Logic.Avatar
         [JsonProperty] internal LogicDataSlot QuestUnlockSeens;
         [JsonProperty] internal LogicQuestMoves QuestMoves;
 
+        [JsonProperty] internal LogicQuest OngoingQuestData;
+
         [JsonProperty] internal LogicDataSlot EnergyPackages;
 
         [JsonProperty] internal LogicDataSlot ItemInventories;
@@ -109,8 +103,6 @@ namespace Supercell.Life.Server.Logic.Avatar
         internal LogicItems Items;
 
         internal readonly LogicTime Time;
-
-        internal LogicQuest CurrentQuest;
 
         internal bool RecentlyResigned;
 
@@ -258,8 +250,8 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.Resources            = new LogicResources(this);
             this.Variables            = new LogicVariables(this);
 
-            this.SpellsReady          = new LogicDataSlot(this);
             this.Spells               = new LogicSpells(this);
+            this.SpellsReady          = new LogicDataSlot(this);
 
             this.HeroLevels           = new LogicHeroLevels(this);
             this.HeroQuests           = new LogicDataSlot(this);
@@ -296,7 +288,8 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.Diamonds             = Globals.StartingDiamonds;
             this.FreeDiamonds         = Globals.StartingDiamonds;
 
-            this.OngoingQuestData     = Globals.StartingQuest.GlobalID;
+            this.OngoingQuestData        = LogicQuests.Quests[Globals.StartingQuest.GlobalID];
+            this.OngoingQuestData.Avatar = this;
         }
 
         /// <summary>
@@ -362,7 +355,7 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.HeroUpgrade.Save(json);
 
             json.Put("tutorial_mask", new LogicJSONNumber(this.TutorialMask));
-
+            
             stream.WriteCompressedString(json.ToString());
         }
 
@@ -410,8 +403,8 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.AchievementProgress.Encode(stream); // Achievement Progress Data
 
             this.ItemInventories.Encode(stream);
-            this.NpcProgress.Encode(stream);
 
+            this.NpcProgress.Encode(stream);
             this.QuestUnlockSeens.Encode(stream);
             this.QuestUnlockSeens.Encode(stream);
 
@@ -440,7 +433,6 @@ namespace Supercell.Life.Server.Logic.Avatar
 
             this.Spells.Encode(stream);
             this.SpellsReady.Encode(stream);
-            //Stream.WriteInt(0); // SpellsReadyCount
 
             this.HeroTired.Encode(stream); // HeroTired
 
@@ -494,6 +486,16 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.Booster.AdjustSubTick();
             this.SpellTimer.AdjustSubTick();
             this.ItemUnavailableTimer.AdjustSubTick();
+
+            if (this.Alliance != null)
+            {
+                this.Alliance.TeamGoalTimer.AdjustSubTick();
+
+                if (!this.Alliance.TeamGoalTimer.Started)
+                {
+                    this.Alliance.TeamGoalTimer.Start();
+                }
+            }
         }
 
         /// <summary>
@@ -508,6 +510,7 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.Booster.FastForward(seconds);
             this.SpellTimer.FastForward(seconds);
             this.ItemUnavailableTimer.FastForward(seconds);
+            this.Alliance?.TeamGoalTimer.FastForward(seconds);
 
             this.AdjustSubTick();
             this.Save();
@@ -525,14 +528,16 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.Booster.Tick();
             this.SpellTimer.Tick();
             this.ItemUnavailableTimer.Tick();
+            this.Alliance?.TeamGoalTimer.Tick();
 
             Debugger.Debug($"Energy Timer           : Started: {this.EnergyTimer.Timer.Started}  : RemainingSecs: {this.EnergyTimer.Timer.RemainingSecs}.");
             Debugger.Debug($"Hero Upgrade Timer     : Started: {this.HeroUpgrade.Timer.Started}  : RemainingSecs: {this.HeroUpgrade.Timer.RemainingSecs}.");
-            Debugger.Debug($"Sailing Timer          : Started: {this.Sailing.Timer.Started}      : RemainingSecs: {this.Sailing.Timer.RemainingSecs}.");
+            Debugger.Debug($"Sailing Timer          : Started: {this.Sailing.Timer.Started}  : RemainingSecs: {this.Sailing.Timer.RemainingSecs}.");
             Debugger.Debug($"Ship Upgrade Timer     : Started: {this.ShipUpgrade.Timer.Started}  : RemainingSecs: {this.ShipUpgrade.Timer.RemainingSecs}.");
-            Debugger.Debug($"XP Booster Timer       : Started: {this.Booster.Timer.Started}      : RemainingSecs: {this.Booster.Timer.RemainingSecs}.");
-            Debugger.Debug($"Spell Timer            : Started: {this.SpellTimer.Started}         : RemainingSecs: {this.SpellTimer.Timer.RemainingSecs}.");
-            Debugger.Debug($"Item Unavailable Timer : Started: {this.ItemUnavailableTimer.Timer.Started}  : RemainingSecs: {this.ItemUnavailableTimer.Timer.RemainingSecs}.");
+            Debugger.Debug($"XP Booster Timer       : Started: {this.Booster.Timer.Started}  : RemainingSecs: {this.Booster.Timer.RemainingSecs}.");
+            Debugger.Debug($"Spell Timer            : Started: {this.SpellTimer.Started}  : RemainingSecs: {this.SpellTimer.Timer.RemainingSecs}.");
+            Debugger.Debug($"Item Unavailable Timer : Started: {this.ItemUnavailableTimer.Started}  : RemainingSecs: {this.ItemUnavailableTimer.Timer.RemainingSecs}.");
+            Debugger.Debug($"Team Goal Timer        : Started: {this.Alliance?.TeamGoalTimer.Started}  : RemainingSecs: {this.Alliance?.TeamGoalTimer.Timer.RemainingSecs}.");
 
             this.Update = DateTime.UtcNow;
         }

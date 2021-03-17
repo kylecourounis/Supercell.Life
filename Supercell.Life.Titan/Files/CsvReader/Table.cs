@@ -6,10 +6,10 @@
 
     public class Table
     {
-        internal readonly LogicArrayList<Column> Columns;
-        internal readonly LogicArrayList<string> Headers;
-        internal readonly LogicArrayList<Row> Rows;
-        internal readonly LogicArrayList<string> Types;
+        public readonly LogicArrayList<Column> Columns;
+        public readonly LogicArrayList<string> Headers;
+        public readonly LogicArrayList<Row> Rows;
+        public readonly LogicArrayList<string> Types;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Table"/> class.

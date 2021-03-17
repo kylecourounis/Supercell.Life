@@ -12,20 +12,22 @@
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Avatar;
 
+    [JsonObject(MemberSerialization.OptIn)]
     internal class LogicQuest
     {
         internal LogicClientAvatar Avatar;
 
         internal LogicQuestData Data;
-        
-        internal string Name;
         internal LogicArrayList<LogicLevel> Levels;
-
         internal int Moves;
+
+        [JsonProperty] internal string Name;
+        [JsonProperty] internal int Level;
 
         /// <summary>
         /// Gets the global identifier for the <see cref="LogicQuestData"/> instance in this class.
         /// </summary>
+        [JsonProperty]
         internal int GlobalID
         {
             get
@@ -41,7 +43,17 @@
         {
             this.Levels = new LogicArrayList<LogicLevel>();
         }
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogicQuest"/> class.
+        /// </summary>
+        internal LogicQuest(LogicClientAvatar avatar, LogicQuestData data)
+        {
+            this.Avatar = avatar;
+            this.Data   = data;
+            this.Levels = new LogicArrayList<LogicLevel>();
+        }
+
         /// <summary>
         /// Starts this instance.
         /// </summary>
@@ -49,19 +61,9 @@
         {
             if (this.Avatar.ExpLevel >= this.Data.RequiredXpLevel && this.Avatar.Energy >= this.Data.Energy)
             {
-                this.Avatar.CurrentQuest     = this;
-                this.Avatar.OngoingQuestData = this.GlobalID;
+                this.Avatar.OngoingQuestData = this;
                 this.Avatar.Connection.State = State.Battle;
                 this.Avatar.Energy          -= this.Data.Energy;
-
-                if (!this.Avatar.NpcProgress.ContainsKey(this.GlobalID))
-                {
-                    this.SaveCurrentArea(this.Name, 0);
-                }
-                else if (this.Avatar.NpcProgress.ContainsKey(this.GlobalID) && !this.Avatar.NpcProgress.Crowns.Contains(this.GlobalID))
-                {
-                    this.SaveCurrentArea(this.Name, 0);
-                }
             }
         }
 
@@ -82,8 +84,6 @@
                         this.Avatar.NpcProgress.AddItem(this.GlobalID, 1);
                     }
 
-                    this.SaveCurrentArea(this.Name, this.Avatar.CurrentArea["Level"].ToObject<int>() + 1);
-
                     break;
                 }
                 case "PvP":
@@ -93,11 +93,12 @@
                 }
                 default:
                 {
-                    this.Avatar.QuestMoves.Set(this.GlobalID, this.Moves);
+                    this.Avatar.QuestMoves.AddItem(this.GlobalID, this.Moves);
 
                     if (this.Avatar.NpcProgress.GetCount(this.GlobalID) < this.Levels.Size)
                     {
                         this.Avatar.NpcProgress.AddItem(this.GlobalID, 1);
+                        this.Level = this.Avatar.NpcProgress.GetCount(this.GlobalID);
                     }
 
                     if (this.Moves <= this.Data.GoalMoveCount)
@@ -110,7 +111,8 @@
                         this.Avatar.Energy += 1;
                     }
 
-                    this.SaveCurrentArea(this.Name, this.Avatar.CurrentArea["Level"].ToObject<int>() + 1);
+                    this.Moves = 0;
+
                     this.CalculateChestLoot();
 
                     break;
@@ -124,30 +126,14 @@
         /// </summary>
         internal void CalculateChestLoot()
         {
-            if (this.Avatar.CurrentArea["Level"].ToObject<int>() == this.Levels.Count && (this.Data.QuestType != "Unlock" || this.Data.QuestType != "PvP"))
+            if (this.Level == this.Levels.Count && (this.Data.QuestType != "Unlock" || this.Data.QuestType != "PvP"))
             {
                 Debugger.Debug("Create a chest.");
-
-                var areaNames      = LogicQuests.Quests;
-                int currentAreaIdx = areaNames.Values.ToList().FindIndex(value => value.Name.Equals(this.Name));
-                LogicQuest area    = areaNames[currentAreaIdx + 1];
-
-                this.Avatar.OngoingQuestData = area.GlobalID;
-                this.SaveCurrentArea(area.Name, 0);
             }
             else
             {
                 Debugger.Debug("No chest yet.");
             }
-        }
-
-        /// <summary>
-        /// Saves the current area.
-        /// </summary>
-        internal void SaveCurrentArea(string name, int level)
-        {
-            this.Avatar.CurrentArea["Name"]  = name;
-            this.Avatar.CurrentArea["Level"] = level;
         }
 
         internal class LogicLevel

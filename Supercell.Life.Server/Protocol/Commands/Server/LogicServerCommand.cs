@@ -13,18 +13,11 @@
         {
             // LogicServerCommand.
         }
-
-        /// <summary>
-        /// Encodes this instance.
-        /// </summary>
-        internal virtual void Encode()
-        {
-        }
-
+        
         /// <summary>
         /// Writes the header.
         /// </summary>
-        internal void WriteHeader()
+        internal new void WriteHeader()
         {
             this.Stream.WriteInt(this.Subtick);
             this.Stream.WriteInt(this.Subtick);

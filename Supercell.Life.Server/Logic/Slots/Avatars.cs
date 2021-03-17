@@ -278,10 +278,9 @@ namespace Supercell.Life.Server.Logic.Slots
 
             LogicClientAvatar avatar = new LogicClientAvatar(connection, new LogicLong(highId, low))
             {
-                Connection = connection,
-                Token      = Loader.Random.GenerateRandomString()
+                Token = Loader.Random.GenerateRandomString()
             };
-            
+
             switch (database)
             {
                 case DBMS.Mongo:

@@ -184,9 +184,9 @@
                 {
                     return new LogicSendTauntCommand(connection, stream);
                 }
-                case Command.Unknown_1:
+                case Command.AimCharacter:
                 {
-                    return new LogicUnknownCommand(connection, stream);
+                    return new LogicAimCharacterCommand(connection, stream);
                 }
                 case Command.UseSpell:
                 {

@@ -32,6 +32,9 @@
 
             this.Connection.Avatar.Variables.Remove(LogicVariables.SailRewardUnclaimed.GlobalID);
 
+            this.Connection.Avatar.Sailing.Heroes.Clear();
+            this.Connection.Avatar.Sailing.HeroLevels.Clear();
+
             this.Connection.Avatar.Save();
         }
 

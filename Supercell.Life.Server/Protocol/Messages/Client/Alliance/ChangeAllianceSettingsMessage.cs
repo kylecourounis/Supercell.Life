@@ -19,7 +19,7 @@
     {
         internal string AllianceDescription;
         internal LogicAllianceBadgeData BadgeData;
-        internal int Type;
+        internal int AllianceType;
         internal int TrophyLimit;
 
         /// <summary>
@@ -46,7 +46,7 @@
             this.AllianceDescription = this.Stream.ReadString();
             this.Stream.ReadString(); // ?
             this.BadgeData           = this.Stream.ReadDataReference<LogicAllianceBadgeData>();
-            this.Type                = this.Stream.ReadInt();
+            this.AllianceType        = this.Stream.ReadInt();
             this.TrophyLimit         = this.Stream.ReadInt();
         }
 
@@ -86,9 +86,9 @@
                     alliance.Badge = this.BadgeData.GlobalID;
                 }
 
-                if (alliance.Type != (Hiring)this.Type)
+                if (alliance.Type != (Hiring)this.AllianceType)
                 {
-                    alliance.Type = (Hiring)this.Type;
+                    alliance.Type = (Hiring)this.AllianceType;
                 }
 
                 if (alliance.RequiredTrophies != this.TrophyLimit)

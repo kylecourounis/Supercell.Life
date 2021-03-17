@@ -4,14 +4,14 @@
 
     using Supercell.Life.Titan.Logic;
 
-    internal class Column
+    public class Column
     {
-        internal readonly LogicArrayList<string> Values;
+        public readonly LogicArrayList<string> Values;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Column"/> class.
         /// </summary>
-        internal Column()
+        public Column()
         {
             this.Values = new LogicArrayList<string>();
         }
@@ -19,7 +19,7 @@
         /// <summary>
         /// Gets the size of the array.
         /// </summary>
-        internal static int GetArraySize(int offset, int nOffset)
+        public static int GetArraySize(int offset, int nOffset)
         {
             return nOffset - offset;
         }
@@ -27,7 +27,7 @@
         /// <summary>
         /// Adds the specified value.
         /// </summary>
-        internal void Add(string value)
+        public void Add(string value)
         {
             if (value == null)
             {
@@ -42,7 +42,7 @@
         /// <summary>
         /// Gets the specified row.
         /// </summary>
-        internal string Get(int row)
+        public string Get(int row)
         {
             return (this.Values.Count > row) ? this.Values[row] : null;
         }
@@ -50,7 +50,7 @@
         /// <summary>
         /// Gets the size.
         /// </summary>
-        internal int GetSize()
+        public int GetSize()
         {
             return this.Values.Count;
         }

@@ -41,7 +41,7 @@
 
             LogicDataTable questCsv = CSV.Tables.Get(Gamefile.Quests);
             Table questCsvTable     = questCsv.Table;
-
+            
             string lastStoredName   = "";
 
             Task.Run(() =>

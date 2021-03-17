@@ -11,6 +11,10 @@
     {
         private LogicLong VisitID;
 
+        private bool Unknown_1;
+
+        private LogicLong Unknown_2;
+
         /// <summary>
         /// The service node for this message.
         /// </summary>
@@ -32,12 +36,29 @@
 
         internal override void Decode()
         {
-            this.VisitID = this.Stream.ReadLogicLong();
+            this.VisitID = this.Stream.ReadLong();
+
+            if (this.Stream.BytesLeft > 0)
+            {
+                this.Unknown_1 = this.Stream.ReadBoolean();
+
+                if (this.Unknown_1)
+                {
+                    this.Unknown_2 = this.Stream.ReadLong();
+                }
+            }
         }
 
         internal override void Handle()
         {
-            new AvatarProfileMessage(this.Connection, this.VisitID).Send();
+            if (this.Unknown_2.Low == 0)
+            {
+                // new AvatarProfileMessage(this.Connection, this.Connection.Avatar.Identifier).Send();
+            }
+            else
+            {
+                new AvatarProfileMessage(this.Connection, this.VisitID).Send();
+            }
         }
     }
 }

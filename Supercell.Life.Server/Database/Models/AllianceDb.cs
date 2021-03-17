@@ -50,7 +50,7 @@
         }
 
         /// <summary>
-        /// Creates the specified Alliance.
+        /// Creates the specified alliance.
         /// </summary>
         internal static async Task Create(Alliance alliance)
         {
@@ -58,7 +58,7 @@
         }
 
         /// <summary>
-        /// Creates the Alliance in the database.
+        /// Creates the alliance in the database.
         /// </summary>
         internal static async Task<AllianceDb> Save(Alliance alliance)
         {
@@ -76,12 +76,6 @@
                 {
                     return updatedEntity;
                 }
-
-                Debugger.Error("updatedEntity.Ids != this.Ids");
-            }
-            else
-            {
-                Debugger.Error("updatedEntity == null");
             }
 
             return null;
@@ -104,17 +98,7 @@
                     {
                         return entity;
                     }
-
-                    Debugger.Error("Entity == null");
                 }
-                else
-                {
-                    Debugger.Error("Entities == null");
-                }
-            }
-            else
-            {
-                Debugger.Error("lowId < 0");
             }
 
             return null;
@@ -133,26 +117,9 @@
                 {
                     if (result.DeletedCount > 0)
                     {
-                        if (result.DeletedCount == 1)
-                        {
-                            return true;
-                        }
-
-                        Debugger.Error("result.DeletedCount > 1");
-                    }
-                    else
-                    {
-                        Debugger.Warning("result.DeletedCount == 0");
+                        return result.DeletedCount == 1;
                     }
                 }
-                else
-                {
-                    Debugger.Error("result.IsAcknowledged != true");
-                }
-            }
-            else
-            {
-                Debugger.Error("lowId <= 0");
             }
 
             return false;

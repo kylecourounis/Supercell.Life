@@ -13,14 +13,16 @@ namespace Supercell.Life.Server.Logic.Enums
         Heroes,
         ExperienceLevels,
         Leagues,
+        Obstacles,
         AllianceBadges = 21,
         Taunts         = 24,
         Decos          = 25,
         Variables      = 26,
         Boosters       = 28,
         EnergyPackages = 32,
+        TeamGoals      = 33,
         Spells         = 35,
-        Obstacles      = 36,
+        Events         = 36,
         Items          = 37
     }
 }

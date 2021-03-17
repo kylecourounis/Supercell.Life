@@ -35,6 +35,7 @@
         internal Connection Connection
         {
             get;
+            set;
         }
 
         /// <summary>
@@ -71,6 +72,15 @@
             // Decode.
         }
 
+
+        /// <summary>
+        /// Encodes this instance.
+        /// </summary>
+        internal virtual void Encode()
+        {
+            // Encode.
+        }
+
         /// <summary>
         /// Executes this instance.
         /// </summary>
@@ -86,6 +96,15 @@
         {
             this.ExecuteSubTick = this.Stream.ReadInt();
             this.ExecutorID     = this.Stream.ReadLogicLong();
+        }
+
+        /// <summary>
+        /// Writes the header.
+        /// </summary>
+        internal void WriteHeader()
+        {
+            this.Stream.WriteInt(this.ExecuteSubTick);
+            this.Stream.WriteLogicLong(this.ExecutorID);
         }
 
         /// <summary>

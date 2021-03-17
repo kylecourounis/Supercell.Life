@@ -6,7 +6,6 @@
 
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Commands;
-    using Supercell.Life.Server.Protocol.Messages.Server;
 
     internal class SectorEndClientTurnMessage : PiranhaMessage
     {
@@ -39,8 +38,6 @@
                     for (int i = 0; i < this.CommandCount; i++)
                     {
                         int commandID = this.Stream.ReadInt();
-                        Debugger.Debug(commandID);
-                        return;
 
                         if (commandID >= 600)
                         {
@@ -48,7 +45,7 @@
 
                             if (command != null)
                             {
-                                // if (LogicCommandManager.IsCommandAllowedInCurrentState(command))
+                                if (LogicCommandManager.IsCommandAllowedInCurrentState(command))
                                 {
                                     Debugger.Info($"Battle Command {command.GetType().Name.Pad(34)} received from {this.Connection.EndPoint}.");
 

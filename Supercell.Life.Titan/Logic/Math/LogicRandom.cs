@@ -4,6 +4,8 @@
 
     public class LogicRandom : Random
     {
+        private int Seed = -237100689;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicRandom"/> class.
         /// </summary>
@@ -25,6 +27,14 @@
         public int Rand(int min, int max)
         {
             return this.Next(min, max);
+        }
+
+        /// <summary>
+        /// Sets the iterated random seed.
+        /// </summary>
+        public void SetIteratedRandomSeed(int randSeed)
+        {
+            this.Seed = randSeed;
         }
 
         /// <summary>

@@ -24,14 +24,12 @@
         {
             // We need to figure out the quest completion system at some point.
 
-            if (this.Connection.Avatar.CurrentQuest != null)
+            if (this.Connection.Avatar.OngoingQuestData != null)
             {
-                if (this.Connection.Avatar.ExpLevel >= this.Connection.Avatar.CurrentQuest.Data.RequiredXpLevel)
+                if (this.Connection.Avatar.ExpLevel >= this.Connection.Avatar.OngoingQuestData.Data.RequiredXpLevel)
                 {
-                    this.Connection.Avatar.CurrentQuest.Save();
-
+                    this.Connection.Avatar.OngoingQuestData.Save();
                     this.Connection.Avatar.Save();
-                    this.Connection.Avatar.CurrentQuest = null;
                 }
                 else
                 {

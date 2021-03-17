@@ -14,6 +14,7 @@
     using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Logic.Alliance.Streams;
     using Supercell.Life.Server.Logic.Avatar;
+    using Supercell.Life.Server.Logic.Avatar.Timers;
     using Supercell.Life.Server.Logic.Slots;
     using Supercell.Life.Server.Protocol.Messages;
     using Supercell.Life.Server.Protocol.Messages.Server;
@@ -29,7 +30,7 @@
 
         [JsonProperty] internal int Badge;
         internal LogicAllianceBadgeData BadgeData => (LogicAllianceBadgeData)CSV.Tables.Get(Gamefile.AllianceBadges).GetDataWithID(this.Badge);
-
+        
         [JsonProperty] internal string Name;
         [JsonProperty] internal string Description;
 
@@ -37,6 +38,13 @@
         
         [JsonProperty] internal LogicArrayList<AllianceMember> Members;
         [JsonProperty] internal LogicArrayList<StreamEntry> Entries;
+
+        internal LogicTeamGoalData TeamGoal => (LogicTeamGoalData)CSV.Tables.Get(Gamefile.TeamGoals).GetDataByName("clear_bats0");
+
+        [JsonProperty] internal int TotalStarsCollected;
+        [JsonProperty] internal int StarsLastSeason;
+
+        [JsonProperty] internal LogicTeamGoalTimer TeamGoalTimer;
 
         /// <summary>
         /// Gets the seed.
@@ -85,8 +93,9 @@
         /// </summary>
         internal Alliance(int highId, int lowId) : this()
         {
-            this.HighID  = highId;
-            this.LowID   = lowId;
+            this.HighID        = highId;
+            this.LowID         = lowId;
+            this.TeamGoalTimer = new LogicTeamGoalTimer(this);
         }
 
         /// <summary>
@@ -115,11 +124,11 @@
             stream.WriteInt(this.Score);
             stream.WriteInt(this.RequiredTrophies);
 
-            stream.WriteInt(0);
-            stream.WriteInt(0);
-            stream.WriteInt(0);
+            stream.WriteDataReference(null);
+            stream.WriteDataReference(null);
 
-            stream.WriteInt(0);
+            stream.WriteInt(this.TotalStarsCollected); 
+            stream.WriteInt(this.StarsLastSeason); 
         }
 
         /// <summary>

@@ -3,8 +3,9 @@
     using System.Collections.Concurrent;
     using System.Linq;
 
-    using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Titan.Logic.Enums;
+
+    using Supercell.Life.Server.Logic.Avatar;
 
     internal static class Waiting
     {

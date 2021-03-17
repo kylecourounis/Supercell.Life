@@ -36,7 +36,7 @@
         SwapCharacter      = 606,
         Resign             = 609,
         SendTaunt          = 611,
-        Unknown_1          = 612,
+        AimCharacter       = 612,
         UseSpell           = 613,
         ActionSeen         = 800,
 

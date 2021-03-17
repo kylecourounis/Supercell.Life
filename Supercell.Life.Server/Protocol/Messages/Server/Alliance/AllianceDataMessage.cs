@@ -2,7 +2,9 @@
 {
     using System.Linq;
 
+    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Alliance;
+    using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
 
@@ -39,6 +41,8 @@
             {
                 member.Encode(this.Stream);
             }
+
+            this.Stream.WriteInt(this.Alliance.TeamGoalTimer.Timer.RemainingSecs);
         }
     }
 }

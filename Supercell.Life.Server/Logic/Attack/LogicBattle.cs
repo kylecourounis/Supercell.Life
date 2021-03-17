@@ -1,6 +1,7 @@
 ﻿namespace Supercell.Life.Server.Logic.Attack
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
@@ -15,9 +16,12 @@
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Logic.Enums;
+    using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Server.Logic.Slots;
+    using Supercell.Life.Server.Protocol.Commands;
     using Supercell.Life.Server.Protocol.Messages;
     using Supercell.Life.Server.Protocol.Messages.Server;
+    using Supercell.Life.Titan.Logic;
 
     using Timer = System.Timers.Timer;
 
@@ -25,8 +29,6 @@
     {
         internal int HighID;
         internal int LowID;
-
-        internal int Tick;
 
         internal int Seed;
 
@@ -36,9 +38,22 @@
         internal bool Stopped;
 
         internal LogicQuestData PvPTier;
+        internal LogicEventsData Event;
 
-        internal Timer Timer;
-        internal List<LogicClientAvatar> Avatars;
+        internal Timer BattleTimer;
+        internal Timer TurnTimer;
+
+        internal List<LogicClientAvatar> Avatars
+        {
+            get
+            {
+                return this.CommandQueues.Keys.ToList();
+            }
+        }
+
+        internal Dictionary<LogicClientAvatar, ConcurrentQueue<LogicCommand>> CommandQueues;
+        
+        internal int Turn;
 
         internal int BattleTime => (int)DateTime.UtcNow.Subtract(this.StartTime).TotalSeconds * 2;
 
@@ -82,17 +97,20 @@
         /// </summary>
         internal LogicBattle()
         {
-            this.Timer = new Timer
+            this.TurnTimer = new Timer
             {
                 AutoReset = true,
-                Interval  = 2000
+                Interval  = Globals.PVPFirstTurnTimeSeconds * 1000
             };
             
-            this.StartTime = DateTime.UtcNow;
+            this.BattleTimer = new Timer
+            {
+                AutoReset = true,
+                Interval  = 500
+            };
 
-            this.Seed = Loader.Random.Next(0, 100);
-
-            this.Timer.Elapsed += this.Process;
+            this.BattleTimer.Elapsed += this.Tick;
+            this.TurnTimer.Elapsed   += this.SetTurn;
         }
 
         /// <summary>
@@ -100,12 +118,11 @@
         /// </summary>
         internal LogicBattle(LogicClientAvatar avatar1, LogicClientAvatar avatar2) : this()
         {
-            this.Avatars = new List<LogicClientAvatar>
+            this.CommandQueues = new Dictionary<LogicClientAvatar, ConcurrentQueue<LogicCommand>>
             {
-                avatar1, avatar2
+                { avatar1, new ConcurrentQueue<LogicCommand>() },
+                { avatar2, new ConcurrentQueue<LogicCommand>() }
             };
-
-            Debugger.Debug($"{avatar1}, {avatar2}");
         }
 
         /// <summary>
@@ -113,15 +130,15 @@
         /// </summary>
         internal void Encode(ByteStream stream)
         {
-            stream.WriteInt(0);
+            stream.WriteInt(Loader.Random.Next(0, 1)); // Coin toss to check who goes first
             stream.WriteInt(0);
             stream.WriteInt(0);
             stream.WriteInt(0);
 
-            stream.WriteBoolean(false);
+            stream.WriteBoolean(true);
 
             stream.WriteDataReference(this.PvPTier);
-            stream.WriteDataReference((LogicObstacleData)CSV.Tables.Get(Gamefile.Obstacles).GetDataByName("Bush_A"));
+            stream.WriteDataReference(this.Event);
         }
 
         /// <summary>
@@ -131,20 +148,26 @@
         {
             if (!this.Started)
             {
-                this.Started = true;
+                this.Started   = true;
+                this.StartTime = DateTime.UtcNow;
 
                 if (!this.Stopped)
                 {
+                    int idx = 0;
+
                     foreach (LogicClientAvatar avatar in this.Avatars.Where(avatar => avatar.Connection != null))
                     {
                         new StopHomeLogicMessage(avatar.Connection).Send();
-                        new SectorStateMessage(avatar.Connection)
+                        new SectorStateMessage(avatar.Connection, idx)
                         {
                             Battle = this
                         }.Send();
+
+                        idx++;
                     }
 
-                    this.Timer.Start();
+                    this.BattleTimer.Start();
+                    this.TurnTimer.Start();
                 }
                 else
                 {
@@ -157,24 +180,43 @@
             }
         }
 
+
         /// <summary>
-        /// Processes the specified sender.
+        /// Gets the enemy's command queue.
         /// </summary>
-        private void Process(object sender, ElapsedEventArgs args)
+        internal ConcurrentQueue<LogicCommand> GetOwnQueue(LogicClientAvatar avatar)
+        {
+            return this.CommandQueues[this.Avatars.Find(a => a.Identifier == avatar.Identifier)];
+        }
+
+        /// <summary>
+        /// Gets the enemy's command queue.
+        /// </summary>
+        internal ConcurrentQueue<LogicCommand> GetEnemyQueue(LogicClientAvatar nonEnemy)
+        {
+            return this.CommandQueues[this.Avatars.Find(avatar => avatar.Identifier != nonEnemy.Identifier)];
+        }
+
+        /// <summary>
+        /// Ticks this instance.
+        /// </summary>
+        private void Tick(object sender, ElapsedEventArgs args)
         {
             if (!this.Stopped)
             {
                 if (this.Started)
                 {
-                    int currentSeed = Interlocked.Increment(ref this.Tick);
+                    Debugger.Info("Tick.");
 
-                    Debugger.Info($"Heartbeat n°{currentSeed}!");
-
-                    foreach (LogicClientAvatar avatar in this.Avatars.Where(avatar => avatar.Connection != null && avatar.Connection.IsConnected))
+                    foreach (LogicClientAvatar avatar in this.Avatars)
                     {
-                        new SectorHeartbeatMessage(avatar.Connection, currentSeed).Send();
+                        new SectorHeartbeatMessage(avatar.Connection)
+                        {
+                            Commands = this.CommandQueues[avatar],
+                            Turn = this.Turn
+                        }.Send();
                     }
-
+                    
                     if (this.AllDisconnected)
                     {
                         this.Stop();
@@ -182,12 +224,26 @@
                 }
                 else
                 {
-                    Debugger.Error("Battle had not started when Process() was called.");
+                    Debugger.Error("Battle had not started when Tick() was called.");
                 }
             }
             else
             {
-                Debugger.Error("Battle had already stopped when Process() was called.");
+                Debugger.Error("Battle had already stopped when Tick() was called.");
+            }
+        }
+
+        internal void SetTurn(object sender, ElapsedEventArgs args)
+        { 
+            this.Reset();
+        }
+
+        internal void Reset()
+        {
+            if ((int)this.TurnTimer.Interval == Globals.PVPFirstTurnTimeSeconds * 1000)
+            {
+                this.TurnTimer.Stop();
+                this.TurnTimer.Interval = Globals.PVPMaxTurnTimeSeconds * 1000;
             }
         }
 
@@ -202,7 +258,8 @@
 
                 if (this.Started)
                 {
-                    this.Timer.Stop();
+                    this.BattleTimer.Stop();
+                    this.TurnTimer.Stop();
 
                     foreach (LogicClientAvatar avatar in this.Avatars)
                     {

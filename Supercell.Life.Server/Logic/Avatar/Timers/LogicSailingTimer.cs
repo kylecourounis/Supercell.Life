@@ -11,6 +11,7 @@
     using Supercell.Life.Server.Logic.Avatar.Items;
     using Supercell.Life.Server.Logic.Avatar.Slots;
     using Supercell.Life.Server.Logic.Enums;
+    using Supercell.Life.Server.Logic.Game;
 
     internal class LogicSailingTimer
     {
@@ -35,14 +36,6 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicSailingTimer"/> class.
         /// </summary>
-        internal LogicSailingTimer()
-        {
-            this.Timer = new LogicTimer();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LogicSailingTimer"/> class.
-        /// </summary>
         internal LogicSailingTimer(LogicClientAvatar avatar)
         {
             this.Avatar     = avatar;
@@ -57,7 +50,7 @@
         /// </summary>
         internal void Start()
         {
-            this.Timer.StartTimer(this.Avatar.Time, 25200);
+            this.Timer.StartTimer(this.Avatar.Time, 3600 * Globals.ShipSailDurationHours);
         }
 
         /// <summary>
@@ -72,16 +65,13 @@
                 LogicGlobalData globals = (LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SHIP_SEASICK_DURATION_HOURS");
                 this.Avatar.Seasick = globals.NumberValue;
 
-                this.Avatar.Variables.Set(LogicVariables.SailRewardUnclaimed.GlobalID, 1);
+                this.Avatar.Variables.Set(LogicVariables.SailRewardUnclaimed.GlobalID, 0);
                 
                 foreach (Item hero in this.Heroes.Values)
                 {
                     this.Avatar.HeroTired.AddItem(hero.Id, hero.Count);
                 }
-
-                this.Avatar.Sailing.Heroes.Clear();
-                this.Avatar.Sailing.HeroLevels.Clear();
-
+                
                 this.Avatar.Save();
             }
         }

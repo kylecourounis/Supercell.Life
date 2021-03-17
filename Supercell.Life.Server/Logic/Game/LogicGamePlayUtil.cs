@@ -72,10 +72,6 @@
                 {
                     return ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SPEED_UP_MODIFIER_ITEM_AVAILABILITY")).NumberValue;
                 }
-                case 4:
-                {
-                    return 250;
-                }
                 default:
                 {
                     return 100;

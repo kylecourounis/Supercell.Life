@@ -42,27 +42,21 @@ namespace Supercell.Life.Server.Files
             CSV.Gamefiles.Add(Gamefile.ParticleEmitters, "csv_logic/particle_emitters.csv");
             CSV.Gamefiles.Add(Gamefile.Globals, "csv_logic/globals.csv");
             CSV.Gamefiles.Add(Gamefile.Quests, "csv_logic/quests.csv");
-
             CSV.Gamefiles.Add(Gamefile.Achievements, "csv_logic/achievements.csv");
-
             CSV.Gamefiles.Add(Gamefile.Worlds, "csv_logic/worlds.csv");
             CSV.Gamefiles.Add(Gamefile.Heroes, "csv_logic/heroes.csv");
-
             CSV.Gamefiles.Add(Gamefile.ExperienceLevels, "csv_logic/experience_levels.csv");
             CSV.Gamefiles.Add(Gamefile.Leagues, "csv_logic/leagues.csv");
-
+            CSV.Gamefiles.Add(Gamefile.Obstacles, "csv_logic/obstacles.csv");
             CSV.Gamefiles.Add(Gamefile.AllianceBadges, "csv_logic/alliance_badges.csv");
-            
             CSV.Gamefiles.Add(Gamefile.Taunts, "csv_logic/taunts.csv");
             CSV.Gamefiles.Add(Gamefile.Decos, "csv_logic/decos.csv");
-
             CSV.Gamefiles.Add(Gamefile.Variables, "csv_logic/variables.csv");
-
             CSV.Gamefiles.Add(Gamefile.Boosters, "csv_logic/boosters.csv");
             CSV.Gamefiles.Add(Gamefile.EnergyPackages, "csv_logic/energy_packages.csv");
-
+            CSV.Gamefiles.Add(Gamefile.TeamGoals, "csv_logic/team_goals.csv");
             CSV.Gamefiles.Add(Gamefile.Spells, "csv_logic/spells.csv");
-            CSV.Gamefiles.Add(Gamefile.Obstacles, "csv_logic/obstacles.csv");
+            CSV.Gamefiles.Add(Gamefile.Events, "csv_logic/events.csv");
             CSV.Gamefiles.Add(Gamefile.Items, "csv_logic/items.csv");
 
             Parallel.ForEach(CSV.Gamefiles, file =>

@@ -52,15 +52,15 @@
         }
 
         /// <summary>
-        /// Creates the specified player.
+        /// Creates the specified avatar.
         /// </summary>
-        internal static async Task Create(LogicClientAvatar player)
+        internal static async Task Create(LogicClientAvatar avatar)
         {
-            await Mongo.Avatars.InsertOneAsync(new AvatarDb(player));
+            await Mongo.Avatars.InsertOneAsync(new AvatarDb(avatar));
         }
 
         /// <summary>
-        /// Creates the player in the database.
+        /// Creates the avatar in the database.
         /// </summary>
         internal static async Task<AvatarDb> Save(LogicClientAvatar avatar)
         {
@@ -78,12 +78,6 @@
                 {
                     return updatedEntity;
                 }
-
-                Debugger.Error("updatedEntity.Ids != this.Ids");
-            }
-            else
-            {
-                Debugger.Error("updatedEntity == null");
             }
 
             return null;
@@ -106,17 +100,7 @@
                     {
                         return entity;
                     }
-                    
-                    Debugger.Error("Entity == null");
                 }
-                else
-                {
-                    Debugger.Error("Entities == null");
-                }
-            }
-            else
-            {
-                Debugger.Error("lowId < 0");
             }
 
             return null;
@@ -135,28 +119,9 @@
                 {
                     if (result.DeletedCount > 0)
                     {
-                        if (result.DeletedCount == 1)
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            Debugger.Error("result.DeletedCount > 1");
-                        }
-                    }
-                    else
-                    {
-                        Debugger.Warning("result.DeletedCount == 0");
+                        return result.DeletedCount == 1;
                     }
                 }
-                else
-                {
-                    Debugger.Error("result.IsAcknowledged != true");
-                }
-            }
-            else
-            {
-                Debugger.Error("lowId <= 0");
             }
 
             return false;

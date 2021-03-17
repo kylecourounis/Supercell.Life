@@ -114,6 +114,12 @@ namespace Supercell.Life.Server.Files.CsvHelpers
                     break;
                 }
 
+                case 14:
+                {
+                    data = new LogicObstacleData(row, this);
+                    break;
+                }
+
                 case 21:
                 {
                     data = new LogicAllianceBadgeData(row, this);
@@ -150,6 +156,12 @@ namespace Supercell.Life.Server.Files.CsvHelpers
                     break;
                 }
 
+                case 33:
+                {
+                    data = new LogicTeamGoalData(row, this);
+                    break;
+                }
+
                 case 35:
                 {
                     data = new LogicSpellData(row, this);
@@ -158,7 +170,7 @@ namespace Supercell.Life.Server.Files.CsvHelpers
 
                 case 36:
                 {
-                    data = new LogicObstacleData(row, this);
+                    data = new LogicEventsData(row, this);
                     break;
                 }
 
