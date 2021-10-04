@@ -7,7 +7,6 @@
     using Supercell.Life.Titan.Logic.Json;
 
     using Supercell.Life.Server.Logic.Game.Objects.Quests;
-    using Supercell.Life.Server.Protocol.Messages.Server;
 
     internal class LogicNpcProgress : LogicDataSlot
     {
@@ -43,7 +42,7 @@
         internal void Save(LogicJSONObject json)
         {
             json.Put("ongoing_quest_data", new LogicJSONNumber(this.Avatar.OngoingQuestData.GlobalID));
-            json.Put("ongoing_level_idx", new LogicJSONNumber(this.Avatar.OngoingQuestData.GlobalID));
+            json.Put("ongoing_level_idx", new LogicJSONNumber(this.Avatar.OngoingQuestData.Level));
             json.Put("ongoing_event_data", new LogicJSONNumber());
 
             if (this.Avatar.Variables.Get(LogicVariables.IgnoreOngoingQuest.GlobalID) != null)
@@ -53,11 +52,8 @@
 
             var ongoingLvl = this.OngoingLevel;
 
-            Debugger.Debug(ongoingLvl);
-
-            json.Put("ongoing_level", ongoingLvl);
+            // json.Put("ongoing_level", ongoingLvl);
         }
-
 
         /// <summary>
         /// Gets the ongoing level data as a <see cref="LogicJSONObject"/>.
@@ -70,12 +66,9 @@
 
                 LogicJSONArray array = new LogicJSONArray();
 
-                foreach (var quest in LogicQuests.Quests[this.Avatar.OngoingQuestData.GlobalID].Levels)
+                foreach (var battle in LogicQuests.Quests[this.Avatar.OngoingQuestData.GlobalID].Levels[0].Battles)
                 {
-                    foreach (var battle in quest.Battles.ToObject<LogicArrayList<LogicQuest.LogicLevel.Battle>>())
-                    {
-                        array.Add(new LogicJSONString(JsonConvert.SerializeObject(battle).Replace("\\", string.Empty)));
-                    }
+                    array.Add(battle.JSON);
                 }
 
                 retVal.Put("battles", array);
@@ -85,7 +78,7 @@
                 retVal.Put("enemy_killcount", new LogicJSONNumber());
                 retVal.Put("current_battle", new LogicJSONNumber());
                 retVal.Put("level_index", new LogicJSONNumber(this.Avatar.OngoingQuestData.Level));
-                retVal.Put("drops", new LogicJSONNumber());
+                retVal.Put("drops", new LogicJSONArray());
                 retVal.Put("ver", new LogicJSONNumber(1));
 
                 return retVal;

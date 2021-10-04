@@ -3,10 +3,10 @@
     using System.Linq;
 
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
 
     using Supercell.Life.Titan.Logic;
     using Supercell.Life.Titan.Logic.Enums;
+    using Supercell.Life.Titan.Logic.Json;
 
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
@@ -19,6 +19,7 @@
 
         internal LogicQuestData Data;
         internal LogicArrayList<LogicLevel> Levels;
+
         internal int Moves;
 
         [JsonProperty] internal string Name;
@@ -64,6 +65,11 @@
                 this.Avatar.OngoingQuestData = this;
                 this.Avatar.Connection.State = State.Battle;
                 this.Avatar.Energy          -= this.Data.Energy;
+                
+                foreach (var hero in this.Avatar.Team.ToObject<int[]>())
+                {
+                    this.Avatar.HeroQuests.AddItem(hero, 1);
+                }
             }
         }
 
@@ -93,22 +99,25 @@
                 }
                 default:
                 {
-                    this.Avatar.QuestMoves.AddItem(this.GlobalID, this.Moves);
+                    this.Avatar.QuestMoves.Set(this.GlobalID, this.Moves);
 
-                    if (this.Avatar.NpcProgress.GetCount(this.GlobalID) < this.Levels.Size)
+                    if (this.Moves > 0)
                     {
-                        this.Avatar.NpcProgress.AddItem(this.GlobalID, 1);
-                        this.Level = this.Avatar.NpcProgress.GetCount(this.GlobalID);
-                    }
+                        if (this.Avatar.NpcProgress.GetCount(this.GlobalID) < this.Levels.Size)
+                        {
+                            this.Avatar.NpcProgress.AddItem(this.GlobalID, 1);
+                            this.Level = this.Avatar.NpcProgress.GetCount(this.GlobalID);
+                        }
 
-                    if (this.Moves <= this.Data.GoalMoveCount)
-                    {
-                        this.Avatar.NpcProgress.Crowns.Add(this.GlobalID);
-                    }
+                        if (this.Moves <= this.Data.GoalMoveCount)
+                        {
+                            this.Avatar.NpcProgress.Crowns.Add(this.GlobalID);
+                        }
 
-                    if (this.Avatar.ItemAttachedTo.Values.Any(item => item.Id.Equals(this.Avatar.ItemLevels.Get(37000000).Id) && this.Avatar.Team.Any(hero => hero.ToObject<int>().Equals(item.Count))))
-                    {
-                        this.Avatar.Energy += 1;
+                        if (this.Avatar.ItemAttachedTo.Values.Any(item => item.Id.Equals(this.Avatar.ItemLevels.Get(37000000).Id) && this.Avatar.Team.Any(hero => hero.ToObject<int>().Equals(item.Count))))
+                        {
+                            this.Avatar.Energy += 1;
+                        }
                     }
 
                     this.Moves = 0;
@@ -138,29 +147,53 @@
 
         internal class LogicLevel
         {
-            [JsonProperty("battles")] internal JArray Battles;
-            [JsonProperty("ver")]     internal int Version;
+            internal LogicArrayList<Battle> Battles;
+            internal LogicJSONArray BattlesJson;
+            internal int Version;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="LogicLevel"/> class.
             /// </summary>
-            internal LogicLevel()
+            internal LogicLevel(LogicJSONObject json)
             {
-                this.Battles = new JArray();
+                this.Battles = new LogicArrayList<Battle>();
 
-                foreach (var battle in this.Battles)
+                this.BattlesJson = json.GetJsonArray("battles");
+                this.Version     = json.GetJsonNumber("ver").GetIntValue();
+
+                for (int i = 0; i < this.BattlesJson.Size; i++)
                 {
-                    this.Battles.Add(JsonConvert.DeserializeObject<Battle>(battle.ToString()));
+                    this.Battles.Add(new Battle(this.BattlesJson.GetJsonObject(i)));
                 }
             }
 
             internal class Battle
             {
-                [JsonProperty("enemies")]   internal JArray Enemies;
-                [JsonProperty("obstacles")] internal JArray Obstacles;
+                internal LogicJSONArray Enemies;
+                internal LogicJSONArray Obstacles;
 
-                [JsonProperty("bg_index")]  internal int BGIndex;
-                [JsonProperty("fg_index")]  internal int FGIndex;
+                internal int BGIndex;
+                internal int FGIndex;
+
+                /// <summary>
+                /// Gets this instance of <see cref="Battle"/> as a <see cref="LogicJSONObject"/>.
+                /// </summary>
+                internal LogicJSONObject JSON
+                {
+                    get;
+                }
+
+                /// <summary>
+                /// Initializes a new instance of the <see cref="Battle"/> class.
+                /// </summary>
+                internal Battle(LogicJSONObject battle)
+                {
+                    this.JSON      = battle;
+                    this.Enemies   = this.JSON.GetJsonArray("enemies");
+                    this.Obstacles = this.JSON.GetJsonArray("obstacles");
+                    this.BGIndex   = this.JSON.GetJsonNumber("bg_index").GetIntValue();
+                    this.FGIndex   = this.JSON.GetJsonNumber("fg_index").GetIntValue();
+                }
             }
         }
     }

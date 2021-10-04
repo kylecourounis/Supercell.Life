@@ -6,9 +6,8 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Newtonsoft.Json;
-
     using Supercell.Life.Titan.Files.CsvReader;
+    using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Utils;
 
     using Supercell.Life.Server.Files;
@@ -60,9 +59,10 @@
                         lastStoredName = name;
                     }
 
+                    LogicQuest.LogicLevel level = new LogicQuest.LogicLevel(LogicJSONParser.ParseObject(File.ReadAllText($"Gamefiles/{value}")));
+
                     if (LogicQuests.Quests.ContainsKey(questCsv.GetDataByName(lastStoredName).GlobalID))
                     {
-                        LogicQuest.LogicLevel level = JsonConvert.DeserializeObject<LogicQuest.LogicLevel>(File.ReadAllText($"Gamefiles/{value}"));
                         LogicQuests.Quests[questCsv.GetDataByName(lastStoredName).GlobalID].Levels.Add(level);
                     }
                     else
@@ -73,7 +73,7 @@
                             Data = (LogicQuestData)questCsv.GetDataByName(lastStoredName)
                         };
 
-                        quest.Levels.Add(JsonConvert.DeserializeObject<LogicQuest.LogicLevel>(File.ReadAllText($"Gamefiles/{value}")));
+                        quest.Levels.Add(level);
 
                         LogicQuests.Quests.Add(quest.GlobalID, quest);
                     }
@@ -92,7 +92,7 @@
         {
             foreach (var pair in LogicQuests.Quests)
             {
-                Debugger.Debug(pair.Key);
+                Debugger.Info($"GlobalID: {pair.Key}, Levels: {pair.Value.Levels.Count}");
 
                 foreach (var battle in pair.Value.Levels.SelectMany(level => level.Battles))
                 {

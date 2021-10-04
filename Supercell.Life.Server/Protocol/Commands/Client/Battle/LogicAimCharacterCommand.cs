@@ -1,7 +1,5 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
-    using System.Threading;
-
     using Supercell.Life.Titan.DataStream;
 
     using Supercell.Life.Server.Network;
