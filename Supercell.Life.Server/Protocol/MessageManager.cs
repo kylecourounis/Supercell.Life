@@ -77,8 +77,10 @@
         {
             if (MessageManager.Started)
             {
+                MessageManager.Started = false;
+
                 MessageManager.SendThread.Abort();
-                MessageManager.SendThread.Abort();
+                MessageManager.ReceiveThread.Abort();
             }
         }
 

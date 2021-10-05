@@ -9,11 +9,9 @@
 
     internal class AskForAvatarProfileMessage : PiranhaMessage
     {
-        private LogicLong VisitID;
+        private long VisitID;
 
-        private bool Unknown_1;
-
-        private LogicLong Unknown_2;
+        private long Unknown;
 
         /// <summary>
         /// The service node for this message.
@@ -38,24 +36,17 @@
         {
             this.VisitID = this.Stream.ReadLong();
 
-            if (this.Stream.BytesLeft > 0)
+            if (this.Stream.ReadBoolean())
             {
-                this.Unknown_1 = this.Stream.ReadBoolean();
-
-                if (this.Unknown_1)
-                {
-                    this.Unknown_2 = this.Stream.ReadLong();
-                }
+                this.Unknown = this.Stream.ReadLong();
             }
         }
 
         internal override void Handle()
         {
-            if (this.Unknown_2.Low == 0)
-            {
-                // new AvatarProfileMessage(this.Connection, this.Connection.Avatar.Identifier).Send();
-            }
-            else
+            this.ShowValues();
+
+            if (this.VisitID > 0)
             {
                 new AvatarProfileMessage(this.Connection, this.VisitID).Send();
             }

@@ -74,7 +74,7 @@
 
                             if (!this.Connection.Token.Aborting)
                             {
-                                this.Connection.Token.Buffer = this.Connection.Token.Buffer.Skip(length + 7).ToArray();
+                                this.Connection.Token.Packet.RemoveRange(0, length + 7);
 
                                 if (buffer.Length - 7 - length >= 7)
                                 {
@@ -87,7 +87,7 @@
                     {
                         Debugger.Error("The received buffer length is inferior the header length.");
 
-                        this.Connection.Token.Buffer = null;
+                        this.Connection.Token.Packet.Clear();
                     }
                 }
                 else

@@ -49,7 +49,7 @@
                     string[] command = Console.ReadLine()?.Split(' ');
 
                     Console.SetCursorPosition(0, cursorTop2 - 1);
-                    Console.WriteLine(new string(' ', Console.BufferWidth));
+                    Console.Write(new string(' ', Console.BufferWidth) + Environment.NewLine);
                     Console.SetCursorPosition(0, cursorTop2 - 2);
 
                     switch (command?[0].Replace("/", string.Empty))
@@ -58,13 +58,14 @@
                         {
                             if (Loader.Initialized)
                             {
-                                Console.WriteLine();
-                                Console.WriteLine($"#  {DateTime.Now.ToString("d")} ---- STATS ---- {DateTime.Now.ToString("t")} #");
-                                Console.WriteLine("# ----------------------------------- #");
-                                Console.WriteLine($"# Connected Sockets # {LogicStringUtil.IntToString(Connections.Count).Pad(15)} #");
-                                Console.WriteLine($"# In-Memory Avatars # {LogicStringUtil.IntToString(Avatars.Count).Pad(15)} #");
-                                Console.WriteLine($"#  In-Memory Clans  # {LogicStringUtil.IntToString(Alliances.Count).Pad(15)} #");
-                                Console.WriteLine("# ----------------------------------- #");
+                                Console.Write(Environment.NewLine);
+                                Console.Write($"#  {DateTime.Now.ToString("d")} ---- STATS ---- {DateTime.Now.ToString("t")} #" + Environment.NewLine);
+                                Console.Write("# ----------------------------------- #" + Environment.NewLine);
+                                Console.Write($"# Connected Sockets # {LogicStringUtil.IntToString(Connections.Count).Pad(15)} #" + Environment.NewLine);
+                                Console.Write($"# In-Memory Avatars # {LogicStringUtil.IntToString(Avatars.Count).Pad(15)} #" + Environment.NewLine);
+                                Console.Write($"#  In-Memory Clans  # {LogicStringUtil.IntToString(Alliances.Count).Pad(15)} #" + Environment.NewLine);
+                                Console.Write("# ----------------------------------- #" + Environment.NewLine);
+                                Console.Write(Environment.NewLine);
                             }
 
                             break;

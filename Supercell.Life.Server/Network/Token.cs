@@ -1,6 +1,7 @@
 ﻿namespace Supercell.Life.Server.Network
 {
     using System;
+    using System.Collections.Generic;
     using System.Net.Sockets;
 
     using Supercell.Life.Titan.Core;
@@ -11,6 +12,7 @@
         internal SocketAsyncEventArgs Args;
 
         internal byte[] Buffer;
+        internal List<byte> Packet;
 
         internal bool Aborting;
         internal bool Disposed;
@@ -29,6 +31,7 @@
             this.Args.UserToken   = this;
 
             this.Buffer           = new byte[Constants.BufferSize];
+            this.Packet           = new List<byte>(Constants.BufferSize);
         }
 
         /// <summary>
@@ -38,8 +41,9 @@
         {
             if (!this.Disposed)
             {
-                this.Buffer = new byte[this.Args.BytesTransferred];
-                Array.Copy(this.Args.Buffer, 0, this.Buffer, 0, this.Args.BytesTransferred);
+                byte[] data = new byte[this.Args.BytesTransferred];
+                Array.Copy(this.Args.Buffer, 0, data, 0, this.Args.BytesTransferred);
+                this.Packet.AddRange(data);
             }
 
             this.Tries += 1;
@@ -57,7 +61,7 @@
             else
             {
                 this.Tries = 0;
-                this.Connection.Messaging.OnReceive(this.Buffer);
+                this.Connection.Messaging.OnReceive(this.Packet.ToArray());
             }
         }
 
@@ -67,6 +71,7 @@
         public void Dispose()
         {
             this.Buffer     = null;
+            this.Packet     = null;
             this.Connection = null;
 
             this.Tries      = 0;

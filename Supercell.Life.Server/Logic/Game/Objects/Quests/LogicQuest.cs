@@ -4,6 +4,7 @@
 
     using Newtonsoft.Json;
 
+    using Supercell.Life.Server.Files;
     using Supercell.Life.Titan.Logic;
     using Supercell.Life.Titan.Logic.Enums;
     using Supercell.Life.Titan.Logic.Json;
@@ -11,6 +12,7 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Avatar;
+    using Supercell.Life.Server.Logic.Enums;
 
     [JsonObject(MemberSerialization.OptIn)]
     internal class LogicQuest
@@ -60,7 +62,9 @@
         /// </summary>
         internal void Start()
         {
-            if (this.Avatar.ExpLevel >= this.Data.RequiredXpLevel && this.Avatar.Energy >= this.Data.Energy)
+            var requiredQuest = ((LogicQuestData)CSV.Tables.Get(Gamefile.Quests).GetDataByName(this.Data.RequiredQuest)).GlobalID;
+
+            if (this.Avatar.NpcProgress.ContainsKey(requiredQuest) && this.Avatar.ExpLevel >= this.Data.RequiredXpLevel && this.Avatar.Energy >= this.Data.Energy)
             {
                 this.Avatar.OngoingQuestData = this;
                 this.Avatar.Connection.State = State.Battle;
@@ -108,7 +112,7 @@
                             this.Avatar.NpcProgress.AddItem(this.GlobalID, 1);
                             this.Level = this.Avatar.NpcProgress.GetCount(this.GlobalID);
                         }
-
+                        
                         if (this.Moves <= this.Data.GoalMoveCount)
                         {
                             this.Avatar.NpcProgress.Crowns.Add(this.GlobalID);
@@ -160,7 +164,7 @@
 
                 this.BattlesJson = json.GetJsonArray("battles");
                 this.Version     = json.GetJsonNumber("ver").GetIntValue();
-
+                
                 for (int i = 0; i < this.BattlesJson.Size; i++)
                 {
                     this.Battles.Add(new Battle(this.BattlesJson.GetJsonObject(i)));
