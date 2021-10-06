@@ -77,7 +77,7 @@
         {
             get
             {
-                return this.Avatars.All(avatar => avatar.Battle == null);
+                return this.Avatars.All(avatar => avatar.GameMode.Battle == null);
             }
         }
 

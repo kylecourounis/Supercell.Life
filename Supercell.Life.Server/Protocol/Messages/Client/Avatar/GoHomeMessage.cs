@@ -39,21 +39,21 @@
         {
             this.ShowValues();
 
-            if (this.Connection.Avatar.RecentlyResigned)
+            if (this.Connection.Avatar.GameMode.Resigned)
             {
-                this.Connection.Avatar.LoseBattle();
+                this.Connection.Avatar.GameMode.LoseBattle();
             }
             else
             {
-                if (!this.Connection.Avatar.Battle.Stopped)
+                if (!this.Connection.Avatar.GameMode.Battle.Stopped)
                 {
-                    this.Connection.Avatar.Battle.Stop();
+                    this.Connection.Avatar.GameMode.Battle.Stop();
                 }
 
                 this.GetBattleResult();
             }
              
-            this.Connection.Avatar.RecentlyResigned = false;
+            this.Connection.Avatar.GameMode.Resigned = false;
 
             new OwnAvatarDataMessage(this.Connection).Send();
         }

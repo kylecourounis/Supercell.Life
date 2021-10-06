@@ -33,7 +33,7 @@
 
             if (this.X != 0 && this.Y != 0)
             {
-                if (this.Connection.Avatar.Battle != null)
+                if (this.Connection.Avatar.GameMode.Battle != null)
                 {
                     new BattleEventMessage(this.Connection)
                     {
@@ -42,7 +42,7 @@
                         Y       = this.Y
                     }.Send();
 
-                    new BattleEventMessage(this.Connection.Avatar.Battle.Avatars.Find(avatar => avatar.Identifier != this.Connection.Avatar.Identifier).Connection)
+                    new BattleEventMessage(this.Connection.Avatar.GameMode.Battle.Avatars.Find(avatar => avatar.Identifier != this.Connection.Avatar.Identifier).Connection)
                     {
                         Unknown = this.Unknown,
                         X       = -this.X,

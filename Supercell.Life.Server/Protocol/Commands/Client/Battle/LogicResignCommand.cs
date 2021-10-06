@@ -36,9 +36,9 @@
 
         internal override void Execute()
         {
-            this.Connection.Avatar.RecentlyResigned = true;
+            this.Connection.Avatar.GameMode.Resigned = true;
 
-            var battle = this.Connection.Avatar.Battle;
+            var battle = this.Connection.Avatar.GameMode.Battle;
 
             if (battle != null)
             {

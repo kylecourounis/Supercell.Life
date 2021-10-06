@@ -8,49 +8,11 @@
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic.Avatar;
-    using Supercell.Life.Server.Logic.Avatar.Slots;
     using Supercell.Life.Server.Logic.Enums;
-    using Supercell.Life.Server.Logic.Game.Objects;
     using Supercell.Life.Server.Logic.Slots;
 
     internal static class AvatarExtensions
     {
-        /// <summary>
-        /// Called when the player wins a battle.
-        /// </summary>
-        internal static void WinBattle(this LogicClientAvatar avatar, int trophies = 30)
-        {
-            LogicLeagueData league = (LogicLeagueData)CSV.Tables.Get(Gamefile.Leagues).GetDataWithID(avatar.League);
-
-            avatar.AddGold(league.PVPGoldReward);
-            avatar.AddXP(league.PVPXpReward);
-            avatar.AddTrophies(trophies);
-
-            avatar.Variables.AddItem(LogicVariables.Wins.GlobalID, 1);
-            avatar.Variables.AddItem(LogicVariables.WinStreak.GlobalID, 1);
-            avatar.Variables.AddItem(LogicVariables.Matches.GlobalID, 1);
-
-            avatar.Variables.AddItem(LogicVariables.ChestProgress.GlobalID, 1);
-            avatar.Variables.AddItem(LogicVariables.ChestProgressUpdated.GlobalID, 1);
-
-            if (avatar.Variables.Get(LogicVariables.ChestProgress.GlobalID).Count == 5 && avatar.Variables.Get(LogicVariables.ChestProgressUpdated.GlobalID).Count == 5)
-            {
-                avatar.Variables.Set(LogicVariables.ChestProgress.GlobalID, 0);
-                avatar.Variables.Set(LogicVariables.ChestProgressUpdated.GlobalID, 0);
-
-                LogicChest chest = new LogicChest(avatar);
-                chest.CreateMegaChest();
-            }
-        }
-
-        /// <summary>
-        /// Called when the player loses a battle.
-        /// </summary>
-        internal static void LoseBattle(this LogicClientAvatar avatar)
-        {
-            avatar.LoseTrophies(30);
-        }
-
         /// <summary>
         /// Adds the trophies and updates the player's league accordingly.
         /// </summary>

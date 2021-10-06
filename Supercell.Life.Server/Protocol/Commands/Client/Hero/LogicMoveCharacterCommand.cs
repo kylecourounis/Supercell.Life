@@ -62,7 +62,7 @@
                 }
             }
 
-            var battle = this.Connection.Avatar.Battle;
+            var battle = this.Connection.Avatar.GameMode.Battle;
 
             if (battle != null)
             {

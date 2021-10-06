@@ -98,7 +98,7 @@
                 }
                 case "PvP":
                 {
-                    this.Avatar.WinBattle(59);
+                    this.Avatar.GameMode.WinBattle(59);
                     break;
                 }
                 default:

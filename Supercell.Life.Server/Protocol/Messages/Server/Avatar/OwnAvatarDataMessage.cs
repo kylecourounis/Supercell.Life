@@ -44,9 +44,9 @@
 
         internal override void Handle()
         {
-            this.Connection.Avatar.AdjustSubTick();
-            this.Connection.Avatar.FastForward(this.TimeSinceLastSave);
-            this.Connection.Avatar.Tick();
+            this.Connection.Avatar.GameMode.AdjustSubTick();
+            this.Connection.Avatar.GameMode.FastForward(this.TimeSinceLastSave);
+            this.Connection.Avatar.GameMode.Tick();
         }
     }
 }
