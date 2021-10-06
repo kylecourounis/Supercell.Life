@@ -89,7 +89,7 @@
                             if (this.Connection.Avatar.Time.ClientSubTick <= command.ExecuteSubTick)
                             {
                                 this.Connection.Avatar.Time.ClientSubTick = command.ExecuteSubTick;
-                                this.Connection.Avatar.GameMode.Tick();
+                                this.Connection.Avatar.Tick();
                                 
                                 command.Execute();
                             }
@@ -103,7 +103,7 @@
             }
 
             this.Connection.Avatar.Time.ClientSubTick = this.SubTick;
-            this.Connection.Avatar.GameMode.Tick();
+            this.Connection.Avatar.Tick();
             
             Debugger.Debug($"Client Time :  MS={this.Connection.Avatar.Time.TotalMS}   SECS={this.Connection.Avatar.Time.TotalSecs}.");
             Debugger.Debug($"Checksum    :  CLIENT={this.Checksum - this.Connection.Avatar.Time.ClientSubTick}   SERVER={this.Connection.Avatar.Checksum}.");

@@ -34,21 +34,21 @@
             {
                 case 15:
                 {
-                    this.Connection.Avatar.GameMode.FastForward(60);
+                    this.Connection.Avatar.FastForward(60);
                     Debugger.Info("Fast forward 1 minute");
 
                     break;
                 }
                 case 16:
                 {
-                    this.Connection.Avatar.GameMode.FastForward(3600);
+                    this.Connection.Avatar.FastForward(3600);
                     Debugger.Info("Fast forward 1 hour");
 
                     break;
                 }
                 case 17:
                 {
-                    this.Connection.Avatar.GameMode.FastForward(86400);
+                    this.Connection.Avatar.FastForward(86400);
                     Debugger.Info("Fast forward 24 hours");
 
                     break;

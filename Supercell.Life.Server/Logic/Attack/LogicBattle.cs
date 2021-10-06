@@ -4,24 +4,20 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading;
     using System.Timers;
 
     using Supercell.Life.Titan.DataStream;
     using Supercell.Life.Titan.Logic.Math;
 
     using Supercell.Life.Server.Core;
-    using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Avatar;
-    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Server.Logic.Slots;
     using Supercell.Life.Server.Protocol.Commands;
     using Supercell.Life.Server.Protocol.Messages;
     using Supercell.Life.Server.Protocol.Messages.Server;
-    using Supercell.Life.Titan.Logic;
 
     using Timer = System.Timers.Timer;
 
@@ -77,7 +73,7 @@
         {
             get
             {
-                return this.Avatars.All(avatar => avatar.GameMode.Battle == null);
+                return this.Avatars.All(avatar => avatar.Battle == null);
             }
         }
 
@@ -180,7 +176,6 @@
             }
         }
 
-
         /// <summary>
         /// Gets the enemy's command queue.
         /// </summary>
@@ -233,11 +228,17 @@
             }
         }
 
+        /// <summary>
+        /// Sets the turn.
+        /// </summary>
         internal void SetTurn(object sender, ElapsedEventArgs args)
         { 
             this.Reset();
         }
 
+        /// <summary>
+        /// Resets this the turn timer.
+        /// </summary>
         internal void Reset()
         {
             if ((int)this.TurnTimer.Interval == Globals.PVPFirstTurnTimeSeconds * 1000)

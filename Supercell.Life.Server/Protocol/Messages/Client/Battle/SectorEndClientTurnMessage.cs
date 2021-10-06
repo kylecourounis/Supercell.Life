@@ -76,7 +76,7 @@
                             if (this.Connection.Avatar.Time.ClientSubTick <= command.ExecuteSubTick)
                             {
                                 this.Connection.Avatar.Time.ClientSubTick = command.ExecuteSubTick;
-                                this.Connection.Avatar.GameMode.Tick();
+                                this.Connection.Avatar.Tick();
 
                                 command.Execute();
                             }

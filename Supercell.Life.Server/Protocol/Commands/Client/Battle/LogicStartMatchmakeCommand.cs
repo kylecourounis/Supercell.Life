@@ -43,8 +43,8 @@
 
                 Battles.Add(battle);
 
-                this.Connection.Avatar.GameMode.Battle = battle;
-                opponent.GameMode.Battle               = battle;
+                this.Connection.Avatar.Battle = battle;
+                opponent.Battle               = battle;
 
                 battle.Start();
             }

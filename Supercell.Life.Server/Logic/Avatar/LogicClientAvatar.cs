@@ -28,8 +28,6 @@ namespace Supercell.Life.Server.Logic.Avatar
     {
         internal Connection Connection;
 
-        internal LogicGameMode GameMode;
-        
         [JsonProperty] internal int HighID;
         [JsonProperty] internal int LowID;
 
@@ -105,6 +103,10 @@ namespace Supercell.Life.Server.Logic.Avatar
         internal LogicItems Items;
 
         internal readonly LogicTime Time;
+
+        internal LogicBattle Battle;
+
+        internal bool Resigned;
 
         /// <summary>
         /// Gets the player identifier.
@@ -241,8 +243,6 @@ namespace Supercell.Life.Server.Logic.Avatar
         /// </summary>
         internal LogicClientAvatar()
         {
-            this.GameMode             = new LogicGameMode(this.Connection);
-
             this.Time                 = new LogicTime();
             this.Team                 = new JArray(Globals.StartingCharacter.GlobalID, 0, 0);
 
@@ -473,7 +473,75 @@ namespace Supercell.Life.Server.Logic.Avatar
 
             stream.WriteInt(this.League);
         }
-        
+
+        /// <summary>
+        /// Adjusts the sub tick.
+        /// </summary>
+        internal void AdjustSubTick()
+        {
+            this.EnergyTimer.AdjustSubTick();
+            this.HeroUpgrade.AdjustSubTick();
+            this.Sailing.AdjustSubTick();
+            this.ShipUpgrade.AdjustSubTick();
+            this.Booster.AdjustSubTick();
+            this.SpellTimer.AdjustSubTick();
+            this.ItemUnavailableTimer.AdjustSubTick();
+
+            if (this.Alliance != null)
+            {
+                this.Alliance.TeamGoalTimer.AdjustSubTick();
+
+                if (!this.Alliance.TeamGoalTimer.Started)
+                {
+                    this.Alliance.TeamGoalTimer.Start();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fast forwards this instance.
+        /// </summary>
+        internal void FastForward(int seconds)
+        {
+            this.EnergyTimer.FastForward(seconds);
+            this.HeroUpgrade.FastForward(seconds);
+            this.Sailing.FastForward(seconds);
+            this.ShipUpgrade.FastForward(seconds);
+            this.Booster.FastForward(seconds);
+            this.SpellTimer.FastForward(seconds);
+            this.ItemUnavailableTimer.FastForward(seconds);
+            this.Alliance?.TeamGoalTimer.FastForward(seconds);
+
+            this.AdjustSubTick();
+            this.Save();
+        }
+
+        /// <summary>
+        /// Ticks this instance.
+        /// </summary>
+        internal void Tick()
+        {
+            this.EnergyTimer.Tick();
+            this.HeroUpgrade.Tick();
+            this.Sailing.Tick();
+            this.ShipUpgrade.Tick();
+            this.Booster.Tick();
+            this.SpellTimer.Tick();
+            this.ItemUnavailableTimer.Tick();
+            this.Alliance?.TeamGoalTimer.Tick();
+
+            Debugger.Debug($"Energy Timer           : Started: {this.EnergyTimer.Timer.Started}  : RemainingSecs: {this.EnergyTimer.Timer.RemainingSecs}.");
+            Debugger.Debug($"Hero Upgrade Timer     : Started: {this.HeroUpgrade.Timer.Started}  : RemainingSecs: {this.HeroUpgrade.Timer.RemainingSecs}.");
+            Debugger.Debug($"Sailing Timer          : Started: {this.Sailing.Timer.Started}  : RemainingSecs: {this.Sailing.Timer.RemainingSecs}.");
+            Debugger.Debug($"Ship Upgrade Timer     : Started: {this.ShipUpgrade.Timer.Started}  : RemainingSecs: {this.ShipUpgrade.Timer.RemainingSecs}.");
+            Debugger.Debug($"XP Booster Timer       : Started: {this.Booster.Timer.Started}  : RemainingSecs: {this.Booster.Timer.RemainingSecs}.");
+            Debugger.Debug($"Spell Timer            : Started: {this.SpellTimer.Started}  : RemainingSecs: {this.SpellTimer.Timer.RemainingSecs}.");
+            Debugger.Debug($"Item Unavailable Timer : Started: {this.ItemUnavailableTimer.Started}  : RemainingSecs: {this.ItemUnavailableTimer.Timer.RemainingSecs}.");
+            Debugger.Debug($"Team Goal Timer        : Started: {this.Alliance?.TeamGoalTimer.Started}  : RemainingSecs: {this.Alliance?.TeamGoalTimer.Timer.RemainingSecs}.");
+
+            this.Update = DateTime.UtcNow;
+        }
+
         /// <summary>
         /// Returns a <see cref="string"/> that represents this instance.
         /// </summary>
