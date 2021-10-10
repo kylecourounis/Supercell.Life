@@ -1,5 +1,6 @@
 ﻿namespace Supercell.Life.Server.Logic.Game.Objects.Quests
 {
+    using System;
     using System.Linq;
 
     using Newtonsoft.Json;
@@ -23,6 +24,12 @@
         internal LogicArrayList<LogicLevel> Levels;
 
         internal int Moves;
+
+        internal int GoldReward;
+        internal int XPReward;
+
+        internal int ReplayGoldReward;
+        internal int ReplayXPReward;
 
         [JsonProperty] internal string Name;
         [JsonProperty] internal int Level;
@@ -82,9 +89,6 @@
         /// </summary>
         internal void Save()
         {
-            this.Avatar.AddGold(this.Data.GoldRewardOverride);
-            this.Avatar.AddXP(this.Data.XpRewardOverride);
-
             switch (this.Data.QuestType)
             {
                 case "Unlock":
@@ -103,7 +107,15 @@
                 }
                 default:
                 {
-                    this.Avatar.QuestMoves.Set(this.GlobalID, this.Moves);
+                    if (!this.Avatar.NpcProgress.Crowns.Contains(this.GlobalID))
+                    {
+                        this.Avatar.QuestMoves.Set(this.GlobalID, this.Moves);
+                    }
+                    else
+                    {
+                        this.Avatar.AddGold(this.ReplayGoldReward);
+                        this.Avatar.AddXP(this.ReplayXPReward);
+                    }
 
                     if (this.Moves > 0)
                     {
@@ -151,33 +163,45 @@
 
         internal class LogicLevel
         {
+            private readonly LogicJSONArray BattlesJson;
+
+            internal LogicQuest Quest;
+
             internal LogicArrayList<Battle> Battles;
-            internal LogicJSONArray BattlesJson;
             internal int Version;
+
+            internal int CurrentBattle;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="LogicLevel"/> class.
             /// </summary>
-            internal LogicLevel(LogicJSONObject json)
+            internal LogicLevel(LogicQuest quest, LogicJSONObject json)
             {
+                this.Quest   = quest;
                 this.Battles = new LogicArrayList<Battle>();
 
                 this.BattlesJson = json.GetJsonArray("battles");
                 this.Version     = json.GetJsonNumber("ver").GetIntValue();
-                
+
                 for (int i = 0; i < this.BattlesJson.Size; i++)
                 {
-                    this.Battles.Add(new Battle(this.BattlesJson.GetJsonObject(i)));
+                    this.Battles.Add(new Battle(this, this.BattlesJson.GetJsonObject(i)));
                 }
             }
 
             internal class Battle
             {
+                internal LogicLevel Level;
+
                 internal LogicJSONArray Enemies;
                 internal LogicJSONArray Obstacles;
 
+                private readonly LogicJSONArray EnemiesCopy;
+
                 internal int BGIndex;
                 internal int FGIndex;
+
+                internal int EnemiesKilled;
 
                 /// <summary>
                 /// Gets this instance of <see cref="Battle"/> as a <see cref="LogicJSONObject"/>.
@@ -188,15 +212,68 @@
                 }
 
                 /// <summary>
+                /// Gets a value indicating whether this <see cref="Battle"/> is current battle.
+                /// </summary>
+                internal bool IsCurrentBattle
+                {
+                    get
+                    {
+                        return this.Level.CurrentBattle == this.Level.Battles.IndexOf(this);
+                    }
+                }
+
+                /// <summary>
+                /// Gets a value indicating whether this <see cref="Battle"/> is complete.
+                /// </summary>
+                internal bool IsCompleted
+                {
+                    get
+                    {
+                        return this.EnemiesCopy.Size == 0;
+                    }
+                }
+
+                /// <summary>
                 /// Initializes a new instance of the <see cref="Battle"/> class.
                 /// </summary>
-                internal Battle(LogicJSONObject battle)
+                internal Battle(LogicLevel level, LogicJSONObject battle)
                 {
+                    this.Level     = level;
                     this.JSON      = battle;
+
                     this.Enemies   = this.JSON.GetJsonArray("enemies");
                     this.Obstacles = this.JSON.GetJsonArray("obstacles");
                     this.BGIndex   = this.JSON.GetJsonNumber("bg_index").GetIntValue();
                     this.FGIndex   = this.JSON.GetJsonNumber("fg_index").GetIntValue();
+
+                    this.EnemiesCopy = this.JSON.GetJsonArray("enemies");
+                }
+
+                /// <summary>
+                /// Checks whether the character at the specified X and Y coordinates collided with an enemy in the battle.
+                /// </summary>
+                internal void CheckCollision(int characterX, int characterY)
+                {
+                    for (int i = 0; i < this.Enemies.Size; i++)
+                    {
+                        int enemyX = 0;
+                        int enemyY = 0;
+
+                        Debugger.Debug($"{characterX} ?= {enemyX} && {characterY} ?= {enemyY}");
+
+                        if (characterX == enemyX && characterY == enemyY)
+                        {
+                            Debugger.Debug(this.EnemiesCopy.GetJsonObject(i).GetJsonNumber("data"));
+                            
+                            this.EnemiesCopy.RemoveAt(i);
+                            this.EnemiesKilled++;
+                        }
+                    }
+
+                    if (this.IsCompleted)
+                    {
+                        this.Level.CurrentBattle++;
+                    }
                 }
             }
         }

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Supercell.Life.Server.Logic.Avatar
 {
     using System;
@@ -99,6 +101,8 @@ namespace Supercell.Life.Server.Logic.Avatar
         [JsonProperty] internal LogicShipUpgradeTimer ShipUpgrade;
         [JsonProperty] internal LogicItemUnavailableTimer ItemUnavailableTimer;
         [JsonProperty] internal LogicSpellTimer SpellTimer;
+
+        internal Dictionary<int, LogicQuest> Quests;
 
         internal LogicItems Items;
 
@@ -288,7 +292,9 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.Diamonds             = Globals.StartingDiamonds;
             this.FreeDiamonds         = Globals.StartingDiamonds;
 
-            this.OngoingQuestData        = LogicQuests.Quests[Globals.StartingQuest.GlobalID];
+            this.Quests               = new Dictionary<int, LogicQuest>(LogicQuests.Quests);
+
+            this.OngoingQuestData        = this.Quests[Globals.StartingQuest.GlobalID];
             this.OngoingQuestData.Avatar = this;
         }
 

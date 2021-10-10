@@ -133,6 +133,14 @@
         }
 
         /// <summary>
+        /// Removes a <see cref="LogicJSONNode"/> from the array at the specified index.
+        /// </summary>
+        public void RemoveAt(int idx)
+        {
+            this.Items.RemoveAt(idx);
+        }
+
+        /// <summary>
         /// Converts this instance to JSON.
         /// </summary>
         public override void WriteToString(StringBuilder builder)

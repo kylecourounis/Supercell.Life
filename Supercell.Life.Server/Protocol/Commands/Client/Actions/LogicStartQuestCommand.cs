@@ -28,7 +28,7 @@
 
         internal override void Execute()
         {
-            LogicQuest quest = LogicQuests.Quests[this.QuestData.GlobalID];
+            LogicQuest quest = this.Connection.Avatar.Quests[this.QuestData.GlobalID];
 
             if (this.Connection.Avatar.OngoingQuestData.Name != quest.Name)
             {

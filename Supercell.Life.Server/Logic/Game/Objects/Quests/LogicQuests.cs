@@ -41,47 +41,70 @@
             LogicDataTable questCsv = CSV.Tables.Get(Gamefile.Quests);
             Table questCsvTable     = questCsv.Table;
             
-            string lastStoredName   = "";
-
             Task.Run(() =>
             {
-                for (int i = 0; i < questCsvTable.GetColumnRowCount(); i++)
+                var quests = questCsvTable.Rows.Where(row => !row.Name.IsNullOrEmptyOrWhitespace()).ToList();
+
+                for (int i = 0; i < quests.Count; i++)
                 {
-                    string name = questCsvTable.GetValue("Name", i);
-                    string value = questCsvTable.GetValueAt(questCsvTable.GetColumnIndexByName("LevelFile"), i);
+                    Row currentQuest = questCsvTable.GetRowAt(i);
+                    Row nextQuest = null;
 
-                    if (name.IsNullOrEmptyOrWhitespace())
-                    {
-                        name = lastStoredName;
+                    if (i < quests.Count - 1)
+                    { 
+                        nextQuest = questCsvTable.GetRowAt(quests.FindIndex(row => row.Name.Equals(quests[i + 1].Name)));
                     }
-                    else
+                    
+                    string name = currentQuest.Name;
+
+                    int startIdx = 1;
+
+                    if (nextQuest != null)
                     {
-                        lastStoredName = name;
+                        startIdx = (nextQuest.Offset - currentQuest.Offset);
                     }
 
-                    LogicQuest.LogicLevel level = new LogicQuest.LogicLevel(LogicJSONParser.ParseObject(File.ReadAllText($"Gamefiles/{value}")));
+                    for (int j = 0; j < startIdx; j++)
+                    {
+                        string value = questCsvTable.GetValue("LevelFile", currentQuest.Offset + j);
 
-                    if (LogicQuests.Quests.ContainsKey(questCsv.GetDataByName(lastStoredName).GlobalID))
-                    {
-                        LogicQuests.Quests[questCsv.GetDataByName(lastStoredName).GlobalID].Levels.Add(level);
-                    }
-                    else
-                    {
-                        LogicQuest quest = new LogicQuest
+                        LogicQuest.LogicLevel level = new LogicQuest.LogicLevel(null, LogicJSONParser.ParseObject(File.ReadAllText($"Gamefiles/{value}")));
+
+                        if (LogicQuests.Quests.ContainsKey(questCsv.GetDataByName(name).GlobalID))
                         {
-                            Name = lastStoredName,
-                            Data = (LogicQuestData)questCsv.GetDataByName(lastStoredName)
-                        };
+                            LogicQuest quest = LogicQuests.Quests[questCsv.GetDataByName(name).GlobalID];
+                            level.Quest = quest;
+                            
+                            LogicQuests.Quests[questCsv.GetDataByName(name).GlobalID].Levels.Add(level);
+                        }
+                        else
+                        {
+                            LogicQuest quest = new LogicQuest
+                            {
+                                Name = name,
+                                Data = (LogicQuestData)questCsv.GetDataByName(name)
+                            };
 
-                        quest.Levels.Add(level);
+                            var replayRewards = LogicJSONParser.ParseObject(File.ReadAllText("Gamefiles/replay-reward-values.json"));
+                            var questData     = replayRewards?.GetJsonObject(name);
 
-                        LogicQuests.Quests.Add(quest.GlobalID, quest);
+                            if (questData != null)
+                            {
+                                quest.ReplayGoldReward = questData.GetJsonNumber("Gold").GetIntValue();
+                                quest.ReplayXPReward   = questData.GetJsonNumber("XP").GetIntValue();
+                            }
+
+                            level.Quest = quest;
+                            quest.Levels.Add(level);
+
+                            LogicQuests.Quests.Add(quest.GlobalID, quest);
+                        }
                     }
                 }
 
                 Console.WriteLine($"Loaded {LogicQuests.Quests.Count} Quests." + Environment.NewLine);
             }).Wait();
-
+            
             LogicQuests.Initialized = true;
         }
 
@@ -92,11 +115,11 @@
         {
             foreach (var pair in LogicQuests.Quests)
             {
-                Debugger.Info($"GlobalID: {pair.Key}, Levels: {pair.Value.Levels.Count}");
+                Debugger.Info($"GlobalID: {pair.Key}, Levels: {pair.Value.Levels.Count}, Gold Reward: {pair.Value.GoldReward}, XP Reward: {pair.Value.XPReward}");
 
-                foreach (var battle in pair.Value.Levels.SelectMany(level => level.Battles))
+                foreach (var battle in pair.Value.Levels.Select(level => level.Battles))
                 {
-                    Debugger.Debug($"   -> {battle}");
+                    Debugger.Debug($"   -> {battle[0].JSON}");
                 }
             }
         }

@@ -59,6 +59,9 @@
                 if (this.Connection.Avatar.OngoingQuestData.Data.QuestType != "PvP")
                 {
                     this.Connection.Avatar.OngoingQuestData.Moves += 1;
+
+                    var ongoingLevel = this.Connection.Avatar.OngoingQuestData.Levels[this.Connection.Avatar.OngoingQuestData.Level];
+                    ongoingLevel.Battles[this.Connection.Avatar.Quests[this.Connection.Avatar.OngoingQuestData.GlobalID].Levels[0].CurrentBattle].CheckCollision(this.DirectionX, this.DirectionY);
                 }
             }
 

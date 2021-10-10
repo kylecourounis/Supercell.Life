@@ -1,0 +1,158 @@
+{
+  "Forest": {
+    "Gold": 44,
+    "XP": 16
+  },
+  "Forest2": {
+    "Gold": 44,
+    "XP": 16
+  },
+  "Forest3": {
+    "Gold": 40,
+    "XP": 16
+  },
+  "Forest4": {
+    "Gold": 41,
+    "XP": 24
+  },
+  "Forest5": {
+    "Gold": 36,
+    "XP": 20
+  },
+  "Desert": {
+    "Gold": 79,
+    "XP": 40
+  },
+  "Desert2": {
+    "Gold": 86,
+    "XP": 43
+  },
+  "Desert3": {
+    "Gold": 100,
+    "XP": 50
+  },
+  "Desert4": {
+    "Gold": 100,
+    "XP": 50
+  },
+  "Spooky2": {
+    "Gold": 153,
+    "XP": 76
+  },
+  "Spooky3": {
+    "Gold": 153,
+    "XP": 76
+  },
+  "Spooky4": {
+    "Gold": 163,
+    "XP": 83
+  },
+  "Spooky5": {
+    "Gold": 172,
+    "XP": 86
+  },
+  "Spooky6": {
+    "Gold": 172,
+    "XP": 86
+  },
+  "Spooky7": {
+    "Gold": 182,
+    "XP": 92
+  },
+  "Forest2_1": {
+    "Gold": 192,
+    "XP": 96
+  },
+  "Forest2_2": {
+    "Gold": 201,
+    "XP": 102
+  },
+  "Forest2_3": {
+    "Gold": 201,
+    "XP": 102
+  },
+  "Forest2_4": {
+    "Gold": 211,
+    "XP": 105
+  },
+  "Forest2_5": {
+    "Gold": 211,
+    "XP": 105
+  },
+  "Forest2_6": {
+    "Gold": 220,
+    "XP": 112
+  },
+  "Forest2_7": {
+    "Gold": 220,
+    "XP": 112
+  },
+  "Forest2_8": {
+    "Gold": 230,
+    "XP": 115
+  },
+  "Desert2_1": {
+    "Gold": 230,
+    "XP": 115
+  },
+  "Desert2_2": {
+    "Gold": 240,
+    "XP": 121
+  },
+  "Desert2_3": {
+    "Gold": 240,
+    "XP": 121
+  },
+  "Desert2_4": {
+    "Gold": 249,
+    "XP": 124
+  },
+  "Desert2_5": {
+    "Gold": 249,
+    "XP": 124
+  },
+  "Desert2_6": {
+    "Gold": 259,
+    "XP": 131
+  },
+  "Desert2_7": {
+    "Gold": 259,
+    "XP": 131
+  },
+  "Desert2_8": {
+    "Gold": 268,
+    "XP": 134
+  },
+  "Spooky2_1": {
+    "Gold": 268,
+    "XP": 134
+  },
+  "Spooky2_2": {
+    "Gold": 278,
+    "XP": 140
+  },
+  "Spooky2_3": {
+    "Gold": 278,
+    "XP": 140
+  },
+  "Spooky2_4": {
+    "Gold": 288,
+    "XP": 144
+  },
+  "Spooky2_5": {
+    "Gold": 297,
+    "XP": 150
+  },
+  "Spooky2_6": {
+    "Gold": 307,
+    "XP": 153
+  },
+  "Spooky2_7": {
+    "Gold": 313,
+    "XP": 156
+  },
+  "Spooky2_8": {
+    "Gold": 316,
+    "XP": 160
+  }
+}

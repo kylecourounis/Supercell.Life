@@ -984,6 +984,9 @@
     <None Update="Gamefiles\level\spooky_boss.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Gamefiles\replay-reward-values.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
