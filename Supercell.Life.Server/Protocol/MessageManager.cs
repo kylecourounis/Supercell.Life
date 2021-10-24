@@ -79,8 +79,8 @@
             {
                 MessageManager.Started = false;
 
-                MessageManager.SendThread.Abort();
-                MessageManager.ReceiveThread.Abort();
+                MessageManager.SendResetEvent.Close();
+                MessageManager.ReceiveResetEvent.Close();
             }
         }
 

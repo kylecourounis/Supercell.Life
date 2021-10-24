@@ -34,9 +34,9 @@
         /// <summary>
         /// Loads the data.
         /// </summary>
-        internal static void Load(LogicData data, Type type, Row row)
+        internal void CreateReferences(LogicData data, Row row)
         {
-            foreach (PropertyInfo property in type.GetProperties())
+            foreach (PropertyInfo property in data.GetType().GetProperties())
             {
                 if (property.PropertyType.IsGenericType)
                 {

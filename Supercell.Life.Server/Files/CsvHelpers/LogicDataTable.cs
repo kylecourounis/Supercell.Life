@@ -4,6 +4,7 @@ namespace Supercell.Life.Server.Files.CsvHelpers
     using Supercell.Life.Titan.Logic;
 
     using Supercell.Life.Server.Files.CsvLogic;
+    using Supercell.Life.Server.Logic.Enums;
 
     internal class LogicDataTable
     {
@@ -15,15 +16,7 @@ namespace Supercell.Life.Server.Files.CsvHelpers
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicDataTable"/> class.
         /// </summary>
-        internal LogicDataTable()
-        {
-            this.Datas = new LogicArrayList<LogicData>();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LogicDataTable"/> class.
-        /// </summary>
-        public LogicDataTable(Table table, int index)
+        internal LogicDataTable(Table table, int index)
         {
             this.Table = table;
             this.Index = index;
@@ -46,135 +39,153 @@ namespace Supercell.Life.Server.Files.CsvHelpers
         {
             LogicData data;
 
-            switch (this.Index)
+            switch ((Gamefile)this.Index)
             {
-                case 1:
+                case Gamefile.Locales:
                 {
                     data = new LogicLocaleData(row, this);
                     break;
                 }
 
-                case 2:
+                case Gamefile.Resources:
                 {
                     data = new LogicResourceData(row, this);
                     break;
                 }
 
-                case 3:
+                case Gamefile.Effects:
                 {
                     data = new LogicEffectData(row, this);
                     break;
                 }
 
-                case 4:
+                case Gamefile.ParticleEmitters:
                 {
                     data = new LogicParticleEmitterData(row, this);
                     break;
                 }
 
-                case 5:
+                case Gamefile.Globals:
                 {
                     data = new LogicGlobalData(row, this);
                     break;
                 }
 
-                case 6:
+                case Gamefile.Quests:
                 {
                     data = new LogicQuestData(row, this);
                     break;
                 }
 
-                case 8:
+                case Gamefile.Achievements:
                 {
                     data = new LogicAchievementData(row, this);
                     break;
                 }
 
-                case 10:
+                case Gamefile.Worlds:
                 {
                     data = new LogicWorldData(row, this);
                     break;
                 }
 
-                case 11:
+                case Gamefile.Heroes:
                 {
                     data = new LogicHeroData(row, this);
                     break;
                 }
 
-                case 12:
+                case Gamefile.EnemyCharacters:
                 {
-                    data = new LogicExperienceLevelData(row, this);
+                    data = new LogicEnemyCharacterData(row, this);
                     break;
                 }
 
-                case 13:
-                {
-                    data = new LogicLeagueData(row, this);
-                    break;
-                }
-
-                case 14:
+                case Gamefile.Obstacles:
                 {
                     data = new LogicObstacleData(row, this);
                     break;
                 }
 
-                case 21:
+                case Gamefile.Collectables:
+                {
+                    data = new LogicCollectableData(row, this);
+                    break;
+                }
+
+                case Gamefile.ExperienceLevels:
+                {
+                    data = new LogicExperienceLevelData(row, this);
+                    break;
+                }
+
+                case Gamefile.Leagues:
+                {
+                    data = new LogicLeagueData(row, this);
+                    break;
+                }
+
+                case Gamefile.AllianceBadges:
                 {
                     data = new LogicAllianceBadgeData(row, this);
                     break;
                 }
 
-                case 24:
+                case Gamefile.Dialog:
+                {
+                    data = new LogicDialogData(row, this);
+                    break;
+                }
+
+                case Gamefile.Taunts:
                 {
                     data = new LogicTauntData(row, this);
                     break;
                 }
 
-                case 25:
+                case Gamefile.Decos:
                 {
                     data = new LogicDecoData(row, this);
                     break;
                 }
 
-                case 26:
+                case Gamefile.Variables:
                 {
                     data = new LogicVariableData(row, this);
                     break;
                 }
                
-                case 28:
+                case Gamefile.Boosters:
                 {
                     data = new LogicBoosterData(row, this);
                     break;
                 }
 
-                case 32:
+                case Gamefile.EnergyPackages:
                 {
                     data = new LogicEnergyPackageData(row, this);
                     break;
                 }
 
-                case 33:
+                case Gamefile.TeamGoals:
                 {
                     data = new LogicTeamGoalData(row, this);
                     break;
                 }
 
-                case 35:
+                case Gamefile.Spells:
                 {
                     data = new LogicSpellData(row, this);
                     break;
                 }
 
-                case 36:
+                case Gamefile.Events:
                 {
                     data = new LogicEventsData(row, this);
                     break;
                 }
 
-                case 37:
+                case Gamefile.Items:
                 {
                     data = new LogicItemsData(row, this);
                     break;

@@ -45,10 +45,13 @@ namespace Supercell.Life.Server.Files
             CSV.Gamefiles.Add(Gamefile.Achievements, "csv_logic/achievements.csv");
             CSV.Gamefiles.Add(Gamefile.Worlds, "csv_logic/worlds.csv");
             CSV.Gamefiles.Add(Gamefile.Heroes, "csv_logic/heroes.csv");
+            CSV.Gamefiles.Add(Gamefile.EnemyCharacters, "csv_logic/enemy_characters.csv");
+            CSV.Gamefiles.Add(Gamefile.Obstacles, "csv_logic/obstacles.csv");
+            CSV.Gamefiles.Add(Gamefile.Collectables, "csv_logic/collectables.csv");
             CSV.Gamefiles.Add(Gamefile.ExperienceLevels, "csv_logic/experience_levels.csv");
             CSV.Gamefiles.Add(Gamefile.Leagues, "csv_logic/leagues.csv");
-            CSV.Gamefiles.Add(Gamefile.Obstacles, "csv_logic/obstacles.csv");
             CSV.Gamefiles.Add(Gamefile.AllianceBadges, "csv_logic/alliance_badges.csv");
+            CSV.Gamefiles.Add(Gamefile.Dialog, "csv_logic/dialog.csv");
             CSV.Gamefiles.Add(Gamefile.Taunts, "csv_logic/taunts.csv");
             CSV.Gamefiles.Add(Gamefile.Decos, "csv_logic/decos.csv");
             CSV.Gamefiles.Add(Gamefile.Variables, "csv_logic/variables.csv");

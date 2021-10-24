@@ -12,7 +12,7 @@ namespace Supercell.Life.Server.Files.CsvLogic
         /// </summary>
         public LogicEnergyPackageData(Row row, LogicDataTable dataTable) : base(row, dataTable)
         {
-            LogicData.Load(this, this.GetType(), row);
+            this.CreateReferences(this, row);
         }
 
         public string TID
