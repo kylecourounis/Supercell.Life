@@ -1,8 +1,7 @@
-using System.Collections.Generic;
-
 namespace Supercell.Life.Server.Logic.Avatar
 {
     using System;
+    using System.Collections.Generic;
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;

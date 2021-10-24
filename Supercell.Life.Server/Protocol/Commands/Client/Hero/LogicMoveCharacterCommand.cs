@@ -1,7 +1,8 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
     using Supercell.Life.Titan.DataStream;
-    
+    using Supercell.Life.Titan.Logic.Math;
+
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
 
@@ -58,6 +59,25 @@
             {
                 if (this.Connection.Avatar.OngoingQuestData.Data.QuestType != "PvP")
                 {
+                    if (this.DirectionX + 256 >= 512)
+                    {
+                        Debugger.Error("Invalid Dx");
+                        return;
+                    }
+
+                    if (this.DirectionY + 256 >= 512)
+                    {
+                        Debugger.Error("Invalid Dy");
+                        return;
+                    }
+
+                    var dX = LogicMath.Abs(this.DirectionX) + 256;
+
+                    if (LogicMath.Abs(this.DirectionY) + dX < 10)
+                    {
+                        return;
+                    }
+
                     this.Connection.Avatar.OngoingQuestData.Moves += 1;
 
                     var ongoingLevel = this.Connection.Avatar.OngoingQuestData.Levels[this.Connection.Avatar.OngoingQuestData.Level];
