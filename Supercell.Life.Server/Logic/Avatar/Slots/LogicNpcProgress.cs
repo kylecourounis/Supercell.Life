@@ -49,10 +49,8 @@
             {
                 json.Put("IgnoreOngoingQuest", new LogicJSONNumber(this.Avatar.Variables.Get(LogicVariables.IgnoreOngoingQuest.GlobalID).Id));
             }
-
-            var ongoingLvl = this.OngoingLevel;
-
-            json.Put("ongoing_level", ongoingLvl);
+            
+            // json.Put("ongoing_level", this.OngoingLevel);
         }
 
         /// <summary>
@@ -76,8 +74,8 @@
 
                 retVal.Put("battles", array);
 
-                retVal.Put("move_count", new LogicJSONNumber(this.Avatar.QuestMoves.GetCount(this.Avatar.OngoingQuestData.GlobalID)));
-                retVal.Put("sublevel_move_count", new LogicJSONNumber(this.Avatar.OngoingQuestData.Moves));
+                retVal.Put("move_count", new LogicJSONNumber(this.Avatar.OngoingQuestData.Moves));
+                retVal.Put("sublevel_move_count", new LogicJSONNumber(this.Avatar.OngoingQuestData.SublevelMoveCount));
                 retVal.Put("enemy_killcount", new LogicJSONNumber(enemyKillcount));
                 retVal.Put("current_battle", new LogicJSONNumber(this.Avatar.Quests[this.Avatar.OngoingQuestData.GlobalID].Levels[0].CurrentBattle));
                 retVal.Put("level_index", new LogicJSONNumber(this.Avatar.OngoingQuestData.Level));

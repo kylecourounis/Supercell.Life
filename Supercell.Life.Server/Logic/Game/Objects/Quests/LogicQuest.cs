@@ -1,6 +1,5 @@
 ﻿namespace Supercell.Life.Server.Logic.Game.Objects.Quests
 {
-    using System;
     using System.Linq;
 
     using Newtonsoft.Json;
@@ -14,6 +13,7 @@
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Logic.Enums;
+    using Supercell.Life.Server.Logic.Game.Objects.Quests.Items;
 
     [JsonObject(MemberSerialization.OptIn)]
     internal class LogicQuest
@@ -23,7 +23,7 @@
         internal LogicQuestData Data;
         internal LogicArrayList<LogicLevel> Levels;
 
-        internal int Moves;
+        internal int SublevelMoveCount;
 
         internal int GoldReward;
         internal int XPReward;
@@ -43,6 +43,17 @@
             get
             {
                 return this.Data.GlobalID;
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of moves in this <see cref="LogicQuest"/>.
+        /// </summary>
+        internal int Moves
+        {
+            get
+            {
+                return this.Avatar.QuestMoves.GetCount(this.GlobalID);
             }
         }
 
@@ -70,8 +81,8 @@
         internal void Start()
         {
             var requiredQuest = ((LogicQuestData)CSV.Tables.Get(Gamefile.Quests).GetDataByName(this.Data.RequiredQuest)).GlobalID;
-
-            if (this.Avatar.NpcProgress.ContainsKey(requiredQuest) && this.Avatar.ExpLevel >= this.Data.RequiredXpLevel && this.Avatar.Energy >= this.Data.Energy)
+            
+            if (this.Avatar.ExpLevel >= this.Data.RequiredXpLevel && this.Avatar.Energy >= this.Data.Energy)
             {
                 this.Avatar.OngoingQuestData = this;
                 this.Avatar.Connection.State = State.Battle;
@@ -93,11 +104,7 @@
             {
                 case "Unlock":
                 {
-                    if (this.Avatar.NpcProgress.GetCount(this.GlobalID) < this.Levels.Size)
-                    {
-                        this.Avatar.NpcProgress.AddItem(this.GlobalID, 1);
-                    }
-
+                    this.Avatar.NpcProgress.AddItem(this.GlobalID, 1); 
                     break;
                 }
                 case "PvP":
@@ -109,26 +116,25 @@
                 {
                     if (!this.Avatar.NpcProgress.Crowns.Contains(this.GlobalID))
                     {
-                        this.Avatar.QuestMoves.Set(this.GlobalID, this.Moves);
+                        this.Avatar.QuestMoves.AddItem(this.GlobalID, this.SublevelMoveCount);
                     }
                     else
                     {
                         this.Avatar.AddGold(this.ReplayGoldReward);
                         this.Avatar.AddXP(this.ReplayXPReward);
                     }
-
-                    if (this.Moves > 0)
+                    
+                    if (this.SublevelMoveCount > 0)
                     {
                         if (this.Avatar.NpcProgress.GetCount(this.GlobalID) < this.Levels.Size)
                         {
                             this.Avatar.NpcProgress.AddItem(this.GlobalID, 1);
                             this.Level = this.Avatar.NpcProgress.GetCount(this.GlobalID);
+                            this.SublevelMoveCount = 0;
                         }
                         
-                        if (this.Moves <= this.Data.GoalMoveCount)
-                        {
-                            this.Avatar.NpcProgress.Crowns.Add(this.GlobalID);
-                        }
+                        this.Avatar.AddGold(this.Data.GoldRewardOverride);
+                        this.Avatar.AddXP(this.Data.XpRewardOverride);
 
                         if (this.Avatar.ItemAttachedTo.Values.Any(item => item.Id.Equals(this.Avatar.ItemLevels.Get(37000000).Id) && this.Avatar.Team.Any(hero => hero.ToObject<int>().Equals(item.Count))))
                         {
@@ -136,7 +142,13 @@
                         }
                     }
 
-                    this.Moves = 0;
+                    if (this.Level == this.Levels.Size)
+                    {
+                        if (this.Moves <= this.Data.GoalMoveCount)
+                        {
+                            this.Avatar.NpcProgress.Crowns.Add(this.GlobalID);
+                        }
+                    }
 
                     this.CalculateChestLoot();
 
@@ -151,7 +163,7 @@
         /// </summary>
         internal void CalculateChestLoot()
         {
-            if (this.Level == this.Levels.Count && (this.Data.QuestType != "Unlock" || this.Data.QuestType != "PvP"))
+            if (this.Level == this.Levels.Size && (this.Data.QuestType != "Unlock" || this.Data.QuestType != "PvP"))
             {
                 Debugger.Debug("Create a chest.");
             }
@@ -193,10 +205,8 @@
             {
                 internal LogicLevel Level;
 
-                internal LogicJSONArray Enemies;
-                internal LogicJSONArray Obstacles;
-
-                private readonly LogicJSONArray EnemiesCopy;
+                internal LogicArrayList<Enemy> Enemies;
+                internal LogicArrayList<Obstacle> Obstacles;
 
                 internal int BGIndex;
                 internal int FGIndex;
@@ -229,7 +239,7 @@
                 {
                     get
                     {
-                        return this.EnemiesCopy.Size == 0;
+                        return this.Enemies.Size == 0;
                     }
                 }
 
@@ -241,12 +251,39 @@
                     this.Level     = level;
                     this.JSON      = battle;
 
-                    this.Enemies   = this.JSON.GetJsonArray("enemies");
-                    this.Obstacles = this.JSON.GetJsonArray("obstacles");
+                    this.InitializeLists();
+
                     this.BGIndex   = this.JSON.GetJsonNumber("bg_index").GetIntValue();
                     this.FGIndex   = this.JSON.GetJsonNumber("fg_index").GetIntValue();
+                }
 
-                    this.EnemiesCopy = this.JSON.GetJsonArray("enemies");
+                /// <summary>
+                /// Initializes the lists of enemies and obstacles in the battle.
+                /// </summary>
+                private void InitializeLists()
+                {
+                    this.Enemies   = new LogicArrayList<Enemy>();
+                    this.Obstacles = new LogicArrayList<Obstacle>();
+
+                    LogicJSONArray enemies = this.JSON.GetJsonArray("enemies");
+
+                    if (enemies != null)
+                    {
+                        for (int i = 0; i < enemies.Size; i++)
+                        {
+                            this.Enemies.Add(new Enemy(enemies.GetJsonObject(i)));
+                        }
+                    }
+
+                    LogicJSONArray obstacles = this.JSON.GetJsonArray("obstacles");
+
+                    if (obstacles != null)
+                    {
+                        for (int i = 0; i < obstacles.Size; i++)
+                        {
+                            this.Obstacles.Add(new Obstacle(obstacles.GetJsonObject(i)));
+                        }
+                    }
                 }
 
                 /// <summary>
@@ -254,21 +291,26 @@
                 /// </summary>
                 internal void CheckCollision(int characterX, int characterY)
                 {
-                    for (int i = 0; i < this.Enemies.Size; i++)
+                    if (this.Enemies.Size > 0)
                     {
-                        int enemyX = 0;
-                        int enemyY = 0;
-
-                        Debugger.Debug($"{characterX} ?= {enemyX} && {characterY} ?= {enemyY}");
-
-                        if (characterX == enemyX && characterY == enemyY)
+                        for (int i = 0; i < this.Enemies.Size; i++)
                         {
-                            Debugger.Debug(this.EnemiesCopy.GetJsonObject(i).GetJsonNumber("data"));
-                            
-                            this.EnemiesCopy.RemoveAt(i);
-                            this.EnemiesKilled++;
+                            int enemyX = this.Enemies[i].X;
+                            int enemyY = this.Enemies[i].Y;
+
+                            Debugger.Debug($"{characterX} ?= {enemyX} && {characterY} ?= {enemyY}");
+
+                            if (characterX == enemyX && characterY == enemyY)
+                            {
+                                Debugger.Debug(this.Enemies[i].Data);
+                                
+                                this.Enemies.RemoveAt(i);
+                                this.EnemiesKilled++;
+                            }
                         }
                     }
+
+                    Debugger.Debug(this.Level.CurrentBattle);
 
                     if (this.IsCompleted)
                     {

@@ -30,13 +30,10 @@
         {
             LogicQuest quest = this.Connection.Avatar.Quests[this.QuestData.GlobalID];
 
-            if (this.Connection.Avatar.OngoingQuestData.Name != quest.Name)
-            {
-                quest.Avatar = this.Connection.Avatar;
-                quest.Data   = this.QuestData;
+            quest.Avatar = this.Connection.Avatar;
+            quest.Data   = this.QuestData;
 
-                quest.Start();
-            }
+            quest.Start();
 
             this.Connection.Avatar.Save();
         }

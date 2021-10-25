@@ -1,28 +1,41 @@
 ﻿namespace Supercell.Life.Server.Logic.Game.Objects.Quests.Items
 {
-    using Newtonsoft.Json;
+    using Supercell.Life.Titan.Logic.Json;
 
     internal class Obstacle
     {
-        [JsonProperty("data")]
+        /// <summary>
+        /// Gets the data.
+        /// </summary>
         internal int Data
         {
             get;
-            set;
         }
 
-        [JsonProperty("x")]
+        /// <summary>
+        /// Gets the x.
+        /// </summary>
         internal int X
         {
             get;
-            set;
         }
 
-        [JsonProperty("y")]
+        /// <summary>
+        /// Gets the y.
+        /// </summary>
         internal int Y
         {
             get;
-            set;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Obstacle"/> class.
+        /// </summary>
+        internal Obstacle(LogicJSONObject json)
+        {
+            this.Data = json.GetJsonNumber("data").GetIntValue();
+            this.X    = json.GetJsonNumber("x").GetIntValue();
+            this.Y    = json.GetJsonNumber("y").GetIntValue();
         }
 
         /// <summary>
