@@ -45,11 +45,6 @@
             }
             else
             {
-                if (!this.Connection.Avatar.Battle.Stopped)
-                {
-                    this.Connection.Avatar.Battle.Stop();
-                }
-
                 this.GetBattleResult();
             }
              

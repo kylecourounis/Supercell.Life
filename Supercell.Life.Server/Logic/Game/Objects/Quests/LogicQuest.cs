@@ -8,6 +8,7 @@
     using Supercell.Life.Titan.Logic;
     using Supercell.Life.Titan.Logic.Enums;
     using Supercell.Life.Titan.Logic.Json;
+    using Supercell.Life.Titan.Logic.Utils;
 
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
@@ -32,7 +33,18 @@
         internal int ReplayXPReward;
 
         [JsonProperty] internal string Name;
-        [JsonProperty] internal int Level;
+
+        /// <summary>
+        /// Gets the player's current sublevel in this quest.
+        /// </summary>
+        [JsonProperty]
+        internal int Level
+        {
+            get
+            {
+                return this.Avatar.NpcProgress.GetCount(this.GlobalID);
+            }
+        }
 
         /// <summary>
         /// Gets the global identifier for the <see cref="LogicQuestData"/> instance in this class.
@@ -80,9 +92,14 @@
         /// </summary>
         internal void Start()
         {
-            var requiredQuest = ((LogicQuestData)CSV.Tables.Get(Gamefile.Quests).GetDataByName(this.Data.RequiredQuest)).GlobalID;
-            
-            if (this.Avatar.ExpLevel >= this.Data.RequiredXpLevel && this.Avatar.Energy >= this.Data.Energy)
+            int requiredQuest = 6000000; // This default value is the GlobalID of the first quest of the game
+
+            if (!this.Data.RequiredQuest.IsNullOrEmptyOrWhitespace())
+            {
+                requiredQuest = ((LogicQuestData)CSV.Tables.Get(Gamefile.Quests).GetDataByName(this.Data.RequiredQuest)).GlobalID;
+            }
+
+            if (this.Avatar.NpcProgress.ContainsKey(requiredQuest) && this.Avatar.ExpLevel >= this.Data.RequiredXpLevel && this.Avatar.Energy >= this.Data.Energy)
             {
                 this.Avatar.OngoingQuestData = this;
                 this.Avatar.Connection.State = State.Battle;
@@ -109,7 +126,9 @@
                 }
                 case "PvP":
                 {
+                    this.Avatar.NpcProgress.AddItem(this.GlobalID, 1);
                     this.Avatar.WinBattle(59);
+
                     break;
                 }
                 default:
@@ -129,7 +148,6 @@
                         if (this.Avatar.NpcProgress.GetCount(this.GlobalID) < this.Levels.Size)
                         {
                             this.Avatar.NpcProgress.AddItem(this.GlobalID, 1);
-                            this.Level = this.Avatar.NpcProgress.GetCount(this.GlobalID);
                             this.SublevelMoveCount = 0;
                         }
                         

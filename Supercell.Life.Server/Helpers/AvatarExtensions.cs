@@ -122,7 +122,7 @@
                     finalValue *= avatar.Booster.BoostPackage.Boost;
                 }
 
-                avatar.ExpPoints += (int)Math.Round(finalValue);
+                avatar.ExpPoints += (int)finalValue;
 
                 LogicExperienceLevelData experienceLevels = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataWithID(avatar.ExpLevel - 1);
 
