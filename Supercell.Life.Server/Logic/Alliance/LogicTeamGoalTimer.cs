@@ -29,6 +29,14 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicTeamGoalTimer"/> class.
         /// </summary>
+        public LogicTeamGoalTimer()
+        {
+            this.Timer = new LogicTimer();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogicTeamGoalTimer"/> class.
+        /// </summary>
         internal LogicTeamGoalTimer(Alliance alliance)
         {
             this.Alliance   = alliance;

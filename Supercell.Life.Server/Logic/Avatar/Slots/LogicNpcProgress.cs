@@ -50,7 +50,7 @@
                 json.Put("IgnoreOngoingQuest", new LogicJSONNumber(this.Avatar.Variables.Get(LogicVariables.IgnoreOngoingQuest.GlobalID).Id));
             }
             
-            // json.Put("ongoing_level", this.OngoingLevel);
+            json.Put("ongoing_level", this.OngoingLevel);
         }
 
         /// <summary>

@@ -5,8 +5,10 @@
     using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Math;
 
+    using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic.Enums;
 
     internal class LogicBoosterTimer
     {
@@ -24,7 +26,7 @@
         {
             get
             {
-                return this.Timer.Started && this.BoosterID != -1;
+                return this.Timer.Started && this.BoosterID != 0;
             }
         }
 
@@ -51,6 +53,8 @@
         internal void Start()
         {
             this.BoosterID = this.BoostPackage.GlobalID;
+
+            this.Timer.StopTimer();
             this.Timer.StartTimer(this.Avatar.Time, this.BoostPackage.TimeDays * 86400);
         }
 
@@ -63,8 +67,8 @@
             {
                 this.Timer.StopTimer();
 
+                this.BoosterID    = 0;
                 this.BoostPackage = null;
-                this.BoosterID    = -1;
 
                 this.Avatar.Save();
             }
@@ -116,10 +120,12 @@
         /// </summary>
         internal void Save(LogicJSONObject json)
         {
-            if (this.BoosterID != -1)
+            if (this.BoostActive)
             {
+                this.BoostPackage = (LogicBoosterData)CSV.Tables.Get(Gamefile.Boosters).GetDataWithID(this.BoosterID);
+
                 json.Put("xp_boost_t", new LogicJSONNumber(this.Timer.RemainingSecs));
-                json.Put("xp_boost_p", new LogicJSONNumber(this.BoosterID));
+                json.Put("xp_boost_p", new LogicJSONNumber(this.BoostPackage.BoostPercentage));
             }
         }
     }

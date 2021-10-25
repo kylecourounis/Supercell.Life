@@ -29,11 +29,7 @@
         internal override void Execute()
         {
             LogicQuest quest = this.Connection.Avatar.Quests[this.QuestData.GlobalID];
-
-            quest.Avatar = this.Connection.Avatar;
-            quest.Data   = this.QuestData;
-
-            quest.Start();
+            quest.Start(this.Connection.Avatar, this.QuestData);
 
             this.Connection.Avatar.Save();
         }

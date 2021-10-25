@@ -13,6 +13,7 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Avatar;
+    using Supercell.Life.Server.Logic.Avatar.Slots;
     using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Logic.Game.Objects.Quests.Items;
 
@@ -78,20 +79,13 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogicQuest"/> class.
+        /// Starts this instance.
         /// </summary>
-        internal LogicQuest(LogicClientAvatar avatar, LogicQuestData data)
+        internal void Start(LogicClientAvatar avatar, LogicQuestData data)
         {
             this.Avatar = avatar;
             this.Data   = data;
-            this.Levels = new LogicArrayList<LogicLevel>();
-        }
 
-        /// <summary>
-        /// Starts this instance.
-        /// </summary>
-        internal void Start()
-        {
             int requiredQuest = 6000000; // This default value is the GlobalID of the first quest of the game
 
             if (!this.Data.RequiredQuest.IsNullOrEmptyOrWhitespace())
@@ -152,11 +146,19 @@
                         }
                         
                         this.Avatar.AddGold(this.Data.GoldRewardOverride);
-                        this.Avatar.AddXP(this.Data.XpRewardOverride);
 
-                        if (this.Avatar.ItemAttachedTo.Values.Any(item => item.Id.Equals(this.Avatar.ItemLevels.Get(37000000).Id) && this.Avatar.Team.Any(hero => hero.ToObject<int>().Equals(item.Count))))
+                        if (this.Avatar.Items.IsAttached(LogicItems.EnergyRecycler))
                         {
                             this.Avatar.Energy += 1;
+                        }
+
+                        if (this.Avatar.Items.IsAttached(LogicItems.PlunderThunder))
+                        {
+                            this.Avatar.AddXP(this.Data.XpRewardOverride * this.Avatar.Items.PlunderThunderPercentage);
+                        }
+                        else
+                        {
+                            this.Avatar.AddXP(this.Data.XpRewardOverride);
                         }
                     }
 

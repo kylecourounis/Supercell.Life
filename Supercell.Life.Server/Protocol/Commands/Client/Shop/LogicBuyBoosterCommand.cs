@@ -40,10 +40,12 @@
                     }
                 }
 
+                this.Connection.Avatar.Diamonds -= cost;
+
                 this.Connection.Avatar.Booster.BoostPackage = this.Booster;
                 this.Connection.Avatar.Booster.Start();
 
-                this.Connection.Avatar.Diamonds -= cost;
+                this.Connection.Avatar.Save();
             }
             else Debugger.Error("Unable to buy the XP Booster - The package data does not exist or is invalid.");
         }
