@@ -1,4 +1,4 @@
-﻿namespace Supercell.Life.Server.Logic.Game.Objects.Quests
+﻿namespace Supercell.Life.Server.Files
 {
     using System;
     using System.Collections.Generic;
@@ -10,17 +10,17 @@
     using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Utils;
 
-    using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvHelpers;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic.Enums;
+    using Supercell.Life.Server.Logic.Game.Objects.Quests;
 
-    internal static class LogicQuests
+    internal static class Levels
     {
         internal static readonly Dictionary<int, LogicQuest> Quests = new Dictionary<int, LogicQuest>();
 
         /// <summary>
-        /// Gets a value indicating whether <see cref="LogicQuests"/> is initialized.
+        /// Gets a value indicating whether <see cref="Levels"/> is initialized.
         /// </summary>
         internal static bool Initialized
         {
@@ -29,11 +29,11 @@
         }
 
         /// <summary>
-        /// Initializes the <see cref="LogicQuests"/> class.
+        /// Initializes the <see cref="Levels"/> class.
         /// </summary>
         internal static void Init()
         {
-            if (LogicQuests.Initialized)
+            if (Levels.Initialized)
             {
                 return;
             }
@@ -70,12 +70,12 @@
 
                         LogicQuest.LogicLevel level = new LogicQuest.LogicLevel(null, LogicJSONParser.ParseObject(File.ReadAllText($"Gamefiles/{value}")));
 
-                        if (LogicQuests.Quests.ContainsKey(questCsv.GetDataByName(name).GlobalID))
+                        if (Levels.Quests.ContainsKey(questCsv.GetDataByName(name).GlobalID))
                         {
-                            LogicQuest quest = LogicQuests.Quests[questCsv.GetDataByName(name).GlobalID];
+                            LogicQuest quest = Levels.Quests[questCsv.GetDataByName(name).GlobalID];
                             level.Quest = quest;
-                            
-                            LogicQuests.Quests[questCsv.GetDataByName(name).GlobalID].Levels.Add(level);
+
+                            Levels.Quests[questCsv.GetDataByName(name).GlobalID].Levels.Add(level);
                         }
                         else
                         {
@@ -97,15 +97,15 @@
                             level.Quest = quest;
                             quest.Levels.Add(level);
 
-                            LogicQuests.Quests.Add(quest.GlobalID, quest);
+                            Levels.Quests.Add(quest.GlobalID, quest);
                         }
                     }
                 }
 
-                Console.WriteLine($"Loaded {LogicQuests.Quests.Count} Quests." + Environment.NewLine);
+                Console.WriteLine($"Loaded {Levels.Quests.Count} Quests." + Environment.NewLine);
             }).Wait();
-            
-            LogicQuests.Initialized = true;
+
+            Levels.Initialized = true;
         }
 
         /// <summary>
@@ -113,11 +113,11 @@
         /// </summary>
         private static void Debug()
         {
-            foreach (var pair in LogicQuests.Quests)
+            foreach (var (id, quest) in Levels.Quests)
             {
-                Debugger.Info($"GlobalID: {pair.Key}, Levels: {pair.Value.Levels.Count}, Gold Reward: {pair.Value.GoldReward}, XP Reward: {pair.Value.XPReward}");
+                Debugger.Info($"GlobalID: {id}, Levels: {quest.Levels.Count}, Gold Reward: {quest.GoldReward}, XP Reward: {quest.XPReward}");
 
-                foreach (var battle in pair.Value.Levels.Select(level => level.Battles))
+                foreach (var battle in quest.Levels.Select(level => level.Battles))
                 {
                     Debugger.Debug($"   -> {battle[0].JSON}");
                 }

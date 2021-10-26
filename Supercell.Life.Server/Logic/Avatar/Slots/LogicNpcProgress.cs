@@ -66,7 +66,7 @@
 
                 int enemyKillcount = 0;
 
-                foreach (var battle in this.Avatar.Quests[this.Avatar.OngoingQuestData.GlobalID].Levels[0].Battles)
+                foreach (var battle in this.Avatar.Quests[this.Avatar.OngoingQuestData.GlobalID].Levels[this.Avatar.OngoingQuestData.Level].Battles)
                 {
                     enemyKillcount += battle.EnemiesKilled;
                     array.Add(battle.JSON);
@@ -77,7 +77,7 @@
                 retVal.Put("move_count", new LogicJSONNumber(this.Avatar.OngoingQuestData.Moves));
                 retVal.Put("sublevel_move_count", new LogicJSONNumber(this.Avatar.OngoingQuestData.SublevelMoveCount));
                 retVal.Put("enemy_killcount", new LogicJSONNumber(enemyKillcount));
-                retVal.Put("current_battle", new LogicJSONNumber(this.Avatar.Quests[this.Avatar.OngoingQuestData.GlobalID].Levels[0].CurrentBattle));
+                retVal.Put("current_battle", new LogicJSONNumber(this.Avatar.Quests[this.Avatar.OngoingQuestData.GlobalID].Levels[this.Avatar.OngoingQuestData.Level].CurrentBattle));
                 retVal.Put("level_index", new LogicJSONNumber(this.Avatar.OngoingQuestData.Level));
                 retVal.Put("drops", new LogicJSONArray());
                 retVal.Put("ver", new LogicJSONNumber(1));

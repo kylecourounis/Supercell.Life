@@ -4,7 +4,6 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Logic.Game.Objects;
-    using Supercell.Life.Server.Logic.Game.Objects.Quests;
 
     internal static class Globals
     {
@@ -84,7 +83,6 @@
             Globals.PVPMaxTurnTimeSeconds       = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("PVP_MAX_TURN_TIME_SECONDS")).NumberValue;
 
             LogicCharacters.Init();
-            LogicQuests.Init();
 
             Globals.Initialized = true;
         }

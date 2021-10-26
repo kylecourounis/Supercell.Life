@@ -11,6 +11,7 @@ namespace Supercell.Life.Server.Logic.Avatar
     using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Math;
 
+    using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Alliance;
@@ -291,7 +292,7 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.Diamonds             = Globals.StartingDiamonds;
             this.FreeDiamonds         = Globals.StartingDiamonds;
 
-            this.Quests               = new Dictionary<int, LogicQuest>(LogicQuests.Quests);
+            this.Quests               = new Dictionary<int, LogicQuest>(Levels.Quests);
 
             this.OngoingQuestData        = this.Quests[Globals.StartingQuest.GlobalID];
             this.OngoingQuestData.Avatar = this;

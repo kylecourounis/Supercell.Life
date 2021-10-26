@@ -195,8 +195,6 @@
 
         internal class LogicLevel
         {
-            private readonly LogicJSONArray BattlesJson;
-
             internal LogicQuest Quest;
 
             internal LogicArrayList<Battle> Battles;
@@ -212,12 +210,12 @@
                 this.Quest   = quest;
                 this.Battles = new LogicArrayList<Battle>();
 
-                this.BattlesJson = json.GetJsonArray("battles");
+                var battlesJson  = json.GetJsonArray("battles");
                 this.Version     = json.GetJsonNumber("ver").GetIntValue();
 
-                for (int i = 0; i < this.BattlesJson.Size; i++)
+                for (int i = 0; i < battlesJson.Size; i++)
                 {
-                    this.Battles.Add(new Battle(this, this.BattlesJson.GetJsonObject(i)));
+                    this.Battles.Add(new Battle(this, battlesJson.GetJsonObject(i)));
                 }
             }
 

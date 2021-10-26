@@ -43,6 +43,7 @@
 
             Fingerprint.Init();
             CSV.Init();
+            Levels.Init();
             Globals.Init();
 
             if (Settings.Database == DBMS.Mongo)
