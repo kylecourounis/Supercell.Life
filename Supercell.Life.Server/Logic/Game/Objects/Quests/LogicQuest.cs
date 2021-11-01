@@ -1,5 +1,6 @@
 ﻿namespace Supercell.Life.Server.Logic.Game.Objects.Quests
 {
+    using System;
     using System.Linq;
 
     using Newtonsoft.Json;
@@ -34,7 +35,7 @@
         internal int ReplayXPReward;
 
         [JsonProperty] internal string Name;
-
+        
         /// <summary>
         /// Gets the player's current sublevel in this quest.
         /// </summary>
@@ -58,6 +59,8 @@
                 return this.Data.GlobalID;
             }
         }
+
+        [JsonProperty] internal int MovesRecord;
 
         /// <summary>
         /// Gets the number of moves in this <see cref="LogicQuest"/>.
@@ -85,7 +88,7 @@
         {
             this.Avatar = avatar;
             this.Data   = data;
-
+            
             int requiredQuest = 6000000; // This default value is the GlobalID of the first quest of the game
 
             if (!this.Data.RequiredQuest.IsNullOrEmptyOrWhitespace())
@@ -98,7 +101,17 @@
                 this.Avatar.OngoingQuestData = this;
                 this.Avatar.Connection.State = State.Battle;
                 this.Avatar.Energy          -= this.Data.Energy;
-                
+
+                if (!this.Avatar.NpcProgress.Crowns.Contains(this.GlobalID))
+                {
+                    if (this.Level == this.Levels.Size)
+                    {
+                        this.MovesRecord = this.Moves;
+                        
+                        this.Avatar.QuestMoves.Set(this.GlobalID, 0);
+                    }
+                }
+
                 foreach (var hero in this.Avatar.Team.ToObject<int[]>())
                 {
                     this.Avatar.HeroQuests.AddItem(hero, 1);
@@ -154,7 +167,7 @@
 
                         if (this.Avatar.Items.IsAttached(LogicItems.PlunderThunder))
                         {
-                            this.Avatar.AddXP(this.Data.XpRewardOverride * this.Avatar.Items.PlunderThunderPercentage);
+                            this.Avatar.AddXP((int)Math.Round(this.Data.XpRewardOverride * this.Avatar.Items.PlunderThunderPercentage));
                         }
                         else
                         {

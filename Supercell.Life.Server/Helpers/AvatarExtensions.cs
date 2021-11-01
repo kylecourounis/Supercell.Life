@@ -1,7 +1,5 @@
 ﻿namespace Supercell.Life.Server.Helpers
 {
-    using System;
-
     using Supercell.Life.Titan.Logic.Enums;
 
     using Supercell.Life.Server.Core;

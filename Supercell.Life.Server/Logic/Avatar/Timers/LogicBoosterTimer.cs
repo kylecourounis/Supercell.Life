@@ -26,7 +26,7 @@
         {
             get
             {
-                return this.Timer.Started && this.BoosterID != 0;
+                return this.Timer.Started;
             }
         }
 

@@ -39,17 +39,17 @@
         /// <summary>
         /// Gets the XP boost percentage based on the level of plunder thunder.
         /// </summary>
-        internal int PlunderThunderPercentage
+        internal double PlunderThunderPercentage
         {
             get
             {
-                int percentage = 5;
-                int increment = 2;
+                double percentage = 1.05;
+                double increment  = 0.02;
 
                 for (int i = 1; i <= this.Avatar.ItemLevels.GetCount(LogicItems.PlunderThunder.GlobalID); i++)
                 {
                     percentage += increment;
-                    increment++;
+                    increment  += 0.01;
                 }
 
                 return percentage;
