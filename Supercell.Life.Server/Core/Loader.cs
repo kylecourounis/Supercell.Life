@@ -10,8 +10,6 @@
     using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Server.Logic.Slots;
     using Supercell.Life.Server.Network;
-    using Supercell.Life.Server.Protocol;
-    using Supercell.Life.Server.Protocol.Commands;
 
     internal static class Loader
     {
@@ -37,9 +35,6 @@
             }
             
             Loader.Random = new LogicRandom();
-
-            LogicCommandManager.Init();
-            MessageManager.Init();
 
             Fingerprint.Init();
             CSV.Init();

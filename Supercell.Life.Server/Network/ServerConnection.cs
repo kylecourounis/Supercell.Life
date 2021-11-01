@@ -165,6 +165,7 @@
                 Connection connection = new Connection(socket);
                 Token token           = new Token(readEvent, connection);
 
+                connection.Messaging.MessageManager.StartThreads();
                 ServerConnection.InitializeEncryption(connection.Messaging);
 
                 Connections.Add(connection);

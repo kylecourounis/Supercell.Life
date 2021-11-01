@@ -9,6 +9,7 @@
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
     using Supercell.Life.Server.Protocol.Commands;
+    using Supercell.Life.Server.Protocol.Commands.Debugs;
 
     internal class SendGlobalChatLineMessage : PiranhaMessage
     {
@@ -40,7 +41,7 @@
 
         internal override void Handle()
         {
-            if (this.Message.StartsWith(LogicCommandManager.Delimiter))
+            if (this.Message.StartsWith(LogicChatCommands.Delimiter))
             {
                 string[] commands = this.Message.Remove(0, 1).Split(' ');
 
@@ -49,7 +50,7 @@
                     string command     = commands[0];
                     string[] arguments = commands.Skip(1).ToArray();
 
-                    LogicChatCommand debug = LogicCommandManager.CreateChatCommand(command, this.Connection, arguments);
+                    LogicChatCommand debug = LogicChatCommands.CreateChatCommand(command, this.Connection, arguments);
 
                     if (debug != null)
                     {
@@ -59,7 +60,7 @@
                         {
                             debug.Process();
                         }
-                        catch (Exception exception)
+                        catch
                         {
                             Debugger.Error($"Failed to handle the chat command : {command}!");
                         }

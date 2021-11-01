@@ -1,48 +1,147 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
     using Supercell.Life.Titan.DataStream;
+    using Supercell.Life.Titan.Helpers;
+    using Supercell.Life.Titan.Logic;
     using Supercell.Life.Titan.Logic.Enums;
 
-    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
     using Supercell.Life.Server.Protocol.Commands.Client;
-    using Supercell.Life.Server.Protocol.Commands.Debugs.Chat;
 
     internal class LogicCommandManager
     {
-        internal const string Delimiter = "/";
+        internal readonly Connection Connection;
 
-        private static readonly Dictionary<string, Type> ChatCommands = new Dictionary<string, Type>();
+        internal readonly LogicArrayList<LogicCommand> Commands;
+        internal readonly LogicArrayList<LogicCommand> SectorCommands;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="LogicCommandManager"/> is initialized.
+        /// Initializes a new instance of the <see cref="LogicCommandManager"/> class.
         /// </summary>
-        internal static bool Initialized
+        internal LogicCommandManager(Connection connection)
         {
-            get;
-            private set;
+            this.Connection     = connection;
+            this.Commands       = new LogicArrayList<LogicCommand>();
+            this.SectorCommands = new LogicArrayList<LogicCommand>();
         }
 
         /// <summary>
-        /// Initializes the <see cref="LogicCommandManager"/> class.
+        /// Decodes a <see cref="LogicCommand"/>.
         /// </summary>
-        internal static void Init()
+        internal void DecodeCommand(ByteStream stream, int subtick)
         {
-            if (LogicCommandManager.Initialized)
+            int id      = stream.ReadInt();
+            var command = LogicCommandManager.CreateCommand(id, this.Connection, stream);
+
+            if (command != null)
             {
-                return;
+                if (this.IsCommandAllowedInCurrentState(command))
+                {
+                    Debugger.Info($"Command {command.GetType().Name.Pad(34)} received from {this.Connection.EndPoint}.");
+
+                    command.Subtick = subtick;
+                    command.Decode();
+
+                    this.Commands.Add(command);
+                }
+            }
+            else
+            {
+                Debugger.Debug(stream.ToHexa());
+            }
+        }
+
+        /// <summary>
+        /// Decodes a <see cref="LogicCommand"/>.
+        /// </summary>
+        internal void DecodeBattleCommand(ByteStream stream, int subtick)
+        {
+            int id      = stream.ReadInt();
+            var command = LogicCommandManager.CreateCommand(id, this.Connection, stream);
+
+            if (id >= 600)
+            {
+                if (command != null)
+                {
+                    if (this.IsCommandAllowedInCurrentState(command))
+                    {
+                        Debugger.Info($"Battle Command {command.GetType().Name.Pad(34)} received from {this.Connection.EndPoint}.");
+
+                        command.Subtick = subtick;
+                        command.Decode();
+
+                        this.SectorCommands.Add(command);
+                    }
+                }
+                else
+                {
+                    Debugger.Debug(stream.ToHexa());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Executes the specified <see cref="LogicCommand"/>.
+        /// </summary>
+        internal void ExecuteCommand(LogicCommand command)
+        {
+            if (command.ExecuteSubTick != -1)
+            {
+                if (command.ExecuteSubTick <= command.Subtick)
+                {
+                    if (this.Connection.Avatar.Time.ClientSubTick <= command.ExecuteSubTick)
+                    {
+                        this.Connection.Avatar.Time.ClientSubTick = command.ExecuteSubTick;
+                        this.Connection.Avatar.Tick();
+
+                        command.Execute();
+                    }
+                }
+                else Debugger.Error($"Execute command failed! Command should already executed. (type={command.Type}, server_tick)");
+            }
+            else Debugger.Error("Execute command failed! subtick is not valid.");
+        }
+        
+        /// <summary>
+        /// Determines whether the specified <see cref="LogicCommand"/> is allowed in the current state.
+        /// </summary>
+        internal bool IsCommandAllowedInCurrentState(LogicCommand command)
+        {
+            Connection connection = command.Connection;
+            int type = (int)command.Type;
+
+            if (connection.IsConnected)
+            {
+                if (LogicVersion.IsProd || connection.Avatar.Rank != Rank.Administrator)
+                {
+                    if (type >= 1000)
+                    {
+                        Debugger.Error("Execute command failed! Debug commands are not allowed when debug is off.");
+                        return false;
+                    }
+                }
+
+                if (type >= 600 && type < 700)
+                {
+                    if (connection.State != State.Battle)
+                    {
+                        Debugger.Error($"Execute command failed! Command {type} is only allowed in battle state. Avatar {connection.Avatar}");
+                        return false;
+                    }
+                }
+                if (type >= 500 && type <= 598)
+                {
+                    if (connection.State != State.Home)
+                    {
+                        Debugger.Error($"Execute command failed! Command {type} is only allowed in home state. Avatar {connection.Avatar}");
+                        return false;
+                    }
+                }
             }
 
-            LogicCommandManager.ChatCommands.Add("rank", typeof(LogicRankCommand));
-            LogicCommandManager.ChatCommands.Add("resource", typeof(LogicResourcesCommand));
-
-            LogicCommandManager.Initialized = true;
+            return true;
         }
 
         /// <summary>
@@ -202,79 +301,6 @@
                     return null;
                 }
             }
-        }
-
-        /// <summary>
-        /// Creates the chat command.
-        /// </summary>
-        internal static LogicChatCommand CreateChatCommand(string type, Connection connection, string[] arguments)
-        {
-            if (LogicCommandManager.ChatCommands.TryGetValue(type, out Type cType))
-            {
-                return (LogicChatCommand)Activator.CreateInstance(cType, connection, arguments);
-            }
-
-            connection.SendChatMessage(LogicCommandManager.PrintHelp(type));
-
-            return null;
-        }
-
-        /// <summary>
-        /// Determines whether the specified <see cref="LogicCommand"/> is allowed in the current state.
-        /// </summary>
-        internal static bool IsCommandAllowedInCurrentState(LogicCommand command)
-        {
-            Connection connection = command.Connection;
-            int type              = (int)command.Type;
-
-            if (connection.IsConnected)
-            {
-                if (LogicVersion.IsProd || connection.Avatar.Rank != Rank.Administrator)
-                {
-                    if (type >= 1000)
-                    {
-                        Debugger.Error("Execute command failed! Debug commands are not allowed when debug is off.");
-                        return false;
-                    }
-                }
-
-                if (type >= 600 && type < 700)
-                {
-                    if (connection.State != State.Battle)
-                    {
-                        Debugger.Error($"Execute command failed! Command {type} is only allowed in battle state. Avatar {connection.Avatar}");
-                        return false;
-                    }
-                }
-                if (type >= 500 && type <= 598)
-                {
-                    if (connection.State != State.Home)
-                    {
-                        Debugger.Error($"Execute command failed! Command {type} is only allowed in home state. Avatar {connection.Avatar}");
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Prints the unknown command string.
-        /// </summary>
-        private static string PrintHelp(string type)
-        {
-            StringBuilder help = new StringBuilder();
-
-            help.AppendLine($"Failed to handle command : '{type}' is unknown");
-            help.AppendLine();
-            help.AppendLine("Valid commands are: ");
-            foreach (string command in LogicCommandManager.ChatCommands.Keys)
-            {
-                help.AppendLine($"\t /{command}");
-            }
-
-            return help.ToString();
         }
     }
 }

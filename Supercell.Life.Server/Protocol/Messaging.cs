@@ -8,12 +8,16 @@
     using Supercell.Life.Titan.Library.Cryptography.RC4;
 
     using Supercell.Life.Server.Network;
+    using Supercell.Life.Server.Protocol.Commands;
     using Supercell.Life.Server.Protocol.Enums;
     using Supercell.Life.Server.Protocol.Messages;
 
     internal class Messaging
     {
         internal readonly Connection Connection;
+
+        internal readonly MessageManager MessageManager;
+        internal readonly LogicCommandManager CommandManager;
 
         internal RC4Encrypter Crypto;
 
@@ -22,7 +26,9 @@
         /// </summary>
         internal Messaging(Connection connection)
         {
-            this.Connection = connection;
+            this.Connection     = connection;
+            this.MessageManager = new MessageManager();
+            this.CommandManager = new LogicCommandManager(connection);
         }
 
         /// <summary>
@@ -69,7 +75,7 @@
 
                                 message.Decrypt();
 
-                                MessageManager.Enqueue(message);
+                                this.MessageManager.Enqueue(message);
                             }
 
                             if (!this.Connection.Token.Aborting)

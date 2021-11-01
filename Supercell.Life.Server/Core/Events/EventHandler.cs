@@ -9,7 +9,6 @@
     using Supercell.Life.Titan.Logic.Enums;
     
     using Supercell.Life.Server.Logic.Slots;
-    using Supercell.Life.Server.Protocol;
     using Supercell.Life.Server.Protocol.Messages;
     using Supercell.Life.Server.Protocol.Messages.Server;
 
@@ -76,8 +75,6 @@
 
                     Debugger.Info("Warned every player about the maintenance.", method);
                 }
-
-                MessageManager.StopThreads();
             });
             
             int timeout = 1000;

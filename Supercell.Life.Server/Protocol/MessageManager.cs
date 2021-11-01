@@ -12,88 +12,74 @@
 
     internal class MessageManager
     {
-        private static Thread SendThread;
-        private static Thread ReceiveThread;
+        private readonly Thread SendThread;
+        private readonly Thread ReceiveThread;
 
-        private static ConcurrentQueue<PiranhaMessage> SendQueue;
-        private static ConcurrentQueue<PiranhaMessage> ReceiveQueue;
+        private readonly ConcurrentQueue<PiranhaMessage> SendQueue;
+        private readonly ConcurrentQueue<PiranhaMessage> ReceiveQueue;
 
-        private static AutoResetEvent SendResetEvent;
-        private static AutoResetEvent ReceiveResetEvent;
+        private readonly AutoResetEvent SendResetEvent;
+        private readonly AutoResetEvent ReceiveResetEvent;
 
-        private static bool Started;
-
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="MessageManager"/> is initialized.
-        /// </summary>
-        internal static bool Initialized
-        {
-            get;
-            private set;
-        }
+        private bool Started;
 
         /// <summary>
-        /// Initializes the <see cref="MessageManager"/> class.
+        /// Initializes a new instance of the <see cref="MessageManager"/> class.
         /// </summary>
-        internal static void Init()
+        internal MessageManager()
         {
-            if (MessageManager.Initialized)
-            {
-                return;
-            }
-            
-            MessageManager.SendQueue         = new ConcurrentQueue<PiranhaMessage>();
-            MessageManager.ReceiveQueue      = new ConcurrentQueue<PiranhaMessage>();
+            this.SendQueue         = new ConcurrentQueue<PiranhaMessage>();
+            this.ReceiveQueue      = new ConcurrentQueue<PiranhaMessage>();
 
-            MessageManager.SendResetEvent    = new AutoResetEvent(false);
-            MessageManager.ReceiveResetEvent = new AutoResetEvent(false);
-            
-            MessageManager.SendThread        = new Thread(MessageManager.SendMessage);
-            MessageManager.ReceiveThread     = new Thread(MessageManager.ReceiveMessage);
-            
-            MessageManager.StartThreads();
+            this.SendResetEvent    = new AutoResetEvent(false);
+            this.ReceiveResetEvent = new AutoResetEvent(false);
 
-            MessageManager.Initialized = true;
+            this.SendThread        = new Thread(this.SendMessage);
+            this.ReceiveThread     = new Thread(this.ReceiveMessage);
         }
 
         /// <summary>
         /// Starts the send/receive threads.
         /// </summary>
-        internal static void StartThreads()
+        internal void StartThreads()
         {
-            if (!MessageManager.Started)
+            if (this.Started)
             {
-                MessageManager.Started = true;
-
-                MessageManager.SendThread.Start();
-                MessageManager.ReceiveThread.Start();
+                return;
             }
+
+            this.Started = true;
+
+            this.SendThread.Start();
+            this.ReceiveThread.Start();
         }
 
         /// <summary>
         /// Stops the send/receive threads.
         /// </summary>
-        internal static void StopThreads()
+        internal void StopThreads()
         {
-            if (MessageManager.Started)
+            if (!this.Started)
             {
-                MessageManager.Started = false;
-
-                MessageManager.SendResetEvent.Close();
-                MessageManager.ReceiveResetEvent.Close();
+                return;
             }
+
+            this.Started = false;
+
+            this.SendResetEvent.Close();
+            this.ReceiveResetEvent.Close();
         }
 
         /// <summary>
         /// Dequeues a message and then processes it.
         /// </summary>
-        private static void ReceiveMessage()
+        private void ReceiveMessage()
         {
-            while (MessageManager.Started)
+            while (this.Started)
             {
-                MessageManager.ReceiveResetEvent.WaitOne();
+                this.ReceiveResetEvent.WaitOne();
 
-                while (MessageManager.ReceiveQueue.TryDequeue(out PiranhaMessage message))
+                while (this.ReceiveQueue.TryDequeue(out PiranhaMessage message))
                 {
                     Debugger.Info($"Packet {message.Type.ToString().Pad(35)} received from {message.Connection.EndPoint}.");
 
@@ -116,13 +102,13 @@
         /// <summary>
         /// Dequeues a message and sends it.
         /// </summary>
-        private static void SendMessage()
+        private void SendMessage()
         {
-            while (MessageManager.Started)
+            while (this.Started)
             {
-                MessageManager.SendResetEvent.WaitOne();
+                this.SendResetEvent.WaitOne();
 
-                while (MessageManager.SendQueue.TryDequeue(out PiranhaMessage message))
+                while (this.SendQueue.TryDequeue(out PiranhaMessage message))
                 {
                     if (message.IsServerToClientMessage)
                     {
@@ -144,17 +130,17 @@
         /// <summary>
         /// Determines whether the specified <see cref="PiranhaMessage"/> is a client or server message and queues it accordingly.
         /// </summary>
-        internal static void Enqueue(PiranhaMessage message)
+        internal void Enqueue(PiranhaMessage message)
         {
             if (message.IsClientToServerMessage)
             {
-                MessageManager.ReceiveQueue.Enqueue(message);
-                MessageManager.ReceiveResetEvent.Set();
+                this.ReceiveQueue.Enqueue(message);
+                this.ReceiveResetEvent.Set();
             }
             else
             {
-                MessageManager.SendQueue.Enqueue(message);
-                MessageManager.SendResetEvent.Set();
+                this.SendQueue.Enqueue(message);
+                this.SendResetEvent.Set();
             }
         }
     }
