@@ -2,6 +2,7 @@
 {
     using Supercell.Life.Titan.DataStream;
 
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
 
@@ -41,20 +42,20 @@
             this.Stream.WriteInt(this.Y);
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
-            var battle = this.Connection.Avatar.Battle;
+            var battle = gamemode.Avatar.Battle;
 
             if (battle != null)
             {
-                LogicAimCharacterCommand cmd = new LogicAimCharacterCommand(battle.Avatars.Find(avatar => avatar.Identifier != this.Connection.Avatar.Identifier).Connection)
+                LogicAimCharacterCommand cmd = new LogicAimCharacterCommand(battle.Avatars.Find(avatar => avatar.Identifier != gamemode.Avatar.Identifier).Connection)
                 {
                     X = this.X,
                     Y = this.Y
                 };
 
-                battle.GetOwnQueue(this.Connection.Avatar).Enqueue(this);
-                battle.GetEnemyQueue(this.Connection.Avatar).Enqueue(cmd);
+                battle.GetOwnQueue(gamemode.Avatar).Enqueue(this);
+                battle.GetEnemyQueue(gamemode.Avatar).Enqueue(cmd);
             }
         }
     }

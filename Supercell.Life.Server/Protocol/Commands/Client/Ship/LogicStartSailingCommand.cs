@@ -4,17 +4,21 @@
 
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Avatar.Slots;
     using Supercell.Life.Server.Network;
+    using Supercell.Life.Titan.Logic;
 
     internal class LogicStartSailingCommand : LogicCommand
     {
+        internal LogicArrayList<LogicHeroData> Heroes;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicStartSailingCommand"/> class.
         /// </summary>
         public LogicStartSailingCommand(Connection connection, ByteStream stream) : base(connection, stream)
         {
-            // LogicStartSailingCommand.
+            this.Heroes = new LogicArrayList<LogicHeroData>();
         }
 
         internal override void Decode()
@@ -25,21 +29,24 @@
 
                 if (hero != null)
                 {
-                    this.Connection.Avatar.Sailing.Heroes.AddItem(hero.GlobalID, 1);
-                    this.Connection.Avatar.Sailing.HeroLevels.AddItem(hero.GlobalID, this.Connection.Avatar.HeroLevels.GetCount(hero.GlobalID));
+                    this.Heroes.Add(hero);
                 }
             }
 
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
-            this.Connection.Avatar.Sailing.Start();
-            
-            this.Connection.Avatar.Variables.AddItem(LogicVariables.SailCount.GlobalID, 1);
+            foreach (var hero in this.Heroes)
+            {
+                gamemode.Avatar.Sailing.Heroes.AddItem(hero.GlobalID, 1);
+                gamemode.Avatar.Sailing.HeroLevels.AddItem(hero.GlobalID, gamemode.Avatar.HeroLevels.GetCount(hero.GlobalID));
+            }
 
-            this.Connection.Avatar.Save();
+            gamemode.Avatar.Sailing.Start();
+            
+            gamemode.Avatar.Variables.AddItem(LogicVariables.SailCount.GlobalID, 1);
         }
     }
 }

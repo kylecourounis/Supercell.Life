@@ -2,14 +2,12 @@
 {
     using Supercell.Life.Titan.Logic.Enums;
 
-    using Supercell.Life.Server.Core;
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Logic.Avatar.Slots;
     using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Logic.Game.Objects;
-    using Supercell.Life.Server.Logic.Slots;
 
     internal static class AvatarExtensions
     {
@@ -181,15 +179,6 @@
             Debugger.Error($"{avatar.Rank} was the less than or equal to {avatar.Name}'s current rank!");
 
             return false;
-        }
-
-        /// <summary>
-        /// Saves the specified avatar.
-        /// </summary>
-        internal static void Save(this LogicClientAvatar avatar, DBMS database = Settings.Database)
-        {
-            Avatars.Save(avatar, database);
-            Alliances.Save(avatar.Alliance, database);
         }
     }
 }

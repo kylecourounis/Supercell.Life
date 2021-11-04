@@ -4,6 +4,7 @@
 
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
 
     internal class LogicBuyBoosterCommand : LogicCommand
@@ -25,7 +26,7 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
             if (this.Booster != null)
             {
@@ -33,19 +34,17 @@
 
                 if (cost > 0)
                 {
-                    if (this.Connection.Avatar.Diamonds < cost)
+                    if (gamemode.Avatar.Diamonds < cost)
                     {
-                        Debugger.Error($"Unable to buy the XP Booster - {this.Connection.Avatar.Name} does not enough diamonds. (Diamonds : {this.Connection.Avatar.Diamonds}, Requires : {cost}).");
+                        Debugger.Error($"Unable to buy the XP Booster - {gamemode.Avatar.Name} does not enough diamonds. (Diamonds : {gamemode.Avatar.Diamonds}, Requires : {cost}).");
                         return;
                     }
                 }
 
-                this.Connection.Avatar.Diamonds -= cost;
+                gamemode.Avatar.Diamonds -= cost;
 
-                this.Connection.Avatar.Booster.BoostPackage = this.Booster;
-                this.Connection.Avatar.Booster.Start();
-
-                this.Connection.Avatar.Save();
+                gamemode.Avatar.Booster.BoostPackage = this.Booster;
+                gamemode.Avatar.Booster.Start();
             }
             else Debugger.Error("Unable to buy the XP Booster - The package data does not exist or is invalid.");
         }

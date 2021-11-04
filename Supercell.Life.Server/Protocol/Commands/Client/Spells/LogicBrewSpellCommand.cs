@@ -7,6 +7,7 @@
 
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Avatar.Slots;
     using Supercell.Life.Server.Network;
 
@@ -33,29 +34,26 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
             foreach (LogicSpellData spell in this.Spells)
             {
-                var count = this.Connection.Avatar.SpellsReady.Values.Sum(item => item.Count);
-                Debugger.Debug(count);
+                var count = gamemode.Avatar.SpellsReady.Values.Sum(item => item.Count);
                 
-                if (count < this.Connection.Avatar.Variables.Get(LogicVariables.SpellSlotsUnlocked.GlobalID).Count + 2)
+                if (count < gamemode.Avatar.Variables.Get(LogicVariables.SpellSlotsUnlocked.GlobalID).Count + 2)
                 {
-                    if (this.Connection.Avatar.Gold >= spell.CreateCost)
+                    if (gamemode.Avatar.Gold >= spell.CreateCost)
                     {
-                        this.Connection.Avatar.Gold -= spell.CreateCost;
-                        this.Connection.Avatar.SpellTimer.SpellIDs.Add(spell.GlobalID);
-                        this.Connection.Avatar.SpellTimer.Start();
+                        gamemode.Avatar.Gold -= spell.CreateCost;
+                        gamemode.Avatar.SpellTimer.SpellIDs.Add(spell.GlobalID);
+                        gamemode.Avatar.SpellTimer.Start();
                     }
                 }
                 else
                 {
-                    Debugger.Error($"Spell slots maxed out for player {this.Connection.Avatar}");
+                    Debugger.Error($"Spell slots maxed out for player {gamemode.Avatar}");
                 }
             }
-
-            this.Connection.Avatar.Save();
         }
     }
 }

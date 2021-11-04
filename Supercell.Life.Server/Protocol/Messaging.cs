@@ -8,16 +8,12 @@
     using Supercell.Life.Titan.Library.Cryptography.RC4;
 
     using Supercell.Life.Server.Network;
-    using Supercell.Life.Server.Protocol.Commands;
     using Supercell.Life.Server.Protocol.Enums;
     using Supercell.Life.Server.Protocol.Messages;
 
     internal class Messaging
     {
         internal readonly Connection Connection;
-
-        internal readonly MessageManager MessageManager;
-        internal readonly LogicCommandManager CommandManager;
 
         internal RC4Encrypter Crypto;
 
@@ -26,9 +22,7 @@
         /// </summary>
         internal Messaging(Connection connection)
         {
-            this.Connection     = connection;
-            this.MessageManager = new MessageManager();
-            this.CommandManager = new LogicCommandManager(connection);
+            this.Connection = connection;
         }
 
         /// <summary>
@@ -75,7 +69,7 @@
 
                                 message.Decrypt();
 
-                                this.MessageManager.Enqueue(message);
+                                this.Connection.GameMode.MessageManager.Enqueue(message);
                             }
 
                             if (!this.Connection.Token.Aborting)
@@ -116,6 +110,6 @@
         /// <summary>
         /// Sends the specified <see cref="PiranhaMessage"/>.
         /// </summary>
-        internal void Send(PiranhaMessage message) => MessageManager.Enqueue(message);
+        internal void Send(PiranhaMessage message) => this.Connection.GameMode.MessageManager.Enqueue(message);
     }
 }

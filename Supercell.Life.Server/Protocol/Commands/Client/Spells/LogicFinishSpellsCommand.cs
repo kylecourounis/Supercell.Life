@@ -2,7 +2,7 @@
 {
     using Supercell.Life.Titan.DataStream;
 
-    using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Server.Network;
 
@@ -21,17 +21,15 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
-            int speedUpCost = LogicGamePlayUtil.GetSpeedUpCost(this.Connection.Avatar.SpellTimer.Timer.RemainingSecs, LogicGamePlayUtil.GetSpeedUpCostMultiplier(2));
+            int speedUpCost = LogicGamePlayUtil.GetSpeedUpCost(gamemode.Avatar.SpellTimer.Timer.RemainingSecs, LogicGamePlayUtil.GetSpeedUpCostMultiplier(2));
 
-            if (this.Connection.Avatar.Diamonds >= speedUpCost)
+            if (gamemode.Avatar.Diamonds >= speedUpCost)
             {
-                this.Connection.Avatar.Diamonds -= speedUpCost;
-                this.Connection.Avatar.SpellTimer.Finish();
+                gamemode.Avatar.Diamonds -= speedUpCost;
+                gamemode.Avatar.SpellTimer.Finish();
             }
-
-            this.Connection.Avatar.Save();
         }
     }
 }

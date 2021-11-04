@@ -1,9 +1,10 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
-    using Supercell.Life.Server.Files.CsvLogic;
-    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Titan.DataStream;
 
+    using Supercell.Life.Server.Files.CsvLogic;
+    using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
 
     internal class LogicSendTauntCommand : LogicCommand
@@ -25,7 +26,7 @@
             this.Taunt = this.Stream.ReadDataReference<LogicTauntData>();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
         }
     }

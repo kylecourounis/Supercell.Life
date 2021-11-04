@@ -1,14 +1,10 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
-    using System;
-
     using Supercell.Life.Titan.DataStream;
-
-    using Supercell.Life.Server.Helpers;
-    using Supercell.Life.Server.Logic.Avatar.Slots;
-    using Supercell.Life.Server.Logic.Game;
-    using Supercell.Life.Server.Network;
     using Supercell.Life.Titan.Logic.Math;
+
+    using Supercell.Life.Server.Logic;
+    using Supercell.Life.Server.Network;
 
     internal class LogicSpeedUpShipCommand : LogicCommand
     {
@@ -25,7 +21,7 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
             var cost = 0;
 
@@ -33,12 +29,12 @@
             {
 
             }
-            
-            this.Connection.Avatar.Diamonds -= cost;
 
-            this.Connection.Avatar.Sailing.Finish();
-            this.Connection.Avatar.Save();
+            gamemode.Avatar.Diamonds -= cost;
+
+            gamemode.Avatar.Sailing.Finish();
         }
+
         /* 
         private int CalculateSpeedUpCost() //sub_123974
         {
@@ -46,9 +42,9 @@
             var v14 = 0;
             var v15 = 0;
 
-            if (this.Connection.Avatar.Sailing.Heroes != null)
+            if (gamemode.Avatar.Sailing.Heroes != null)
             {
-                v14 = (int)(-2004318071L * (this.Connection.Avatar.Sailing.Heroes.Count >> 32)) + this.Connection.Avatar.Sailing.Heroes.Count;
+                v14 = (int)(-2004318071L * (gamemode.Avatar.Sailing.Heroes.Count >> 32)) + gamemode.Avatar.Sailing.Heroes.Count;
                 v15 = 100 * LogicMath.Max(0, (int)((v14 >> 3) + (v14 >> 31)));
             }
             else
@@ -58,7 +54,7 @@
 
             var v16 = 0;
             var v17 = v16 * LogicMath.Max(v12, 1);
-            var v18 = (ulong)(1374389535L * LogicMath.Clamp(v15 / (3600 * this.Connection.Avatar.Orb1), 1, 100));
+            var v18 = (ulong)(1374389535L * LogicMath.Clamp(v15 / (3600 * gamemode.Avatar.Orb1), 1, 100));
 
             var v19 = (v18 >> 5) + (v18 >> 31);
 

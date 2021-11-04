@@ -30,10 +30,10 @@
         
         internal override void Encode()
         {
-            this.Stream.WriteLogicLong(this.Connection.Avatar.Identifier);
-            this.Stream.WriteLogicLong(this.Connection.Avatar.Identifier);
+            this.Stream.WriteLogicLong(this.Connection.GameMode.Avatar.Identifier);
+            this.Stream.WriteLogicLong(this.Connection.GameMode.Avatar.Identifier);
 
-            this.Stream.WriteString(this.Connection.Avatar.Token);
+            this.Stream.WriteString(this.Connection.GameMode.Avatar.Token);
 
             this.Stream.WriteString(null);
             this.Stream.WriteString(null);
@@ -45,7 +45,7 @@
             this.Stream.WriteString(LogicVersion.ServerType);
 
             this.Stream.WriteInt(1); // Total Session
-            this.Stream.WriteInt(this.Connection.Avatar.TimePlayed); // Played Time
+            this.Stream.WriteInt(this.Connection.GameMode.Avatar.TimePlayed); // Played Time
             this.Stream.WriteInt(0); // Played Time in day
 
             this.Stream.WriteString(null); // 103121310241222

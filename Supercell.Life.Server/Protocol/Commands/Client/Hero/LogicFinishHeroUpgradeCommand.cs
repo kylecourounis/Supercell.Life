@@ -2,7 +2,7 @@
 {
     using Supercell.Life.Titan.DataStream;
 
-    using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
 
     internal class LogicFinishHeroUpgradeCommand : LogicCommand
@@ -20,10 +20,9 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
-            this.Connection.Avatar.HeroUpgrade.Finish();
-            this.Connection.Avatar.Save();
+            gamemode.Avatar.HeroUpgrade.Finish();
         }
     }
 }

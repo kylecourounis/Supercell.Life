@@ -4,6 +4,7 @@
     
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Game.Objects.Quests;
     using Supercell.Life.Server.Network;
 
@@ -26,12 +27,10 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
-            LogicQuest quest = this.Connection.Avatar.Quests[this.QuestData.GlobalID];
-            quest.Start(this.Connection.Avatar, this.QuestData);
-
-            this.Connection.Avatar.Save();
+            LogicQuest quest = gamemode.Avatar.Quests[this.QuestData.GlobalID];
+            quest.Start(gamemode.Avatar, this.QuestData);
         }
     }
 }

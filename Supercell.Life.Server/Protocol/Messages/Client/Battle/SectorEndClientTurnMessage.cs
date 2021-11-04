@@ -33,7 +33,7 @@
                 {
                     for (int i = 0; i < this.CommandCount; i++)
                     {
-                        this.Connection.Messaging.CommandManager.DecodeBattleCommand(this.Stream, this.Subtick);
+                        this.Connection.GameMode.CommandManager.DecodeBattleCommand(this.Stream, this.Subtick);
                     }
                 }
             }
@@ -41,7 +41,7 @@
 
         internal override void Handle()
         {
-            LogicCommandManager commandManager = this.Connection.Messaging.CommandManager;
+            LogicCommandManager commandManager = this.Connection.GameMode.CommandManager;
 
             if (commandManager.SectorCommands != null)
             {

@@ -3,6 +3,7 @@
     using Supercell.Life.Titan.DataStream;
 
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Server.Network;
@@ -30,7 +31,7 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
             switch (this.Resource)
             {
@@ -38,10 +39,10 @@
                 {
                     int cost = this.DiamondCost;
 
-                    if (this.Connection.Avatar.Diamonds >= cost)
+                    if (gamemode.Avatar.Diamonds >= cost)
                     {
-                        this.Connection.Avatar.Diamonds -= cost;
-                        this.Connection.Avatar.AddGold(this.Amount);
+                        gamemode.Avatar.Diamonds -= cost;
+                        gamemode.Avatar.AddGold(this.Amount);
                     }
 
                     break;
@@ -50,18 +51,16 @@
                 {
                     int cost = this.Amount * 2;
 
-                    if (this.Connection.Avatar.Diamonds >= cost)
+                    if (gamemode.Avatar.Diamonds >= cost)
                     {
-                        this.Connection.Avatar.Diamonds -= cost;
-                        this.Connection.Avatar.EnergyTimer.Stop();
-                        this.Connection.Avatar.Energy = this.Connection.Avatar.MaxEnergy;
+                        gamemode.Avatar.Diamonds -= cost;
+                        gamemode.Avatar.EnergyTimer.Stop();
+                        gamemode.Avatar.Energy = gamemode.Avatar.MaxEnergy;
                     }
 
                     break;
                 }
             }
-
-            this.Connection.Avatar.Save();
         }
 
         private int DiamondCost

@@ -4,6 +4,7 @@
 
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
 
     internal class LogicBuyEnergyPackageCommand : LogicCommand
@@ -25,11 +26,11 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
             if (this.EnergyPackage != null)
             {
-                int alreadyBought = this.Connection.Avatar.EnergyPackages.GetCount(this.EnergyPackage.GlobalID);
+                int alreadyBought = gamemode.Avatar.EnergyPackages.GetCount(this.EnergyPackage.GlobalID);
 
                 if (this.EnergyPackage.Diamonds.Count > alreadyBought)
                 {
@@ -37,18 +38,18 @@
 
                     if (cost > 0)
                     {
-                        if (this.Connection.Avatar.Diamonds < cost)
+                        if (gamemode.Avatar.Diamonds < cost)
                         {
-                            Debugger.Error($"Unable to buy a energy package. {this.Connection.Avatar.Name} does not enough diamonds. (Diamonds : {this.Connection.Avatar.Diamonds}, Require : {cost}).");
+                            Debugger.Error($"Unable to buy a energy package. {gamemode.Avatar.Name} does not enough diamonds. (Diamonds : {gamemode.Avatar.Diamonds}, Require : {cost}).");
                             return;
                         }
                     }
 
-                    this.Connection.Avatar.EnergyPackages.AddItem(this.EnergyPackage.GlobalID, 1);
-                    this.Connection.Avatar.EnergyTimer.Stop();
+                    gamemode.Avatar.EnergyPackages.AddItem(this.EnergyPackage.GlobalID, 1);
+                    gamemode.Avatar.EnergyTimer.Stop();
                     
-                    this.Connection.Avatar.Diamonds -= cost;
-                    this.Connection.Avatar.Energy    = this.Connection.Avatar.MaxEnergy;
+                    gamemode.Avatar.Diamonds -= cost;
+                    gamemode.Avatar.Energy    = gamemode.Avatar.MaxEnergy;
                 }
                 else Debugger.Error("Unable to buy the energy package. The player has already bought all of the packages.");
             }

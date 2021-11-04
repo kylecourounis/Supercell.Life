@@ -35,7 +35,7 @@
             this.Stream.WriteInt((int)this.Command.Type);
             this.Stream.Write(this.Command.Stream.ToArray());
 
-            this.Command.Execute();
+            this.Command.Execute(this.Connection.GameMode);
         }
     }
 }

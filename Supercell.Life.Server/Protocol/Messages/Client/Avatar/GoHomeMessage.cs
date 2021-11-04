@@ -39,32 +39,32 @@
         {
             this.ShowValues();
 
-            if (this.Connection.Avatar.Resigned)
+            if (this.Connection.GameMode.Avatar.Resigned)
             {
-                this.Connection.Avatar.LoseBattle();
+                this.Connection.GameMode.Avatar.LoseBattle();
             }
             else
             {
                 this.GetBattleResult();
             }
              
-            this.Connection.Avatar.Resigned = false;
+            this.Connection.GameMode.Avatar.Resigned = false;
 
             new OwnAvatarDataMessage(this.Connection).Send();
         }
 
         private void GetBattleResult()
         {
-            if (this.Connection.Avatar.OngoingQuestData != null)
+            if (this.Connection.GameMode.Avatar.OngoingQuestData != null)
             {
-                if (this.Connection.Avatar.OngoingQuestData.GlobalID == 6000015)
+                if (this.Connection.GameMode.Avatar.OngoingQuestData.GlobalID == 6000015)
                 {
-                    this.Connection.Avatar.OngoingQuestData.Save();
+                    this.Connection.GameMode.Avatar.OngoingQuestData.Save();
                 }
             }
             else
             {
-                // this.Connection.Avatar.WinBattle();
+                // this.Connection.GameMode.Avatar.WinBattle();
             }
         }
     }

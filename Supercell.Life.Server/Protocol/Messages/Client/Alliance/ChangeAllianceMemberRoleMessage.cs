@@ -43,12 +43,12 @@
 
         internal override void Handle()
         {
-            Alliance alliance = Alliances.Get(this.Connection.Avatar.Alliance.Identifier);
+            Alliance alliance = Alliances.Get(this.Connection.GameMode.Avatar.Alliance.Identifier);
 
             if (alliance != null)
             {
                 AllianceMember member = alliance.Members.Find(m => m.Identifier == this.MemberID);
-                AllianceMember sender = alliance.Members.Find(m => m.Identifier == this.Connection.Avatar.Identifier);
+                AllianceMember sender = alliance.Members.Find(m => m.Identifier == this.Connection.GameMode.Avatar.Identifier);
 
                 alliance.AddEntry(new StreamEntry(member, sender, ChangeAllianceMemberRoleMessage.IsHigherRoleThan(this.Role, member.Role) ? StreamEntry.StreamEvent.Promoted : StreamEntry.StreamEvent.Demoted));
                 member.Role = this.Role;

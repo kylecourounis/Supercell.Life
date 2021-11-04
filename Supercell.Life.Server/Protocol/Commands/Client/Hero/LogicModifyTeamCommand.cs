@@ -5,6 +5,7 @@
 
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
 
     internal class LogicModifyTeamCommand : LogicCommand
@@ -30,19 +31,17 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
-            if (this.Connection.Avatar.Team.Count > 3)
+            if (gamemode.Avatar.Team.Count > 3)
             {
-                this.Connection.Avatar.Team.Clear();
+                gamemode.Avatar.Team.Clear();
             }
 
             for (int i = 0; i < this.Heroes.Count; i++)
             {
-                this.Connection.Avatar.Team[i] = this.Heroes[i].GlobalID;
+                gamemode.Avatar.Team[i] = this.Heroes[i].GlobalID;
             }
-
-            this.Connection.Avatar.Save();
         }
     }
 }

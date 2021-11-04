@@ -5,6 +5,7 @@
 
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Slots;
     using Supercell.Life.Server.Network;
 
@@ -27,28 +28,28 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
             if (this.Hero != null)
             {
-                if (this.Connection.Avatar.HeroUpgrade.CanUpgrade(this.Hero))
+                if (gamemode.Avatar.HeroUpgrade.CanUpgrade(this.Hero))
                 {
-                    if (this.Connection.Avatar.ExpLevel < this.Hero.RequiredXpLevel)
+                    if (gamemode.Avatar.ExpLevel < this.Hero.RequiredXpLevel)
                     {
-                        Debugger.Error($"Unable to upgrade the hero. {this.Connection.Avatar.Name} ({this.Connection.Avatar}) is not at the required level. (Level : {this.Connection.Avatar.ExpLevel}, Require : {this.Hero.RequiredXpLevel})");
+                        Debugger.Error($"Unable to upgrade the hero. {gamemode.Avatar.Name} ({gamemode.Avatar}) is not at the required level. (Level : {gamemode.Avatar.ExpLevel}, Require : {this.Hero.RequiredXpLevel})");
                         return;
                     }
 
                     if (!string.IsNullOrEmpty(this.Hero.RequiredQuest))
                     {
-                        if (!this.Connection.Avatar.NpcProgress.ContainsKey(this.Hero.RequiredQuestData.GlobalID))
+                        if (!gamemode.Avatar.NpcProgress.ContainsKey(this.Hero.RequiredQuestData.GlobalID))
                         {
-                            Debugger.Error($"Unable to upgrade the hero. {this.Connection.Avatar.Name} ({this.Connection.Avatar}) has not unlocked the required quest.");
+                            Debugger.Error($"Unable to upgrade the hero. {gamemode.Avatar.Name} ({gamemode.Avatar}) has not unlocked the required quest.");
                             return;
                         }
                     }
 
-                    string[] cost = this.Hero.Cost[this.Connection.Avatar.HeroLevels.GetCount(this.Hero.GlobalID)].Split(',');
+                    string[] cost = this.Hero.Cost[gamemode.Avatar.HeroLevels.GetCount(this.Hero.GlobalID)].Split(',');
 
                     if (cost.Length >= 7)
                     {
@@ -62,79 +63,77 @@
 
                         if (diamonds != 0)
                         {
-                            if (this.Connection.Avatar.Diamonds < diamonds)
+                            if (gamemode.Avatar.Diamonds < diamonds)
                             {
-                                Debugger.Error($"Unable to upgrade the hero. {this.Connection.Avatar.Name} ({this.Connection.Avatar}) does not have enough diamonds. (Diamonds : {this.Connection.Avatar.Diamonds}, Require : {diamonds})");
+                                Debugger.Error($"Unable to upgrade the hero. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough diamonds. (Diamonds : {gamemode.Avatar.Diamonds}, Require : {diamonds})");
                                 return;
                             }
                         }
 
                         if (gold != 0)
                         {
-                            if (this.Connection.Avatar.Gold < gold)
+                            if (gamemode.Avatar.Gold < gold)
                             {
-                                Debugger.Error($"Unable to upgrade the hero. {this.Connection.Avatar.Name} ({this.Connection.Avatar}) does not have enough gold. (Gold : {this.Connection.Avatar.Gold}, Require : {gold})");
+                                Debugger.Error($"Unable to upgrade the hero. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough gold. (Gold : {gamemode.Avatar.Gold}, Require : {gold})");
                                 return;
                             }
                         }
 
                         if (energy != 0)
                         {
-                            if (this.Connection.Avatar.Energy < energy)
+                            if (gamemode.Avatar.Energy < energy)
                             {
-                                Debugger.Error($"Unable to upgrade the hero. {this.Connection.Avatar.Name} ({this.Connection.Avatar}) does not have enough energy. (Energy : {this.Connection.Avatar.Energy}, Require : {energy}.");
+                                Debugger.Error($"Unable to upgrade the hero. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough energy. (Energy : {gamemode.Avatar.Energy}, Require : {energy}.");
                                 return;
                             }
                         }
                         
                         if (orb1 != 0)
                         {
-                            if (this.Connection.Avatar.Orb1 < orb1)
+                            if (gamemode.Avatar.Orb1 < orb1)
                             {
-                                Debugger.Error($"Unable to upgrade the hero. {this.Connection.Avatar.Name} ({this.Connection.Avatar}) does not have enough of orb1. (Orb1 : {this.Connection.Avatar.Orb1}, Require : {orb1})");
+                                Debugger.Error($"Unable to upgrade the hero. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough of orb1. (Orb1 : {gamemode.Avatar.Orb1}, Require : {orb1})");
                                 return;
                             }
                         }
 
                         if (orb2 != 0)
                         {
-                            if (this.Connection.Avatar.Orb2 < orb2)
+                            if (gamemode.Avatar.Orb2 < orb2)
                             {
-                                Debugger.Error($"Unable to upgrade the hero. {this.Connection.Avatar.Name} ({this.Connection.Avatar}) does not have enough of orb2. (Orb2 : {this.Connection.Avatar.Orb2}, Require : {orb2})");
+                                Debugger.Error($"Unable to upgrade the hero. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough of orb2. (Orb2 : {gamemode.Avatar.Orb2}, Require : {orb2})");
                                 return;
                             }
                         }
 
                         if (orb3 != 0)
                         {
-                            if (this.Connection.Avatar.Orb3 < orb3)
+                            if (gamemode.Avatar.Orb3 < orb3)
                             {
-                                Debugger.Error($"Unable to upgrade the hero. {this.Connection.Avatar.Name} ({this.Connection.Avatar}) does not have enough of orb3. (Orb3 : {this.Connection.Avatar.Orb3}, Require : {orb3})");
+                                Debugger.Error($"Unable to upgrade the hero. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough of orb3. (Orb3 : {gamemode.Avatar.Orb3}, Require : {orb3})");
                                 return;
                             }
                         }
 
                         if (orb4 != 0)
                         {
-                            if (this.Connection.Avatar.Orb4 < orb4)
+                            if (gamemode.Avatar.Orb4 < orb4)
                             {
-                                Debugger.Error($"Unable to upgrade the hero. {this.Connection.Avatar.Name} ({this.Connection.Avatar}) does not have enough of orb4. (Orb4 : {this.Connection.Avatar.Orb4}, Require : {orb4})");
+                                Debugger.Error($"Unable to upgrade the hero. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough of orb4. (Orb4 : {gamemode.Avatar.Orb4}, Require : {orb4})");
                                 return;
                             }
                         }
 
-                        this.Connection.Avatar.Diamonds -= diamonds;
-                        this.Connection.Avatar.Gold     -= gold;
-                        this.Connection.Avatar.Energy   -= energy;
-                        this.Connection.Avatar.Orb1     -= orb1;
-                        this.Connection.Avatar.Orb2     -= orb2;
-                        this.Connection.Avatar.Orb3     -= orb3;
-                        this.Connection.Avatar.Orb4     -= orb4;
+                        gamemode.Avatar.Diamonds -= diamonds;
+                        gamemode.Avatar.Gold     -= gold;
+                        gamemode.Avatar.Energy   -= energy;
+                        gamemode.Avatar.Orb1     -= orb1;
+                        gamemode.Avatar.Orb2     -= orb2;
+                        gamemode.Avatar.Orb3     -= orb3;
+                        gamemode.Avatar.Orb4     -= orb4;
                     }
 
-                    this.Connection.Avatar.HeroUpgrade.Start(this.Hero);
-
-                    this.Connection.Avatar.Save();
+                    gamemode.Avatar.HeroUpgrade.Start(this.Hero);
                 }
             }
         }

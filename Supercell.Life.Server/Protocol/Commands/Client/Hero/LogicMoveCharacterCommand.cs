@@ -1,5 +1,6 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Titan.DataStream;
     using Supercell.Life.Titan.Logic.Math;
 
@@ -53,11 +54,11 @@
             this.WriteHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
-            if (this.Connection.Avatar.OngoingQuestData != null)
+            if (gamemode.Avatar.OngoingQuestData != null)
             {
-                if (this.Connection.Avatar.OngoingQuestData.Data.QuestType != "PvP")
+                if (gamemode.Avatar.OngoingQuestData.Data.QuestType != "PvP")
                 {
                     if (this.DirectionX + 256 >= 512)
                     {
@@ -78,20 +79,20 @@
                         return;
                     }
 
-                    this.Connection.Avatar.OngoingQuestData.SublevelMoveCount += 1;
+                    gamemode.Avatar.OngoingQuestData.SublevelMoveCount += 1;
 
-                    var ongoingLevel = this.Connection.Avatar.OngoingQuestData.Levels[this.Connection.Avatar.OngoingQuestData.Level];
-                    ongoingLevel.Battles[this.Connection.Avatar.Quests[this.Connection.Avatar.OngoingQuestData.GlobalID].Levels[0].CurrentBattle].CheckCollision(this.DirectionX, this.DirectionY);
+                    var ongoingLevel = gamemode.Avatar.OngoingQuestData.Levels[gamemode.Avatar.OngoingQuestData.Level];
+                    ongoingLevel.Battles[gamemode.Avatar.Quests[gamemode.Avatar.OngoingQuestData.GlobalID].Levels[0].CurrentBattle].CheckCollision(this.DirectionX, this.DirectionY);
                 }
             }
 
-            var battle = this.Connection.Avatar.Battle;
+            var battle = gamemode.Avatar.Battle;
 
             if (battle != null)
             {
                 battle.Turn++;
 
-                var opponent = battle.Avatars.Find(avatar => avatar.Identifier != this.Connection.Avatar.Identifier);
+                var opponent = battle.Avatars.Find(avatar => avatar.Identifier != gamemode.Avatar.Identifier);
 
                 LogicMoveCharacterCommand cmd = new LogicMoveCharacterCommand(opponent.Connection)
                 {
@@ -102,8 +103,8 @@
                     ExecutorID     = this.ExecutorID
                 };
 
-                battle.GetOwnQueue(this.Connection.Avatar).Enqueue(this);
-                battle.GetEnemyQueue(this.Connection.Avatar).Enqueue(cmd);
+                battle.GetOwnQueue(gamemode.Avatar).Enqueue(this);
+                battle.GetEnemyQueue(gamemode.Avatar).Enqueue(cmd);
             }
 
             Debugger.Debug($"DirectionX : {this.DirectionX}, DirectionY : {this.DirectionY}, S : {this.S}, F : {this.F}");

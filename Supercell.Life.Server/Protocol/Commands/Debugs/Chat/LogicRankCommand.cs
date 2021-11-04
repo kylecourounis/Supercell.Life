@@ -46,7 +46,7 @@
 
         internal override void Process()
         {
-            if (this.Connection.Avatar.Rank >= this.RequiredRank)
+            if (this.Connection.GameMode.Avatar.Rank >= this.RequiredRank)
             {
                 if (this.Parameters.Length >= 2)
                 {
@@ -59,7 +59,7 @@
                                 LogicLong id             = LogicTagUtil.ToLogicLong(this.Tag);
                                 LogicClientAvatar avatar = Avatars.Get(id);
                                 
-                                if (this.Rank > this.Connection.Avatar.Rank)
+                                if (this.Rank > this.Connection.GameMode.Avatar.Rank)
                                 {
                                     this.Connection.SendChatMessage("Target privileges are higher then yours.");
                                 }

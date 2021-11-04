@@ -1,8 +1,9 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
-    using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Titan.DataStream;
-    
+
+    using Supercell.Life.Server.Logic;
+    using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Server.Network;
 
     internal class LogicFinishShipUpgradeCommand : LogicCommand
@@ -20,14 +21,14 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
             var cost = LogicGamePlayUtil.GetSpeedUpCost(86400, LogicGamePlayUtil.GetSpeedUpCostMultiplier(1));
             Debugger.Debug(cost);
 
-            this.Connection.Avatar.Diamonds -= cost;
+            gamemode.Avatar.Diamonds -= cost;
 
-            this.Connection.Avatar.ShipUpgrade.Finish();
+            gamemode.Avatar.ShipUpgrade.Finish();
         }
     }
 }

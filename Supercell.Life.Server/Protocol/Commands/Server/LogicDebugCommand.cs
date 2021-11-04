@@ -1,6 +1,7 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Server
 {
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
     using Supercell.Life.Server.Protocol.Messages;
@@ -28,35 +29,35 @@
             this.WriteHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
             switch (this.Debug)
             {
                 case 15:
                 {
-                    this.Connection.Avatar.FastForward(60);
+                    gamemode.FastForward(60);
                     Debugger.Info("Fast forward 1 minute");
 
                     break;
                 }
                 case 16:
                 {
-                    this.Connection.Avatar.FastForward(3600);
+                    gamemode.FastForward(3600);
                     Debugger.Info("Fast forward 1 hour");
 
                     break;
                 }
                 case 17:
                 {
-                    this.Connection.Avatar.FastForward(86400);
+                    gamemode.FastForward(86400);
                     Debugger.Info("Fast forward 24 hours");
 
                     break;
                 }
                 case 20:
                 {
-                    this.Connection.Avatar.EnergyTimer.Stop();
-                    this.Connection.Avatar.Energy = this.Connection.Avatar.MaxEnergy;
+                    gamemode.Avatar.EnergyTimer.Stop();
+                    gamemode.Avatar.Energy = gamemode.Avatar.MaxEnergy;
 
                     Debugger.Info("Energy filled");
 
@@ -82,9 +83,9 @@
                             break;
                     }
                         
-                    Debugger.Info($"Change {this.Connection.Avatar.Score} trophy score [new {this.Connection.Avatar.Score + v44}]");
-                        
-                    this.Connection.Avatar.AddTrophies(v44);
+                    Debugger.Info($"Change {gamemode.Avatar.Score} trophy score [new {gamemode.Avatar.Score + v44}]");
+
+                    gamemode.Avatar.AddTrophies(v44);
                         
                     break;
                 }
@@ -108,20 +109,18 @@
                             break;
                     }
 
-                    Debugger.Info($"Change {this.Connection.Avatar.Diamonds} diamond count [new {this.Connection.Avatar.Diamonds + v35}]");
+                    Debugger.Info($"Change {gamemode.Avatar.Diamonds} diamond count [new {gamemode.Avatar.Diamonds + v35}]");
 
                     new AvailableServerCommandMessage(this.Connection, new LogicDiamondsAddedCommand(this.Connection)
                     {
                         Diamonds = v35
                     }).Send();
-                        
-                    this.Connection.Avatar.AddDiamonds(v35);
+
+                    gamemode.Avatar.AddDiamonds(v35);
                         
                     break;
                 }
             }
-
-            this.Connection.Avatar.Save();
         }
     }
 }

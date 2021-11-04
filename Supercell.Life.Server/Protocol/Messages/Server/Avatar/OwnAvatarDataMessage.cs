@@ -28,7 +28,7 @@
         public OwnAvatarDataMessage(Connection connection) : base (connection)
         {
             this.Type              = Message.OwnAvatarData;
-            this.TimeSinceLastSave = (int)DateTime.UtcNow.Subtract(this.Connection.Avatar.Update).TotalSeconds;
+            this.TimeSinceLastSave = (int)DateTime.UtcNow.Subtract(this.Connection.GameMode.Avatar.Update).TotalSeconds;
             this.Connection.State  = State.Home;
         }
 
@@ -39,14 +39,14 @@
             this.Stream.WriteInt(0);
             this.Stream.WriteInt(0);
 
-            this.Connection.Avatar.Encode(this.Stream);
+            this.Connection.GameMode.Avatar.Encode(this.Stream);
         }
 
         internal override void Handle()
         {
-            this.Connection.Avatar.AdjustSubTick();
-            this.Connection.Avatar.FastForward(this.TimeSinceLastSave);
-            this.Connection.Avatar.Tick();
+            this.Connection.GameMode.AdjustSubTick();
+            this.Connection.GameMode.FastForward(this.TimeSinceLastSave);
+            this.Connection.GameMode.Tick();
         }
     }
 }

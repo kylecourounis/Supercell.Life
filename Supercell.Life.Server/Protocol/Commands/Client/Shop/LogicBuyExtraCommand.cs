@@ -6,6 +6,7 @@
     using Supercell.Life.Server.Files.CsvHelpers;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Avatar.Items;
     using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Network;
@@ -33,7 +34,7 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
             if (this.Data != null)
             {
@@ -41,15 +42,15 @@
                 {
                     LogicTauntData taunt = (LogicTauntData) this.Data;
 
-                    if (!this.Connection.Avatar.Extras.ContainsKey(taunt.GlobalID))
+                    if (!gamemode.Avatar.Extras.ContainsKey(taunt.GlobalID))
                     {
                         if (!string.IsNullOrEmpty(taunt.CharacterUnlock))
                         {
                             LogicHeroData hero = (LogicHeroData) CSV.Tables.Get(Gamefile.Heroes).GetDataByName(taunt.CharacterUnlock);
 
-                            if (!this.Connection.Avatar.HeroLevels.ContainsKey(hero.GlobalID))
+                            if (!gamemode.Avatar.HeroLevels.ContainsKey(hero.GlobalID))
                             {
-                                Debugger.Error($"Unable to buy the taunt. {this.Connection.Avatar.Name} ({this.Connection.Avatar}) doesn't have the hero {taunt.CharacterUnlock}.");
+                                Debugger.Error($"Unable to buy the taunt. {gamemode.Avatar.Name} ({gamemode.Avatar}) doesn't have the hero {taunt.CharacterUnlock}.");
                                 return;
                             }
                         }
@@ -58,27 +59,27 @@
                         {
                             LogicResourceData resource = (LogicResourceData) CSV.Tables.Get(Gamefile.Resources).GetDataByName(taunt.Resource);
 
-                            if (this.Connection.Avatar.Resources.GetCount(resource.GlobalID) < taunt.Cost)
+                            if (gamemode.Avatar.Resources.GetCount(resource.GlobalID) < taunt.Cost)
                             {
-                                Debugger.Error($"Unable to buy the taunt. {this.Connection.Avatar.Name} does not have enough {taunt.Resource}. {taunt.Resource} : {this.Connection.Avatar.Resources.GetCount(resource.GlobalID)}, Require : {taunt.Cost}.");
+                                Debugger.Error($"Unable to buy the taunt. {gamemode.Avatar.Name} does not have enough {taunt.Resource}. {taunt.Resource} : {gamemode.Avatar.Resources.GetCount(resource.GlobalID)}, Require : {taunt.Cost}.");
                                 return;
                             }
 
-                            this.Connection.Avatar.Resources.Remove(resource.GlobalID, taunt.Cost);
+                            gamemode.Avatar.Resources.Remove(resource.GlobalID, taunt.Cost);
                         }
 
-                        this.Connection.Avatar.Extras.Set(taunt.GlobalID, 1);
+                        gamemode.Avatar.Extras.Set(taunt.GlobalID, 1);
                     }
                 }
                 else
                 {
                     LogicDecoData deco = (LogicDecoData) this.Data;
 
-                    if (!this.Connection.Avatar.Extras.ContainsKey(deco.GlobalID))
+                    if (!gamemode.Avatar.Extras.ContainsKey(deco.GlobalID))
                     {
-                        if (deco.UnlockLevel > this.Connection.Avatar.ExpLevel)
+                        if (deco.UnlockLevel > gamemode.Avatar.ExpLevel)
                         {
-                            Debugger.Error($"Unable to buy the deco. {this.Connection.Avatar.Name} ({this.Connection.Avatar}) is not at the required level.");
+                            Debugger.Error($"Unable to buy the deco. {gamemode.Avatar.Name} ({gamemode.Avatar}) is not at the required level.");
                             return;
                         }
 
@@ -86,20 +87,20 @@
                         {
                             LogicResourceData resource = (LogicResourceData) CSV.Tables.Get(Gamefile.Resources).GetDataByName(deco.Resource);
 
-                            if (this.Connection.Avatar.Resources.GetCount(resource.GlobalID) < deco.Cost)
+                            if (gamemode.Avatar.Resources.GetCount(resource.GlobalID) < deco.Cost)
                             {
-                                Debugger.Error($"Unable to buy the deco. {this.Connection.Avatar.Name} ({this.Connection.Avatar}) does not have enough {deco.Resource}. ({deco.Resource} : {this.Connection.Avatar.Resources.GetCount(resource.GlobalID)}, Require : {deco.Cost}.");
+                                Debugger.Error($"Unable to buy the deco. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough {deco.Resource}. ({deco.Resource} : {gamemode.Avatar.Resources.GetCount(resource.GlobalID)}, Require : {deco.Cost}.");
                                 return;
                             }
 
-                            this.Connection.Avatar.Resources.Remove(resource.GlobalID, deco.Cost);
+                            gamemode.Avatar.Resources.Remove(resource.GlobalID, deco.Cost);
                         }
 
-                        this.Connection.Avatar.Extras.Set(deco.GlobalID, 2);
+                        gamemode.Avatar.Extras.Set(deco.GlobalID, 2);
 
-                        if (this.Connection.Avatar.Extras.Count > 1)
+                        if (gamemode.Avatar.Extras.Count > 1)
                         {
-                            foreach (Item item in this.Connection.Avatar.Extras.Values)
+                            foreach (Item item in gamemode.Avatar.Extras.Values)
                             {
                                 if (item.Id / 1000000 == deco.GetDataType())
                                 {
@@ -113,11 +114,11 @@
                     }
                     else
                     {
-                        if (this.Connection.Avatar.Extras.GetCount(deco.GlobalID) == 1)
+                        if (gamemode.Avatar.Extras.GetCount(deco.GlobalID) == 1)
                         {
-                            this.Connection.Avatar.Extras.Set(deco.GlobalID, 2);
+                            gamemode.Avatar.Extras.Set(deco.GlobalID, 2);
 
-                            foreach (Item item in this.Connection.Avatar.Extras.Values)
+                            foreach (Item item in gamemode.Avatar.Extras.Values)
                             {
                                 if (item.Id / 1000000 == deco.GetDataType())
                                 {
@@ -128,7 +129,7 @@
                                 }
                             }
                         }
-                        else this.Connection.Avatar.Extras.Set(deco.GlobalID, 1);
+                        else gamemode.Avatar.Extras.Set(deco.GlobalID, 1);
                     }
                 }
             }

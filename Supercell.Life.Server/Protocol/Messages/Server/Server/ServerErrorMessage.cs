@@ -34,10 +34,10 @@ namespace Supercell.Life.Server.Protocol.Messages.Server
             {
                 this.Reason.AppendLine("Your game threw an exception on the server!\nPlease contact one of the Brokencell Developers with the following information :");
 
-                if (this.Connection.Avatar != null)
+                if (this.Connection.GameMode.Avatar != null)
                 {
-                    this.Reason.AppendLine($"Your Player Name    : {this.Connection.Avatar.Name}.");
-                    this.Reason.AppendLine($"Your Player ID      : {this.Connection.Avatar.HighID}-{this.Connection.Avatar.LowID}.");
+                    this.Reason.AppendLine($"Your Player Name    : {this.Connection.GameMode.Avatar.Name}.");
+                    this.Reason.AppendLine($"Your Player ID      : {this.Connection.GameMode.Avatar.HighID}-{this.Connection.GameMode.Avatar.LowID}.");
                 }
 
                 this.Reason.AppendLine();

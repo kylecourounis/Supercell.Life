@@ -3,6 +3,7 @@
     using Supercell.Life.Titan.DataStream;
     using Supercell.Life.Titan.Logic.Math;
 
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Alliance;
     using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Logic.Slots;
@@ -29,7 +30,7 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
             LogicClientAvatar avatar = Avatars.Get(this.Identifier);
 

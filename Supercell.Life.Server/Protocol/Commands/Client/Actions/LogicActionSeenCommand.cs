@@ -4,8 +4,8 @@
     
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Avatar.Slots;
-    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Network;
 
     internal class LogicActionSeenCommand : LogicCommand
@@ -29,7 +29,7 @@
             this.Value    = this.Stream.ReadInt();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
             if (this.Value > 0)
             {
@@ -39,7 +39,7 @@
                     {
                         if (CSV.Tables.GetWithGlobalID(this.Value) is LogicQuestData quest)
                         {
-                            this.Connection.Avatar.QuestUnlockSeens.Set(quest.GlobalID, 1);
+                            gamemode.Avatar.QuestUnlockSeens.Set(quest.GlobalID, 1);
                         }
                         else
                         {
@@ -52,7 +52,7 @@
                     {
                         if (CSV.Tables.GetWithGlobalID(this.Value) is LogicHeroData hero)
                         {
-                            this.Connection.Avatar.HeroUnlockSeens.Set(hero.GlobalID, 1);
+                            gamemode.Avatar.HeroUnlockSeens.Set(hero.GlobalID, 1);
                         }
                         else
                         {
@@ -63,12 +63,12 @@
                     }
                     case 2:
                     {
-                        this.Connection.Avatar.TutorialMask |= this.Value;
+                        gamemode.Avatar.TutorialMask |= this.Value;
                         break;
                     }
                     case 3:
                     {
-                        this.Connection.Avatar.Variables.Set(LogicVariables.IntroSeen.GlobalID, 1);
+                        gamemode.Avatar.Variables.Set(LogicVariables.IntroSeen.GlobalID, 1);
                         break;
                     }
                     default:
@@ -77,8 +77,6 @@
                         break;
                     }
                 }
-
-                this.Connection.Avatar.Save();
             }   
         }
     }

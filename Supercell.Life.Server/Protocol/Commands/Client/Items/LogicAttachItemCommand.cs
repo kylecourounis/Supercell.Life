@@ -4,6 +4,7 @@
     
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
 
     internal class LogicAttachItemCommand : LogicCommand
@@ -27,19 +28,17 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
-            if (!this.Connection.Avatar.ItemAttachedTo.ContainsKey(this.Item.GlobalID))
+            if (!gamemode.Avatar.ItemAttachedTo.ContainsKey(this.Item.GlobalID))
             {
-                this.Connection.Avatar.ItemAttachedTo.AddItem(this.Item.GlobalID, this.Hero.GlobalID);
+                gamemode.Avatar.ItemAttachedTo.AddItem(this.Item.GlobalID, this.Hero.GlobalID);
             }
             else
             {
-                this.Connection.Avatar.ItemAttachedTo.Remove(this.Item.GlobalID);
-                this.Connection.Avatar.ItemUnavailableTimer.Start(this.Item.GlobalID);
+                gamemode.Avatar.ItemAttachedTo.Remove(this.Item.GlobalID);
+                gamemode.Avatar.ItemUnavailableTimer.Start(this.Item.GlobalID);
             }
-
-            this.Connection.Avatar.Save();
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     using Supercell.Life.Titan.DataStream;
 
-    using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
 
     internal class LogicReturnToMapCommand : LogicCommand
@@ -20,16 +20,15 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
             // We need to figure out the quest completion system at some point.
 
-            if (this.Connection.Avatar.OngoingQuestData != null)
+            if (gamemode.Avatar.OngoingQuestData != null)
             {
-                if (this.Connection.Avatar.ExpLevel >= this.Connection.Avatar.OngoingQuestData.Data.RequiredXpLevel)
+                if (gamemode.Avatar.ExpLevel >= gamemode.Avatar.OngoingQuestData.Data.RequiredXpLevel)
                 {
-                    this.Connection.Avatar.OngoingQuestData.Save();
-                    this.Connection.Avatar.Save();
+                    gamemode.Avatar.OngoingQuestData.Save();
                 }
                 else
                 {

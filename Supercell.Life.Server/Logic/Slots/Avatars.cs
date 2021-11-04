@@ -227,7 +227,7 @@ namespace Supercell.Life.Server.Logic.Slots
                             }
 
                             avatar.Connection = connection;
-                            connection.Avatar = avatar;
+                            connection.GameMode.Avatar = avatar;
                         }
 
                         break;
@@ -245,7 +245,7 @@ namespace Supercell.Life.Server.Logic.Slots
                                 avatar = JsonConvert.DeserializeObject<LogicClientAvatar>(json, AvatarDb.JsonSettings);
 
                                 avatar.Connection = connection;
-                                connection.Avatar = avatar;
+                                connection.GameMode.Avatar = avatar;
                             }
                             else
                             {

@@ -4,6 +4,7 @@
 
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
 
     internal class LogicUnlockSpellCommand : LogicCommand
@@ -25,16 +26,16 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
-            if (!this.Connection.Avatar.Spells.ContainsKey(this.Spell.GlobalID))
+            if (!gamemode.Avatar.Spells.ContainsKey(this.Spell.GlobalID))
             {
-                if (this.Connection.Avatar.Gold >= this.Spell.UnlockCost)
+                if (gamemode.Avatar.Gold >= this.Spell.UnlockCost)
                 {
-                    this.Connection.Avatar.Gold -= this.Spell.UnlockCost;
+                    gamemode.Avatar.Gold -= this.Spell.UnlockCost;
 
-                    this.Connection.Avatar.Spells.AddItem(this.Spell.GlobalID, 0);
-                    this.Connection.Avatar.SpellsReady.AddItem(this.Spell.GlobalID, 1);
+                    gamemode.Avatar.Spells.AddItem(this.Spell.GlobalID, 0);
+                    gamemode.Avatar.SpellsReady.AddItem(this.Spell.GlobalID, 1);
                 }
             }
         }

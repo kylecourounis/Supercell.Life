@@ -52,9 +52,9 @@
 
         internal override void Handle()
         {
-            if (this.Connection.Avatar.IsInAlliance)
+            if (this.Connection.GameMode.Avatar.IsInAlliance)
             {
-                Alliance alliance = Alliances.Get(this.Connection.Avatar.Alliance.Identifier);
+                Alliance alliance = Alliances.Get(this.Connection.GameMode.Avatar.Alliance.Identifier);
 
                 if (alliance != null)
                 {

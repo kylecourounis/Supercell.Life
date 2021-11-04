@@ -1,8 +1,8 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Titan.DataStream;
 
-    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Avatar.Slots;
     using Supercell.Life.Server.Network;
 
@@ -23,14 +23,12 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
-            if (LogicVariables.SpellSlotsUnlocked.Value < 3)
+            if (gamemode.Avatar.Variables.GetCount(LogicVariables.SpellSlotsUnlocked.GlobalID) < 3)
             {
-                this.Connection.Avatar.Variables.AddItem(LogicVariables.SpellSlotsUnlocked.GlobalID, 1);
+                gamemode.Avatar.Variables.AddItem(LogicVariables.SpellSlotsUnlocked.GlobalID, 1);
             }
-            
-            this.Connection.Avatar.Save();
         }
     }
 }

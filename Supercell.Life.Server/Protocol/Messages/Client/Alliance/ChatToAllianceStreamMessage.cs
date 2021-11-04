@@ -38,7 +38,7 @@
 
         internal override void Handle()
         {
-            if (this.Connection.Avatar.IsInAlliance)
+            if (this.Connection.GameMode.Avatar.IsInAlliance)
             {
                 if (!this.Message.IsNullOrEmptyOrWhitespace())
                 {
@@ -51,8 +51,8 @@
 
                         if (this.Message.Length > 0)
                         {
-                            AllianceMember sender = this.Connection.Avatar.Alliance.Members.Find(member => member.Identifier == this.Connection.Avatar.Identifier);
-                            this.Connection.Avatar.Alliance.AddEntry(new StreamEntry(sender, this.Message));
+                            AllianceMember sender = this.Connection.GameMode.Avatar.Alliance.Members.Find(member => member.Identifier == this.Connection.GameMode.Avatar.Identifier);
+                            this.Connection.GameMode.Avatar.Alliance.AddEntry(new StreamEntry(sender, this.Message));
                         }
                     }
                 }

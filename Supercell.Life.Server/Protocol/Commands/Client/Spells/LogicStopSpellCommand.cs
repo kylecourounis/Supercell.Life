@@ -4,6 +4,7 @@
 
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
 
     internal class LogicStopSpellCommand : LogicCommand
@@ -27,11 +28,9 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
-            this.Connection.Avatar.SpellTimer.Reset(this.Spell);
-
-            this.Connection.Avatar.Save();
+            gamemode.Avatar.SpellTimer.Reset(this.Spell);
         }
     }
 }

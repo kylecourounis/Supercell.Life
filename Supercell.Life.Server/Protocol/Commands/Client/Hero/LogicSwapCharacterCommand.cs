@@ -1,6 +1,7 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
     using Supercell.Life.Server.Files.CsvHelpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Titan.DataStream;
     
     using Supercell.Life.Server.Network;
@@ -40,13 +41,13 @@
             this.WriteHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
-            var battle = this.Connection.Avatar.Battle;
+            var battle = gamemode.Avatar.Battle;
 
             if (battle != null)
             {
-                var enemy = battle.Avatars.Find(avatar => avatar.Identifier != this.Connection.Avatar.Identifier);
+                var enemy = battle.Avatars.Find(avatar => avatar.Identifier != gamemode.Avatar.Identifier);
 
                 var cmd = new LogicSwapCharacterCommand(enemy.Connection)
                 {
@@ -55,8 +56,8 @@
                     ExecutorID     = this.ExecutorID
                 };
 
-                battle.GetOwnQueue(this.Connection.Avatar).Enqueue(cmd);
-                battle.GetEnemyQueue(this.Connection.Avatar).Enqueue(cmd);
+                battle.GetOwnQueue(gamemode.Avatar).Enqueue(cmd);
+                battle.GetEnemyQueue(gamemode.Avatar).Enqueue(cmd);
             }
         }
     }

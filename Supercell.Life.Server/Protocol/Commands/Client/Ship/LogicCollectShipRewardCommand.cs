@@ -7,6 +7,7 @@
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Avatar.Slots;
     using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Network;
@@ -26,19 +27,17 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
-            this.CalculateLoot();
+            this.CalculateLoot(gamemode);
 
-            this.Connection.Avatar.Variables.Remove(LogicVariables.SailRewardUnclaimed.GlobalID);
+            gamemode.Avatar.Variables.Remove(LogicVariables.SailRewardUnclaimed.GlobalID);
 
-            this.Connection.Avatar.Sailing.Heroes.Clear();
-            this.Connection.Avatar.Sailing.HeroLevels.Clear();
-
-            this.Connection.Avatar.Save();
+            gamemode.Avatar.Sailing.Heroes.Clear();
+            gamemode.Avatar.Sailing.HeroLevels.Clear();
         }
 
-        private void CalculateLoot()
+        private void CalculateLoot(LogicGameMode gamemode)
         {
             if (CSV.Tables.Get(Gamefile.Globals).GetDataByName("SHIP_GOLD_PER_HERO_LVL") is LogicGlobalData shipGold)
             {
@@ -47,14 +46,14 @@
                     int gold = 0;
                     int xp = 0;
 
-                    foreach (var level in this.Connection.Avatar.Sailing.HeroLevels.Select(hero => this.Connection.Avatar.HeroLevels.Get(hero.Value.Id)).Select(item => item.Count))
+                    foreach (var level in gamemode.Avatar.Sailing.HeroLevels.Select(hero => gamemode.Avatar.HeroLevels.Get(hero.Value.Id)).Select(item => item.Count))
                     {
                         gold += shipGold.NumberArray[level];
                         xp   += shipXp.NumberArray[level];
                     }
 
-                    this.Connection.Avatar.AddGold(gold);
-                    this.Connection.Avatar.AddXP(xp);
+                    gamemode.Avatar.AddGold(gold);
+                    gamemode.Avatar.AddXP(xp);
                 }
             }
         }

@@ -30,13 +30,13 @@
         internal override void Encode()
         {
             this.Stream.WriteString(this.Chat.Message);
-            this.Stream.WriteString(this.Chat.System ? "System" : this.Chat.WhoSent ? $"[{this.Connection.Avatar.Rank}] You" : this.Chat.Regex ? $"[{this.Connection.Avatar.Rank}] {this.Connection.Avatar.Name}" : this.Connection.Avatar.Name);
+            this.Stream.WriteString(this.Chat.System ? "System" : this.Chat.WhoSent ? $"[{this.Connection.GameMode.Avatar.Rank}] You" : this.Chat.Regex ? $"[{this.Connection.GameMode.Avatar.Rank}] {this.Connection.GameMode.Avatar.Name}" : this.Connection.GameMode.Avatar.Name);
 
             this.Stream.WriteInt(0);
-            this.Stream.WriteInt(this.Connection.Avatar.League);
+            this.Stream.WriteInt(this.Connection.GameMode.Avatar.League);
 
-            this.Stream.WriteLong(this.Connection.Avatar.Identifier);
-            this.Stream.WriteLong(this.Connection.Avatar.Identifier);
+            this.Stream.WriteLong(this.Connection.GameMode.Avatar.Identifier);
+            this.Stream.WriteLong(this.Connection.GameMode.Avatar.Identifier);
         }
     }
 }

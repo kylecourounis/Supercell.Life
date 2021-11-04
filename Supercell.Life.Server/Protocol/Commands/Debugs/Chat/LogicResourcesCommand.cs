@@ -37,7 +37,7 @@
 
         internal override void Process()
         {
-            if (this.Connection.Avatar.Rank >= this.RequiredRank)
+            if (this.Connection.GameMode.Avatar.Rank >= this.RequiredRank)
             {
                 if (this.Parameters.Length >= 2)
                 {
@@ -47,22 +47,22 @@
                         {
                             case "gold":
                             {
-                                this.Connection.Avatar.Gold = LogicStringUtil.ConvertToInt(this.Parameters[2]);
+                                this.Connection.GameMode.Avatar.Gold = LogicStringUtil.ConvertToInt(this.Parameters[2]);
                                 break;
                             }
                             case "diamonds":
                             {
-                                this.Connection.Avatar.Diamonds = LogicStringUtil.ConvertToInt(this.Parameters[2]);
+                                this.Connection.GameMode.Avatar.Diamonds = LogicStringUtil.ConvertToInt(this.Parameters[2]);
                                 break;
                             }
                             case "xp":
                             {
-                                this.Connection.Avatar.ExpPoints = LogicStringUtil.ConvertToInt(this.Parameters[2]);
+                                this.Connection.GameMode.Avatar.ExpPoints = LogicStringUtil.ConvertToInt(this.Parameters[2]);
                                 break;
                             }
                             case "score":
                             {
-                                this.Connection.Avatar.Score = LogicStringUtil.ConvertToInt(this.Parameters[2]);
+                                this.Connection.GameMode.Avatar.Score = LogicStringUtil.ConvertToInt(this.Parameters[2]);
                                 break;
                             }
                             default:
@@ -78,22 +78,22 @@
                         {
                             case "gold":
                             {
-                                this.Connection.Avatar.AddGold(LogicStringUtil.ConvertToInt(this.Parameters[2]));
+                                this.Connection.GameMode.Avatar.AddGold(LogicStringUtil.ConvertToInt(this.Parameters[2]));
                                 break;
                             }
                             case "diamonds":
                             {
-                                this.Connection.Avatar.AddDiamonds(LogicStringUtil.ConvertToInt(this.Parameters[2]));
+                                this.Connection.GameMode.Avatar.AddDiamonds(LogicStringUtil.ConvertToInt(this.Parameters[2]));
                                 break;
                             }
                             case "xp":
                             {
-                                this.Connection.Avatar.AddXP(LogicStringUtil.ConvertToInt(this.Parameters[2]));
+                                this.Connection.GameMode.Avatar.AddXP(LogicStringUtil.ConvertToInt(this.Parameters[2]));
                                 break;
                             }
                             case "score":
                             {
-                                this.Connection.Avatar.AddTrophies(LogicStringUtil.ConvertToInt(this.Parameters[2]));
+                                this.Connection.GameMode.Avatar.AddTrophies(LogicStringUtil.ConvertToInt(this.Parameters[2]));
                                 break;
                             }
                             default:
@@ -105,7 +105,6 @@
                     }
 
                     this.Connection.SendChatMessage($"Added {this.Parameters[1]} to your {this.Parameters[0]}");
-                    this.Connection.Avatar.Save();
 
                     new OwnAvatarDataMessage(this.Connection).Send();
                 }

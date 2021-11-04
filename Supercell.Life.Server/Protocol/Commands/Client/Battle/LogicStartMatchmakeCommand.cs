@@ -4,6 +4,7 @@
 
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Attack;
     using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Logic.Slots;
@@ -30,28 +31,28 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
             LogicClientAvatar opponent = Waiting.Dequeue();
             
             if (opponent != null)
             {
-                LogicBattle battle = new LogicBattle(this.Connection.Avatar, opponent)
+                LogicBattle battle = new LogicBattle(gamemode.Avatar, opponent)
                 {
                     PvPTier = this.Quest
                 };
 
                 Battles.Add(battle);
 
-                this.Connection.Avatar.Battle = battle;
-                opponent.Battle               = battle;
+                gamemode.Avatar.Battle = battle;
+                opponent.Battle        = battle;
 
                 battle.Start();
             }
             else
             {
                 new PvpMatchmakeNotificationMessage(this.Connection).Send();
-                Waiting.Enqueue(this.Connection.Avatar);
+                Waiting.Enqueue(gamemode.Avatar);
             }
         }
     }

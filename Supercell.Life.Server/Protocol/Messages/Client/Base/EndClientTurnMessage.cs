@@ -43,7 +43,7 @@
                 {
                     for (int i = 0; i < this.CommandCount; i++)
                     {
-                        this.Connection.Messaging.CommandManager.DecodeCommand(this.Stream, this.Subtick);
+                        this.Connection.GameMode.CommandManager.DecodeCommand(this.Stream, this.Subtick);
                     }
                 }
             }
@@ -51,7 +51,7 @@
 
         internal override void Handle()
         {
-            LogicCommandManager commandManager = this.Connection.Messaging.CommandManager;
+            LogicCommandManager commandManager = this.Connection.GameMode.CommandManager;
 
             if (commandManager.Commands != null)
             {
@@ -60,13 +60,15 @@
                     commandManager.ExecuteCommand(commandManager.Commands[0]);
                     commandManager.Commands.RemoveAt(0);
                 }
+
+                this.Connection.GameMode.Avatar.Save();
             }
 
-            this.Connection.Avatar.Time.ClientSubTick = this.Subtick;
-            this.Connection.Avatar.Tick();
-            
-            Debugger.Debug($"Client Time :  MS={this.Connection.Avatar.Time.TotalMS}   SECS={this.Connection.Avatar.Time.TotalSecs}.");
-            Debugger.Debug($"Checksum    :  CLIENT={this.Checksum - this.Connection.Avatar.Time.ClientSubTick}   SERVER={this.Connection.Avatar.Checksum}.");
+            this.Connection.GameMode.Avatar.Time.ClientSubTick = this.Subtick;
+            this.Connection.GameMode.Tick();
+
+            Debugger.Debug($"Client Time :  MS={this.Connection.GameMode.Avatar.Time.TotalMS}   SECS={this.Connection.GameMode.Avatar.Time.TotalSecs}.");
+            Debugger.Debug($"Checksum    :  CLIENT={this.Checksum - this.Connection.GameMode.Avatar.Time.ClientSubTick}   SERVER={this.Connection.GameMode.Avatar.Checksum}.");
         }
     }
 }

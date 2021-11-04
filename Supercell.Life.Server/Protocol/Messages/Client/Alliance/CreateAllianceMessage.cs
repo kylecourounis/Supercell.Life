@@ -50,9 +50,9 @@
 
         internal override void Handle()
         {
-            if (!this.Connection.Avatar.IsInAlliance && this.Connection.Avatar.Gold >= 10000)
+            if (!this.Connection.GameMode.Avatar.IsInAlliance && this.Connection.GameMode.Avatar.Gold >= 10000)
             {
-                this.Connection.Avatar.Gold -= 10000;
+                this.Connection.GameMode.Avatar.Gold -= 10000;
             }
 
             Alliance alliance = Alliances.Create();
@@ -65,12 +65,12 @@
                 alliance.Type             = (Hiring)this.Type;
                 alliance.RequiredTrophies = this.TrophyLimit;
 
-                alliance.Members.Add(new AllianceMember(this.Connection.Avatar, Alliance.Role.Leader));
+                alliance.Members.Add(new AllianceMember(this.Connection.GameMode.Avatar, Alliance.Role.Leader));
 
                 Alliances.Save(alliance);
 
-                this.Connection.Avatar.ClanHighID = alliance.HighID;
-                this.Connection.Avatar.ClanLowID  = alliance.LowID;
+                this.Connection.GameMode.Avatar.ClanHighID = alliance.HighID;
+                this.Connection.GameMode.Avatar.ClanLowID  = alliance.LowID;
 
                 new AvailableServerCommandMessage(this.Connection, new LogicChangeAllianceRoleCommand(this.Connection)
                 {
@@ -84,7 +84,7 @@
                 }).Send();
             }
 
-            this.Connection.Avatar.Save();
+            this.Connection.GameMode.Avatar.Save();
         }
     }
 }

@@ -36,7 +36,7 @@
 
         internal override void Handle()
         {
-            LogicClientAvatar avatar = this.Connection.Avatar;
+            LogicClientAvatar avatar = this.Connection.GameMode.Avatar;
             Alliance alliance        = avatar.Alliance;
 
             if (alliance != null)

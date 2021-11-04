@@ -15,8 +15,8 @@
 
         internal override void Encode()
         {
-            this.Stream.WriteString(this.Connection.Avatar.Name);
-            this.Stream.WriteBoolean(this.Connection.Avatar.NameSetByUser);
+            this.Stream.WriteString(this.Connection.GameMode.Avatar.Name);
+            this.Stream.WriteBoolean(this.Connection.GameMode.Avatar.NameSetByUser);
 
             this.WriteHeader();
         }

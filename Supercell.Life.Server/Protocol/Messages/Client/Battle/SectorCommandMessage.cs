@@ -26,7 +26,7 @@
         {
             var command = LogicCommandManager.CreateCommand(this.Command, this.Connection, this.Stream);
             command.Decode();
-            command.Execute();
+            command.Execute(this.Connection.GameMode);
         }
     }
 }

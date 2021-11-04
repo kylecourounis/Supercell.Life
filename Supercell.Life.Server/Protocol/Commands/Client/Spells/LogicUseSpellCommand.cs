@@ -4,6 +4,7 @@
 
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
 
     internal class LogicUseSpellCommand : LogicCommand
@@ -25,14 +26,12 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
-            if (this.Connection.Avatar.SpellsReady.ContainsKey(this.Spell.GlobalID))
+            if (gamemode.Avatar.SpellsReady.ContainsKey(this.Spell.GlobalID))
             {
-                this.Connection.Avatar.SpellsReady.Remove(this.Spell.GlobalID, 1);
+                gamemode.Avatar.SpellsReady.Remove(this.Spell.GlobalID, 1);
             }
-
-            this.Connection.Avatar.Save();
         }
     }
 }

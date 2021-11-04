@@ -2,7 +2,6 @@
 {
     using Supercell.Life.Titan.DataStream;
 
-    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
     using Supercell.Life.Server.Protocol.Commands.Server;
@@ -38,10 +37,10 @@
         
         internal override void Handle()
         {
-            this.Connection.Avatar.Name          = this.Name;
-            this.Connection.Avatar.NameSetByUser = true;
+            this.Connection.GameMode.Avatar.Name          = this.Name;
+            this.Connection.GameMode.Avatar.NameSetByUser = true;
 
-            this.Connection.Avatar.Save();
+            this.Connection.GameMode.Avatar.Save();
 
             new AvailableServerCommandMessage(this.Connection, new LogicChangeNameCommand(this.Connection)).Send();
         }

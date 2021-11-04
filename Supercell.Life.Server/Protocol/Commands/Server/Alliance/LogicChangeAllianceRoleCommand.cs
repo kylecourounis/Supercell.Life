@@ -15,7 +15,7 @@
         public LogicChangeAllianceRoleCommand(Connection connection) : base(connection)
         {
             this.Type     = Command.ChangeAllianceRole;
-            this.Alliance = this.Connection.Avatar.Alliance;
+            this.Alliance = this.Connection.GameMode.Avatar.Alliance;
         }
 
         internal override void Encode()

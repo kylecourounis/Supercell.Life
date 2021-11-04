@@ -15,7 +15,7 @@
         public LogicJoinAllianceCommand(Connection connection) : base(connection)
         {
             this.Type     = Command.JoinAlliance;
-            this.Alliance = this.Connection.Avatar.Alliance;
+            this.Alliance = this.Connection.GameMode.Avatar.Alliance;
         }
 
         internal override void Encode()

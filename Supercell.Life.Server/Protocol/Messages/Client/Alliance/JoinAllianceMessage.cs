@@ -3,7 +3,6 @@
     using Supercell.Life.Titan.DataStream;
     using Supercell.Life.Titan.Logic.Math;
 
-    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Alliance;
     using Supercell.Life.Server.Logic.Alliance.Streams;
     using Supercell.Life.Server.Logic.Slots;
@@ -46,15 +45,13 @@
 
             if (alliance != null)
             {
-                if (!alliance.Members.Contains(alliance.Members.Find(member => member.Identifier == this.Connection.Avatar.Identifier)))
+                if (!alliance.Members.Contains(alliance.Members.Find(member => member.Identifier == this.Connection.GameMode.Avatar.Identifier)))
                 {
-                    AllianceMember member = new AllianceMember(this.Connection.Avatar, Alliance.Role.Member);
+                    AllianceMember member = new AllianceMember(this.Connection.GameMode.Avatar, Alliance.Role.Member);
                     alliance.Members.Add(member);
 
-                    this.Connection.Avatar.ClanHighID = alliance.HighID;
-                    this.Connection.Avatar.ClanLowID  = alliance.LowID;
-
-                    this.Connection.Avatar.Save();
+                    this.Connection.GameMode.Avatar.ClanHighID = alliance.HighID;
+                    this.Connection.GameMode.Avatar.ClanLowID  = alliance.LowID;
 
                     Alliances.Save(alliance);
 
@@ -68,7 +65,7 @@
                     new AllianceStreamMessage(this.Connection).Send();
                     alliance.AddEntry(new StreamEntry(member, member, StreamEntry.StreamEvent.Joined));
 
-                    this.Connection.Avatar.Save();
+                    this.Connection.GameMode.Avatar.Save();
                 }
             }
         }

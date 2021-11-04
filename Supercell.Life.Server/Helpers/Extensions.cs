@@ -20,7 +20,7 @@
                     Chat = new GlobalChatItem
                     {
                         Message = message,
-                        Sender = connection.Avatar,
+                        Sender = connection.GameMode.Avatar,
                         System = true
                     }
                 }.Send();
@@ -32,7 +32,7 @@
                     Chat = new GlobalChatItem
                     {
                         Message = message,
-                        Sender = connection.Avatar,
+                        Sender = connection.GameMode.Avatar,
                         WhoSent = true,
                         Regex = true
                     }

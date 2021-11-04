@@ -91,12 +91,12 @@
             {
                 if (command.ExecuteSubTick <= command.Subtick)
                 {
-                    if (this.Connection.Avatar.Time.ClientSubTick <= command.ExecuteSubTick)
+                    if (this.Connection.GameMode.Avatar.Time.ClientSubTick <= command.ExecuteSubTick)
                     {
-                        this.Connection.Avatar.Time.ClientSubTick = command.ExecuteSubTick;
-                        this.Connection.Avatar.Tick();
+                        this.Connection.GameMode.Avatar.Time.ClientSubTick = command.ExecuteSubTick;
+                        this.Connection.GameMode.Tick();
 
-                        command.Execute();
+                        command.Execute(this.Connection.GameMode);
                     }
                 }
                 else Debugger.Error($"Execute command failed! Command should already executed. (type={command.Type}, server_tick)");
@@ -114,7 +114,7 @@
 
             if (connection.IsConnected)
             {
-                if (LogicVersion.IsProd || connection.Avatar.Rank != Rank.Administrator)
+                if (LogicVersion.IsProd || connection.GameMode.Avatar.Rank != Rank.Administrator)
                 {
                     if (type >= 1000)
                     {
@@ -127,7 +127,7 @@
                 {
                     if (connection.State != State.Battle)
                     {
-                        Debugger.Error($"Execute command failed! Command {type} is only allowed in battle state. Avatar {connection.Avatar}");
+                        Debugger.Error($"Execute command failed! Command {type} is only allowed in battle state. Avatar {connection.GameMode.Avatar}");
                         return false;
                     }
                 }
@@ -135,7 +135,7 @@
                 {
                     if (connection.State != State.Home)
                     {
-                        Debugger.Error($"Execute command failed! Command {type} is only allowed in home state. Avatar {connection.Avatar}");
+                        Debugger.Error($"Execute command failed! Command {type} is only allowed in home state. Avatar {connection.GameMode.Avatar}");
                         return false;
                     }
                 }

@@ -3,6 +3,7 @@
     using System.Linq;
     using System.Reflection;
 
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Titan.DataStream;
     using Supercell.Life.Titan.Helpers;
     using Supercell.Life.Titan.Logic.Math;
@@ -72,7 +73,6 @@
             // Decode.
         }
 
-
         /// <summary>
         /// Encodes this instance.
         /// </summary>
@@ -84,7 +84,7 @@
         /// <summary>
         /// Executes this instance.
         /// </summary>
-        internal virtual void Execute()
+        internal virtual void Execute(LogicGameMode gamemode)
         {
             // Process.
         }

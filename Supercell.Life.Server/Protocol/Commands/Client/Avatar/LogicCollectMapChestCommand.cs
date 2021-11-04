@@ -2,7 +2,7 @@
 {
     using Supercell.Life.Titan.DataStream;
 
-    using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Game.Objects;
     using Supercell.Life.Server.Network;
 
@@ -21,12 +21,10 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
-            LogicChest chest = new LogicChest(this.Connection.Avatar);
+            LogicChest chest = new LogicChest(gamemode.Avatar);
             chest.CreateMapChest();
-            
-            this.Connection.Avatar.Save();
         }
     }
 }

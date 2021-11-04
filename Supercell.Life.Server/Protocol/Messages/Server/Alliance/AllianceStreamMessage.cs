@@ -27,9 +27,9 @@
 
         internal override void Encode()
         {
-            this.Stream.WriteInt(this.Connection.Avatar.Alliance.Entries.Count);
+            this.Stream.WriteInt(this.Connection.GameMode.Avatar.Alliance.Entries.Count);
 
-            foreach (StreamEntry entry in this.Connection.Avatar.Alliance.Entries)
+            foreach (StreamEntry entry in this.Connection.GameMode.Avatar.Alliance.Entries)
             {
                 entry.Encode(this.Stream);
             }

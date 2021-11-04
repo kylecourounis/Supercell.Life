@@ -69,11 +69,11 @@
             {
                 if (this.AvatarID.Low == 0)
                 {
-                    this.Connection.Avatar = Avatars.Create(this.Connection);
+                    this.Connection.GameMode.Avatar = Avatars.Create(this.Connection);
 
-                    Debugger.Warning($"Player not found! Creating {this.Connection.Avatar.Identifier}...");
+                    Debugger.Warning($"Player not found! Creating {this.Connection.GameMode.Avatar.Identifier}...");
 
-                    if (this.Connection.Avatar != null)
+                    if (this.Connection.GameMode.Avatar != null)
                     {
                         this.Login();
                     }
@@ -86,12 +86,12 @@
                 {
                     Debugger.Info($"{this.AvatarID} found! Logging in...");
 
-                    this.Connection.Avatar = Avatars.Get(this.Connection, this.AvatarID);
+                    this.Connection.GameMode.Avatar = Avatars.Get(this.Connection, this.AvatarID);
 
-                    if (this.Connection.Avatar == null)
+                    if (this.Connection.GameMode.Avatar == null)
                     {
                         Debugger.Warning("Account missing! Recreating...");
-                        this.Connection.Avatar = Avatars.Create(this.Connection, this.AvatarID);
+                        this.Connection.GameMode.Avatar = Avatars.Create(this.Connection, this.AvatarID);
                     }
 
                     this.Login();
@@ -151,15 +151,12 @@
         /// </summary>
         private void Login()
         {
-            if (this.Connection.Avatar.Connection == null) // This check was added so that there is no room for error
-            {
-                this.Connection.Avatar.Connection = this.Connection;
-            }
+            this.Connection.GameMode.Avatar.Connection ??= this.Connection;
 
             new LoginOkMessage(this.Connection).Send();
             new OwnAvatarDataMessage(this.Connection).Send();
 
-            if (this.Connection.Avatar.IsInAlliance)
+            if (this.Connection.GameMode.Avatar.IsInAlliance)
             {
                 new AllianceStreamMessage(this.Connection).Send();
             }

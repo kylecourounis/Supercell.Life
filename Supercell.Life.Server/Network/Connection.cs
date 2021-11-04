@@ -9,7 +9,7 @@
     using Supercell.Life.Titan.Helpers;
     using Supercell.Life.Titan.Logic.Enums;
 
-    using Supercell.Life.Server.Logic.Avatar;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Protocol;
 
     internal class Connection
@@ -19,7 +19,7 @@
 
         internal readonly Messaging Messaging;
         
-        internal LogicClientAvatar Avatar;
+        internal LogicGameMode GameMode;
 
         internal State State = State.Disconnected;
 
@@ -35,6 +35,7 @@
         {
             this.Socket    = socket;
             this.Messaging = new Messaging(this);
+            this.GameMode  = new LogicGameMode(this);
         }
 
         /// <summary>

@@ -4,7 +4,7 @@
     
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
-    using Supercell.Life.Server.Logic.Slots;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
 
     internal class LogicClaimAchievementCommand : LogicCommand
@@ -26,16 +26,14 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
-            if (this.Achievement != null && !this.Connection.Avatar.AchievementProgress.ContainsKey(this.Achievement.GlobalID))
+            if (this.Achievement != null && !gamemode.Avatar.AchievementProgress.ContainsKey(this.Achievement.GlobalID))
             {
-                this.Connection.Avatar.AchievementProgress.AddItem(this.Achievement.GlobalID, this.Achievement.ActionCount);
-                
-                this.Connection.Avatar.AddXP(this.Achievement.ExpReward);
-                this.Connection.Avatar.AddDiamonds(this.Achievement.DiamondReward, true);
+                gamemode.Avatar.AchievementProgress.AddItem(this.Achievement.GlobalID, this.Achievement.ActionCount);
 
-                this.Connection.Avatar.Save();
+                gamemode.Avatar.AddXP(this.Achievement.ExpReward);
+                gamemode.Avatar.AddDiamonds(this.Achievement.DiamondReward, true);
             }
             else
             {

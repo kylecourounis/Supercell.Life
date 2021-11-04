@@ -26,7 +26,7 @@
             this.Stream.WriteInt(0);
             this.Stream.WriteInt(0);
 
-            this.Connection.Avatar.Encode(this.Stream);
+            this.Connection.GameMode.Avatar.Encode(this.Stream);
         }
     }
 }

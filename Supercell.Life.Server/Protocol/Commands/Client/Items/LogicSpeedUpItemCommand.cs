@@ -4,6 +4,7 @@
 
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
 
     internal class LogicSpeedUpItemCommand : LogicCommand
@@ -25,9 +26,9 @@
             this.ReadHeader();
         }
 
-        internal override void Execute()
+        internal override void Execute(LogicGameMode gamemode)
         {
-            this.Connection.Avatar.ItemUnavailableTimer.Finish();
+            gamemode.Avatar.ItemUnavailableTimer.Finish();
         }
     }
 }

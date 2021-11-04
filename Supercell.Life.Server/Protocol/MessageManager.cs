@@ -21,8 +21,6 @@
         private readonly AutoResetEvent SendResetEvent;
         private readonly AutoResetEvent ReceiveResetEvent;
 
-        private bool Started;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageManager"/> class.
         /// </summary>
@@ -43,13 +41,6 @@
         /// </summary>
         internal void StartThreads()
         {
-            if (this.Started)
-            {
-                return;
-            }
-
-            this.Started = true;
-
             this.SendThread.Start();
             this.ReceiveThread.Start();
         }
@@ -59,13 +50,6 @@
         /// </summary>
         internal void StopThreads()
         {
-            if (!this.Started)
-            {
-                return;
-            }
-
-            this.Started = false;
-
             this.SendResetEvent.Close();
             this.ReceiveResetEvent.Close();
         }
@@ -75,7 +59,7 @@
         /// </summary>
         private void ReceiveMessage()
         {
-            while (this.Started)
+            while (true)
             {
                 this.ReceiveResetEvent.WaitOne();
 
@@ -88,12 +72,12 @@
                         message.Decode();
                         message.Handle();
 
-                        message.Connection.Avatar.Save();
+                        message.Connection.GameMode.Avatar.Save();
                     }
                     catch (Exception exception)
                     {
                         Debugger.Error($"A {exception.GetType().Name} occured while handling the following message : ID {(int)message.Type}, Length {message.Length}, Version {message.Version}.");
-                        Debugger.Error($"{exception.Message} [{message.Connection.Avatar.HighID}-{message.Connection.Avatar.LowID}]" + Environment.NewLine + exception.StackTrace);
+                        Debugger.Error($"{exception.Message} [{message.Connection.GameMode.Avatar.HighID}-{message.Connection.GameMode.Avatar.LowID}]" + Environment.NewLine + exception.StackTrace);
                     }
                 }
             }
@@ -104,7 +88,7 @@
         /// </summary>
         private void SendMessage()
         {
-            while (this.Started)
+            while (true)
             {
                 this.SendResetEvent.WaitOne();
 
@@ -121,7 +105,7 @@
 
                         message.Handle();
 
-                        message.Connection.Avatar.Save();
+                        message.Connection.GameMode.Avatar.Save();
                     }
                 }
             }

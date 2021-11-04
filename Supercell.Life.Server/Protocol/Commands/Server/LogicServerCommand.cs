@@ -21,7 +21,7 @@
         {
             this.Stream.WriteInt(this.Subtick);
             this.Stream.WriteInt(this.Subtick);
-            new LogicLong(this.Connection.Avatar.HighID, this.Connection.Avatar.LowID).Encode(this.Stream);
+            new LogicLong(this.Connection.GameMode.Avatar.HighID, this.Connection.GameMode.Avatar.LowID).Encode(this.Stream);
         }
     }
 }
