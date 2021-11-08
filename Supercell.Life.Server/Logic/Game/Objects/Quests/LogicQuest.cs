@@ -145,8 +145,8 @@
                     }
                     else
                     {
-                        this.Avatar.AddGold(this.ReplayGoldReward);
-                        this.Avatar.AddXP(this.ReplayXPReward);
+                        this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, this.ReplayGoldReward);
+                        this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, this.ReplayXPReward);
                     }
                     
                     if (this.SublevelMoveCount > 0)
@@ -156,8 +156,8 @@
                             this.Avatar.NpcProgress.AddItem(this.GlobalID, 1);
                             this.SublevelMoveCount = 0;
                         }
-                        
-                        this.Avatar.AddGold(this.Data.GoldRewardOverride);
+
+                        this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, this.Data.GoldRewardOverride);
 
                         if (this.Avatar.Items.IsAttached(LogicItems.EnergyRecycler))
                         {
@@ -166,11 +166,11 @@
 
                         if (this.Avatar.Items.IsAttached(LogicItems.PlunderThunder))
                         {
-                            this.Avatar.AddXP((int)Math.Round(this.Data.XpRewardOverride * this.Avatar.Items.PlunderThunderPercentage));
+                            this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, (int)Math.Round(this.Data.XpRewardOverride * this.Avatar.Items.PlunderThunderPercentage));
                         }
                         else
                         {
-                            this.Avatar.AddXP(this.Data.XpRewardOverride);
+                            this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, this.Data.XpRewardOverride);
                         }
                     }
 

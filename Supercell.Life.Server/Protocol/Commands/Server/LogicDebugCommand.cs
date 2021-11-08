@@ -2,6 +2,7 @@
 {
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
+    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
     using Supercell.Life.Server.Protocol.Messages;
@@ -116,7 +117,7 @@
                         Diamonds = v35
                     }).Send();
 
-                    gamemode.Avatar.AddDiamonds(v35);
+                    gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Diamonds, v35);
                         
                     break;
                 }

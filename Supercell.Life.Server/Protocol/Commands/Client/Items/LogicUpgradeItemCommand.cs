@@ -6,6 +6,7 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
+    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Network;
 
     internal class LogicUpgradeItemCommand : LogicCommand
@@ -105,14 +106,14 @@
                             return;
                         }
                     }
-                    
-                    gamemode.Avatar.Diamonds -= diamonds;
-                    gamemode.Avatar.Gold     -= gold;
-                    gamemode.Avatar.Energy   -= energy;
-                    gamemode.Avatar.Orb1     -= orb1;
-                    gamemode.Avatar.Orb2     -= orb2;
-                    gamemode.Avatar.Orb3     -= orb3;
-                    gamemode.Avatar.Orb4     -= orb4;
+
+                    gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Diamonds, -diamonds);
+                    gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, -gold);
+                    gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Energy, -energy);
+                    gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Orb1, -orb1);
+                    gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Orb2, -orb2);
+                    gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Orb3, -orb3);
+                    gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Orb4, -orb4);
                 }
 
                 gamemode.Avatar.ItemInventories.AddItem(this.Item.GlobalID, 1);

@@ -18,8 +18,9 @@
         {
             LogicLeagueData league = (LogicLeagueData)CSV.Tables.Get(Gamefile.Leagues).GetDataWithID(avatar.League);
 
-            avatar.AddGold(league.PVPGoldReward);
-            avatar.AddXP(league.PVPXpReward);
+            avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, league.PVPGoldReward);
+            avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, league.PVPXpReward);
+
             avatar.AddTrophies(trophies);
 
             avatar.Variables.AddItem(LogicVariables.Wins.GlobalID, 1);
@@ -71,7 +72,6 @@
             }
         }
 
-
         /// <summary>
         /// Removes the trophies and updates the player's league accordingly.
         /// </summary>
@@ -98,69 +98,7 @@
                 avatar.Save();
             }
         }
-
-        /// <summary>
-        /// Adds the experience.
-        /// </summary>
-        internal static void AddXP(this LogicClientAvatar avatar, int value)
-        {
-            if (value > 0)
-            {
-                if (avatar.ExpLevel == 35 && avatar.ExpPoints >= 2500000)
-                {
-                    return;
-                }
-
-                double finalValue = value;
-
-                if (avatar.Booster.BoostActive)
-                {
-                    finalValue *= avatar.Booster.BoostPackage.Boost;
-                }
-
-                avatar.ExpPoints += (int)finalValue;
-
-                LogicExperienceLevelData experienceLevels = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataWithID(avatar.ExpLevel - 1);
-
-                if (experienceLevels.ExpPoints <= avatar.ExpPoints)
-                {
-                    avatar.ExpPoints -= experienceLevels.ExpPoints;
-                    avatar.ExpLevel++;
-                }
-
-                avatar.Save();
-            }
-        }
-
-        /// <summary>
-        /// Adds the gold.
-        /// </summary>
-        internal static void AddGold(this LogicClientAvatar avatar, int value)
-        {
-            if (value > 0)
-            {
-                avatar.Gold += value;
-                avatar.Save();
-            }
-        }
-
-        /// <summary>
-        /// Adds the diamonds.
-        /// </summary>
-        internal static void AddDiamonds(this LogicClientAvatar avatar, int value, bool free = false)
-        {
-            if (value > 0)
-            {
-                if (free)
-                {
-                    avatar.FreeDiamonds += value;
-                }
-
-                avatar.Diamonds += value;
-                avatar.Save();
-            }
-        }
-
+        
         /// <summary>
         /// Sets the rank of the specified player.
         /// </summary>

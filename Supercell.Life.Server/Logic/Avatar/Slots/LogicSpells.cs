@@ -2,7 +2,7 @@
 {
     using Supercell.Life.Titan.Logic.Json;
 
-    internal class LogicSpells : LogicDataSlot
+    internal class LogicSpells : LogicDataSlots
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicSpells"/> class.
@@ -39,12 +39,10 @@
 
                 foreach (var spell in this.Avatar.SpellsReady.Values)
                 {
-                    LogicJSONObject jsonObj = new LogicJSONObject();
+                    LogicJSONObject json = new LogicJSONObject();
+                    spell.Save(json);
 
-                    jsonObj.Put("id", new LogicJSONNumber(spell.Id));
-                    jsonObj.Put("cnt", new LogicJSONNumber(spell.Count));
-
-                    array.Add(jsonObj);
+                    array.Add(json);
                 }
 
                 return array;
@@ -62,12 +60,10 @@
 
                 foreach (var spell in this.Values)
                 {
-                    LogicJSONObject jsonObj = new LogicJSONObject();
+                    LogicJSONObject json = new LogicJSONObject();
+                    spell.Save(json);
 
-                    jsonObj.Put("id", new LogicJSONNumber(spell.Id));
-                    jsonObj.Put("cnt", new LogicJSONNumber(spell.Count));
-
-                    array.Add(jsonObj);
+                    array.Add(json);
                 }
 
                 return array;

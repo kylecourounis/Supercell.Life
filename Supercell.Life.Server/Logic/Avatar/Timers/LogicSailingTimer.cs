@@ -7,7 +7,6 @@
 
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
-    using Supercell.Life.Server.Logic.Avatar.Items;
     using Supercell.Life.Server.Logic.Avatar.Slots;
     using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Logic.Game;
@@ -18,8 +17,8 @@
 
         [JsonProperty("timer")] internal LogicTimer Timer;
 
-        [JsonProperty]          internal LogicDataSlot Heroes;
-        [JsonProperty]          internal LogicDataSlot HeroLevels;
+        [JsonProperty]          internal LogicDataSlots Heroes;
+        [JsonProperty]          internal LogicDataSlots HeroLevels;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="LogicSailingTimer"/> has started.
@@ -48,8 +47,8 @@
             this.Avatar     = avatar;
             this.Timer      = new LogicTimer(avatar.Time);
 
-            this.Heroes     = new LogicDataSlot(avatar);
-            this.HeroLevels = new LogicDataSlot(avatar);
+            this.Heroes     = new LogicDataSlots(avatar);
+            this.HeroLevels = new LogicDataSlots(avatar);
         }
 
         /// <summary>
@@ -74,7 +73,7 @@
 
                 this.Avatar.Variables.Set(LogicVariables.SailRewardUnclaimed.GlobalID, 0);
                 
-                foreach (Item hero in this.Heroes.Values)
+                foreach (var hero in this.Heroes.Values)
                 {
                     this.Avatar.HeroTired.AddItem(hero.Id, hero.Count);
                 }

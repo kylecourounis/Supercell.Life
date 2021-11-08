@@ -4,6 +4,7 @@
     using Supercell.Life.Titan.Logic.Utils;
 
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Logic.Slots;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Messages;
@@ -78,17 +79,17 @@
                         {
                             case "gold":
                             {
-                                this.Connection.GameMode.Avatar.AddGold(LogicStringUtil.ConvertToInt(this.Parameters[2]));
+                                this.Connection.GameMode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, LogicStringUtil.ConvertToInt(this.Parameters[2]));
                                 break;
                             }
                             case "diamonds":
                             {
-                                this.Connection.GameMode.Avatar.AddDiamonds(LogicStringUtil.ConvertToInt(this.Parameters[2]));
+                                this.Connection.GameMode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Diamonds, LogicStringUtil.ConvertToInt(this.Parameters[2]));
                                 break;
                             }
                             case "xp":
                             {
-                                this.Connection.GameMode.Avatar.AddXP(LogicStringUtil.ConvertToInt(this.Parameters[2]));
+                                this.Connection.GameMode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, LogicStringUtil.ConvertToInt(this.Parameters[2]));
                                 break;
                             }
                             case "score":

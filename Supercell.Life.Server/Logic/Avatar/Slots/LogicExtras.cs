@@ -6,7 +6,7 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic.Enums;
 
-    internal class LogicExtras : LogicDataSlot
+    internal class LogicExtras : LogicDataSlots
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicExtras"/> class.

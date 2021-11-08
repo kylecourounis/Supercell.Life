@@ -1,140 +1,55 @@
 ﻿namespace Supercell.Life.Server.Logic.Avatar.Slots
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    using Newtonsoft.Json;
 
     using Supercell.Life.Titan.DataStream;
+    using Supercell.Life.Titan.Logic.Json;
 
-    using Supercell.Life.Server.Logic.Avatar;
-    using Supercell.Life.Server.Logic.Avatar.Items;
+    using Supercell.Life.Server.Files;
+    using Supercell.Life.Server.Files.CsvHelpers;
 
-    internal class LogicDataSlot : Dictionary<int, Item>
+    internal class LogicDataSlot
     {
-        internal LogicClientAvatar Avatar;
+        [JsonProperty("id")]  internal int Id;
+        [JsonProperty("cnt")] internal int Count;
 
         /// <summary>
-        /// Gets the checksum.
+        /// Gets an instance of <see cref="LogicData"/> using <see cref="LogicDataSlot.Id"/>.
+        /// </summary>
+        internal LogicData Data
+        {
+            get
+            {
+                return CSV.Tables.GetWithGlobalID(this.Id);
+            }
+        }
+
+        /// <summary>
+        /// Gets the checksum for this <see cref="LogicDataSlot"/>.
         /// </summary>
         internal int Checksum
         {
             get
             {
-                return this.Values.Sum(item => item.Id + item.Count);
+                return this.Id + this.Count;
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LogicDataSlot"/> class. 
-        /// </summary>
-        internal LogicDataSlot(int capacity = 50) : base(capacity)
-        {
-            this.Initialize();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicDataSlot"/> class.
         /// </summary>
-        internal LogicDataSlot(LogicClientAvatar avatar, int capacity = 50) : this(capacity)
+        internal LogicDataSlot()
         {
-            this.Avatar = avatar;
+            // LogicDataSlot.
         }
 
         /// <summary>
-        /// Initializes this instance.
+        /// Initializes a new instance of the <see cref="LogicDataSlot"/> class.
         /// </summary>
-        internal virtual void Initialize()
+        internal LogicDataSlot(int data, int count)
         {
-            // Initialize.
-        }
-
-        /// <summary>
-        /// Adds an instance of <see cref="Item"/> using the specified GlobalID and count.
-        /// </summary>
-        internal void AddItem(int data, int count)
-        {
-            if (this.TryGetValue(data, out Item current))
-            {
-                current.Count += count;
-            }
-            else
-                this.Add(data, new Item(data, count));
-        }
-
-        /// <summary>
-        /// Adds the specified <see cref="Item"/>.
-        /// </summary>
-        internal void AddItem(Item item)
-        {
-            if (this.TryGetValue(item.Id, out Item current))
-            {
-                current.Count += item.Count;
-            }
-            else
-                this.Add(item.Id, item);
-        }
-
-        /// <summary>
-        /// Gets the <see cref="Item"/> with the specified GlobalID.
-        /// </summary>
-        internal Item Get(int data)
-        {
-            return this.TryGetValue(data, out Item item) ? item : null;
-        }
-
-        /// <summary>
-        /// Gets the count of the <see cref="Item"/> with the specified GlobalID.
-        /// </summary>
-        internal int GetCount(int data)
-        {
-            return this.TryGetValue(data, out Item item) ? item.Count : 0;
-        }
-
-        /// <summary>
-        /// Subtracts the specified count from the instance of <see cref="Item"/> obtained with the specified GlobalID.
-        /// </summary>
-        internal void Remove(int data, int count)
-        {
-            if (this.TryGetValue(data, out Item current))
-            {
-                current.Count -= count;
-            }
-        }
-
-        /// <summary>
-        /// Subtracts the specified count using the specified instance of <see cref="Item"/>.
-        /// </summary>
-        internal void Remove(Item item, int count)
-        {
-            if (this.TryGetValue(item.Id, out Item current))
-            {
-                current.Count -= count;
-            }
-        }
-
-        /// <summary>
-        /// Sets the count for the <see cref="Item"/> with the specified GlobalID.
-        /// </summary>
-        internal void Set(int data, int count)
-        {
-            if (this.TryGetValue(data, out Item current))
-            {
-                current.Count = count;
-            }
-            else
-                this.Add(data, new Item(data, count));
-        }
-
-        /// <summary>
-        /// Sets an instance of item <see cref="Item"/>.
-        /// </summary>
-        internal void Set(Item item)
-        {
-            if (this.TryGetValue(item.Id, out Item current))
-            {
-                current.Count = item.Count;
-            }
-            else
-                this.Add(item.Id, new Item(item.Id, item.Count));
+            this.Id    = data;
+            this.Count = count;
         }
 
         /// <summary>
@@ -142,37 +57,35 @@
         /// </summary>
         internal void Decode(ByteStream stream)
         {
-            this.Clear();
-
-            int count = stream.ReadInt();
-
-            if (count > 0)
-            {
-                do
-                {
-                    Item item = new Item();
-
-                    item.Decode(stream);
-
-                    if (item.Id > 0)
-                    {
-                        this.Add(item.Id, item);
-                    }
-                } while (--count > 0);
-            }
+            this.Id    = stream.ReadInt();
+            this.Count = stream.ReadInt();
         }
 
         /// <summary>
         /// Encodes this instance.
         /// </summary>
-        internal virtual void Encode(ByteStream stream)
+        internal void Encode(ByteStream stream)
         {
+            stream.WriteInt(this.Id);
             stream.WriteInt(this.Count);
+        }
 
-            foreach (Item item in this.Values)
-            {
-                item.Encode(stream);
-            }
+        /// <summary>
+        /// Saves this <see cref="LogicDataSlot"/> to the specified <see cref="LogicJSONObject"/>.
+        /// </summary>
+        internal void Save(LogicJSONObject json)
+        {
+            json.Put("id", new LogicJSONNumber(this.Id));
+            json.Put("cnt", new LogicJSONNumber(this.Count));
+        }
+
+        /// <summary>
+        /// Loads this <see cref="LogicDataSlot"/> from the specified <see cref="LogicJSONObject"/>.
+        /// </summary>
+        internal void Load(LogicJSONObject json)
+        {
+            this.Id    = json.GetJsonNumber("id").GetIntValue();
+            this.Count = json.GetJsonNumber("cnt").GetIntValue();
         }
     }
 }

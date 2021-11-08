@@ -1,5 +1,6 @@
 ﻿namespace Supercell.Life.Server.Protocol.Messages.Server
 {
+    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Logic.Slots;
     using Supercell.Life.Server.Network;
@@ -34,8 +35,37 @@
 
             foreach (LogicClientAvatar avatar in avatarList)
             {
-                avatar.EncodeRankingEntry(this.Stream);
+                this.EncodeRankingEntry(avatar);
             }
+        }
+
+        /// <summary>
+        /// Encodes the specified <see cref="LogicClientAvatar"/>'s ranking entry.
+        /// </summary>
+        private void EncodeRankingEntry(LogicClientAvatar avatar)
+        {
+            this.Stream.WriteLogicLong(avatar.Identifier);
+            this.Stream.WriteString(avatar.Name);
+
+            this.Stream.WriteInt(0);
+            this.Stream.WriteInt(avatar.Score);
+            this.Stream.WriteInt(0);
+            this.Stream.WriteInt(avatar.ExpLevel);
+
+            this.Stream.WriteInt(0);
+            this.Stream.WriteInt(0);
+            this.Stream.WriteString(null);
+
+            this.Stream.WriteBoolean(avatar.IsInAlliance);
+
+            if (avatar.IsInAlliance)
+            {
+                this.Stream.WriteLogicLong(avatar.Alliance.Identifier);
+                this.Stream.WriteString(avatar.Alliance.Name);
+                this.Stream.WriteDataReference(avatar.Alliance.BadgeData);
+            }
+
+            this.Stream.WriteInt(avatar.League);
         }
     }
 }

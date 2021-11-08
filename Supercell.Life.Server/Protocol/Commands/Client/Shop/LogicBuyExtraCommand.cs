@@ -7,7 +7,6 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
-    using Supercell.Life.Server.Logic.Avatar.Items;
     using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Network;
 
@@ -100,13 +99,13 @@
 
                         if (gamemode.Avatar.Extras.Count > 1)
                         {
-                            foreach (Item item in gamemode.Avatar.Extras.Values)
+                            foreach (var slot in gamemode.Avatar.Extras.Values)
                             {
-                                if (item.Id / 1000000 == deco.GetDataType())
+                                if (slot.Id / 1000000 == deco.GetDataType())
                                 {
-                                    if (item.Count != 1 && item.Id != deco.GlobalID)
+                                    if (slot.Count != 1 && slot.Id != deco.GlobalID)
                                     {
-                                        item.Count = 1;
+                                        slot.Count = 1;
                                     }
                                 }
                             }
@@ -118,13 +117,13 @@
                         {
                             gamemode.Avatar.Extras.Set(deco.GlobalID, 2);
 
-                            foreach (Item item in gamemode.Avatar.Extras.Values)
+                            foreach (var slot in gamemode.Avatar.Extras.Values)
                             {
-                                if (item.Id / 1000000 == deco.GetDataType())
+                                if (slot.Id / 1000000 == deco.GetDataType())
                                 {
-                                    if (item.Count != 1 && item.Id != deco.GlobalID)
+                                    if (slot.Count != 1 && slot.Id != deco.GlobalID)
                                     {
-                                        item.Count = 1;
+                                        slot.Count = 1;
                                     }
                                 }
                             }

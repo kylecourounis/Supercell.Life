@@ -20,7 +20,7 @@
         {
             set
             {
-                this.Avatar.AddGold(value);
+                this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, value);
             }
         }
 
@@ -31,7 +31,7 @@
         {
             set
             {
-                this.Avatar.AddXP(value);
+                this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, value);
             }
         }
 

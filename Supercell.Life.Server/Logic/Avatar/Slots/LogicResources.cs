@@ -3,7 +3,7 @@
     using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Logic.Game;
 
-    internal class LogicResources : LogicDataSlot
+    internal class LogicResources : LogicDataSlots
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicResources"/> class.

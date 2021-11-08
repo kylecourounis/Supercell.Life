@@ -6,7 +6,6 @@
 
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
-    using Supercell.Life.Server.Logic.Avatar.Items;
     using Supercell.Life.Server.Logic.Enums;
 
     internal class LogicItems
@@ -83,15 +82,13 @@
             get
             {
                 LogicJSONArray array = new LogicJSONArray();
-
-                foreach (Item item in this.Avatar.ItemLevels.Values)
+                
+                foreach (var slot in this.Avatar.ItemLevels.Values)
                 {
-                    LogicJSONObject jsonObj = new LogicJSONObject();
+                    LogicJSONObject json = new LogicJSONObject();
+                    slot.Save(json);
 
-                    jsonObj.Put("id", new LogicJSONNumber(item.Id));
-                    jsonObj.Put("cnt", new LogicJSONNumber(item.Count));
-
-                    array.Add(jsonObj);
+                    array.Add(json);
                 }
 
                 return array;
@@ -106,17 +103,17 @@
             get
             {
                 LogicJSONArray array = new LogicJSONArray();
-
-                foreach (Item hero in this.Avatar.HeroLevels.Values)
+                
+                foreach (var hero in this.Avatar.HeroLevels.Values)
                 {
                     if (this.Avatar.ItemAttachedTo.Get(hero.Id) != null)
                     {
-                        LogicJSONObject jsonObj = new LogicJSONObject();
+                        LogicJSONObject json = new LogicJSONObject();
 
-                        jsonObj.Put("id", new LogicJSONNumber(hero.Id));
-                        jsonObj.Put("cnt", new LogicJSONNumber(this.Avatar.ItemAttachedTo.Get(hero.Id).Id));
+                        json.Put("id", new LogicJSONNumber(hero.Id));
+                        json.Put("cnt", new LogicJSONNumber(this.Avatar.ItemAttachedTo.Get(hero.Id).Id));
 
-                        array.Add(jsonObj);
+                        array.Add(json);
                     }
                 }
 

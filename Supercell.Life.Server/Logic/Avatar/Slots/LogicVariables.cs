@@ -4,7 +4,7 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic.Enums;
 
-    internal class LogicVariables : LogicDataSlot
+    internal class LogicVariables : LogicDataSlots
     {
         #region VariableData
 

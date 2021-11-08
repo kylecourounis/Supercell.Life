@@ -5,7 +5,7 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
-    using Supercell.Life.Server.Logic.Avatar.Items;
+    using Supercell.Life.Server.Logic.Avatar.Slots;
     using Supercell.Life.Server.Network;
 
     internal class LogicBuyHeroCommand : LogicCommand
@@ -29,7 +29,7 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            gamemode.Avatar.HeroLevels.AddItem(new Item(this.Hero.GlobalID, 0));
+            gamemode.Avatar.HeroLevels.AddItem(new LogicDataSlot(this.Hero.GlobalID, 0));
         }
     }
 }

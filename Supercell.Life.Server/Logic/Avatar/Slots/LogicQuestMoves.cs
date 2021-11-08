@@ -1,11 +1,9 @@
 ﻿namespace Supercell.Life.Server.Logic.Avatar.Slots
 {
     using Supercell.Life.Titan.DataStream;
-
-    using Supercell.Life.Server.Logic.Avatar.Items;
     using Supercell.Life.Titan.Logic.Json;
 
-    internal class LogicQuestMoves : LogicDataSlot
+    internal class LogicQuestMoves : LogicDataSlots
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicQuestMoves"/> class.
@@ -29,11 +27,11 @@
         {
             stream.WriteInt(this.Count);
 
-            foreach (Item item in this.Values)
+            foreach (var slot in this.Values)
             {
-                stream.WriteInt(item.Id);
+                stream.WriteInt(slot.Id);
                 stream.WriteInt(1);
-                stream.WriteInt(item.Count);
+                stream.WriteInt(slot.Count);
             }
         }
 
@@ -46,7 +44,7 @@
             {
                 LogicJSONArray array = new LogicJSONArray();
 
-                foreach (Item quest in this.Values)
+                foreach (var quest in this.Values)
                 {
                     LogicJSONObject jsonObj = new LogicJSONObject();
 

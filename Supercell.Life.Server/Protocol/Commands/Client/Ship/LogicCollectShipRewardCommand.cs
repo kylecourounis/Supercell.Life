@@ -6,7 +6,6 @@
 
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
-    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Avatar.Slots;
     using Supercell.Life.Server.Logic.Enums;
@@ -52,8 +51,8 @@
                         xp   += shipXp.NumberArray[level];
                     }
 
-                    gamemode.Avatar.AddGold(gold);
-                    gamemode.Avatar.AddXP(xp);
+                    gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, gold);
+                    gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, xp);
                 }
             }
         }

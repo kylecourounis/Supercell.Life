@@ -8,7 +8,7 @@
 
     using Supercell.Life.Server.Logic.Game.Objects.Quests;
 
-    internal class LogicNpcProgress : LogicDataSlot
+    internal class LogicNpcProgress : LogicDataSlots
     {
         [JsonProperty] internal LogicArrayList<int> Crowns;
 

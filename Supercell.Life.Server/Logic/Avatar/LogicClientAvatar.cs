@@ -17,7 +17,6 @@ namespace Supercell.Life.Server.Logic.Avatar
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Alliance;
     using Supercell.Life.Server.Logic.Attack;
-    using Supercell.Life.Server.Logic.Avatar.Items;
     using Supercell.Life.Server.Logic.Avatar.Slots;
     using Supercell.Life.Server.Logic.Avatar.Socials;
     using Supercell.Life.Server.Logic.Avatar.Timers;
@@ -66,32 +65,32 @@ namespace Supercell.Life.Server.Logic.Avatar
 
         [JsonProperty] internal Facebook Facebook;
 
-        [JsonProperty] internal LogicDataSlot AchievementProgress;
+        [JsonProperty] internal LogicDataSlots AchievementProgress;
         [JsonProperty] internal LogicResources Resources;
         [JsonProperty] internal LogicVariables Variables;
 
         [JsonProperty] internal LogicHeroLevels HeroLevels;
-        [JsonProperty] internal LogicDataSlot HeroUnlockSeens;
-        [JsonProperty] internal LogicDataSlot HeroQuests;
-        [JsonProperty] internal LogicDataSlot HeroMatches;
-        [JsonProperty] internal LogicDataSlot HeroKills;
-        [JsonProperty] internal LogicDataSlot HeroTired;
+        [JsonProperty] internal LogicDataSlots HeroUnlockSeens;
+        [JsonProperty] internal LogicDataSlots HeroQuests;
+        [JsonProperty] internal LogicDataSlots HeroMatches;
+        [JsonProperty] internal LogicDataSlots HeroKills;
+        [JsonProperty] internal LogicDataSlots HeroTired;
 
         [JsonProperty] internal LogicSpells Spells;
-        [JsonProperty] internal LogicDataSlot SpellsReady;
+        [JsonProperty] internal LogicDataSlots SpellsReady;
 
         [JsonProperty] internal LogicNpcProgress NpcProgress;
-        [JsonProperty] internal LogicDataSlot QuestUnlockSeens;
+        [JsonProperty] internal LogicDataSlots QuestUnlockSeens;
         [JsonProperty] internal LogicQuestMoves QuestMoves;
 
         [JsonProperty] internal LogicQuest OngoingQuestData;
 
-        [JsonProperty] internal LogicDataSlot EnergyPackages;
+        [JsonProperty] internal LogicDataSlots EnergyPackages;
 
-        [JsonProperty] internal LogicDataSlot ItemInventories;
-        [JsonProperty] internal LogicDataSlot ItemLevels;
-        [JsonProperty] internal LogicDataSlot ItemAttachedTo;
-        [JsonProperty] internal LogicDataSlot ItemUnavailable;
+        [JsonProperty] internal LogicDataSlots ItemInventories;
+        [JsonProperty] internal LogicDataSlots ItemLevels;
+        [JsonProperty] internal LogicDataSlots ItemAttachedTo;
+        [JsonProperty] internal LogicDataSlots ItemUnavailable;
 
         [JsonProperty] internal LogicExtras Extras;
 
@@ -209,11 +208,11 @@ namespace Supercell.Life.Server.Logic.Avatar
             {
                 int count = 15;
 
-                foreach (Item item in this.EnergyPackages.Values)
+                foreach (var slot in this.EnergyPackages.Values)
                 {
-                    LogicEnergyPackageData package = (LogicEnergyPackageData)item.Data;
+                    LogicEnergyPackageData package = (LogicEnergyPackageData)slot.Data;
 
-                    for (int i = 0; i < item.Count; i++)
+                    for (int i = 0; i < slot.Count; i++)
                     {
                         count += package.IncreaseInMaxEnergy[i];
                     }
@@ -251,30 +250,30 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.Time                 = new LogicTime();
             this.Team                 = new JArray(Globals.StartingCharacter.GlobalID, 0, 0);
 
-            this.AchievementProgress  = new LogicDataSlot(this);
+            this.AchievementProgress  = new LogicDataSlots(this);
             this.Resources            = new LogicResources(this);
             this.Variables            = new LogicVariables(this);
 
             this.Spells               = new LogicSpells(this);
-            this.SpellsReady          = new LogicDataSlot(this);
+            this.SpellsReady          = new LogicDataSlots(this);
 
             this.HeroLevels           = new LogicHeroLevels(this);
-            this.HeroQuests           = new LogicDataSlot(this);
-            this.HeroMatches          = new LogicDataSlot(this);
-            this.HeroKills            = new LogicDataSlot(this);
-            this.HeroTired            = new LogicDataSlot(this);
+            this.HeroQuests           = new LogicDataSlots(this);
+            this.HeroMatches          = new LogicDataSlots(this);
+            this.HeroKills            = new LogicDataSlots(this);
+            this.HeroTired            = new LogicDataSlots(this);
 
             this.NpcProgress          = new LogicNpcProgress(this);
-            this.QuestUnlockSeens     = new LogicDataSlot(this);
+            this.QuestUnlockSeens     = new LogicDataSlots(this);
             this.QuestMoves           = new LogicQuestMoves(this);
 
-            this.EnergyPackages       = new LogicDataSlot(this, 2);
-            this.HeroUnlockSeens      = new LogicDataSlot(this);
+            this.EnergyPackages       = new LogicDataSlots(this, 2);
+            this.HeroUnlockSeens      = new LogicDataSlots(this);
 
-            this.ItemInventories      = new LogicDataSlot(this);
-            this.ItemLevels           = new LogicDataSlot(this);
-            this.ItemAttachedTo       = new LogicDataSlot(this);
-            this.ItemUnavailable      = new LogicDataSlot(this);
+            this.ItemInventories      = new LogicDataSlots(this);
+            this.ItemLevels           = new LogicDataSlots(this);
+            this.ItemAttachedTo       = new LogicDataSlots(this);
+            this.ItemUnavailable      = new LogicDataSlots(this);
 
             this.Extras               = new LogicExtras(this);
 
@@ -451,34 +450,165 @@ namespace Supercell.Life.Server.Logic.Avatar
 
             this.SetAvatarJSON(stream);
         }
+        
+        /// <summary>
+        /// Sets the commodity count.
+        /// </summary>
+        internal void SetCommodityCount(LogicCommodityType commodity, int amount)
+        {
+            if (amount > 0)
+            {
+                switch (commodity)
+                {
+                    case LogicCommodityType.Gold:
+                    {
+                        this.Gold = amount;
+                        break;
+                    }
+                    case LogicCommodityType.Diamonds:
+                    {
+                        this.Diamonds = amount;
+                        break;
+                    }
+                    case LogicCommodityType.FreeDiamonds:
+                    {
+                        this.FreeDiamonds = amount;
+                        break;
+                    }
+                    case LogicCommodityType.Energy:
+                    {
+                        this.Energy = amount;
+                        break;
+                    }
+                    case LogicCommodityType.Experience:
+                    {
+                        if (this.ExpLevel == 35 && this.ExpPoints >= 2500000)
+                        {
+                            return;
+                        }
+
+                        double finalValue = amount;
+
+                        if (this.Booster.BoostActive)
+                        {
+                            finalValue *= this.Booster.BoostPackage.Boost;
+                        }
+
+                        this.ExpPoints = (int)finalValue;
+
+                        LogicExperienceLevelData experienceLevels = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataWithID(this.ExpLevel - 1);
+
+                        if (experienceLevels.ExpPoints <= this.ExpPoints)
+                        {
+                            this.ExpPoints -= experienceLevels.ExpPoints;
+                            this.ExpLevel++;
+                        }
+
+                        break;
+                    }
+                    case LogicCommodityType.Orb1:
+                    {
+                        this.Orb1 = amount;
+                        break;
+                    }
+                    case LogicCommodityType.Orb2:
+                    {
+                        this.Orb2 = amount;
+                        break;
+                    }
+                    case LogicCommodityType.Orb3:
+                    {
+                        this.Orb3 = amount;
+                        break;
+                    }
+                    case LogicCommodityType.Orb4:
+                    {
+                        this.Orb4 = amount;
+                        break;
+                    }
+                }
+            }
+        }
 
         /// <summary>
-        /// Encodes this player's ranking entry.
+        /// Changes the specified commodity by the specified amount. 
         /// </summary>
-        internal void EncodeRankingEntry(ByteStream stream)
+        internal void CommodityChangeCountHelper(LogicCommodityType commodity, int amount)
         {
-            stream.WriteLogicLong(this.Identifier);
-            stream.WriteString(this.Name);
-
-            stream.WriteInt(0);
-            stream.WriteInt(this.Score);
-            stream.WriteInt(0);
-            stream.WriteInt(this.ExpLevel);
-
-            stream.WriteInt(0);
-            stream.WriteInt(0);
-            stream.WriteString(null);
-
-            stream.WriteBoolean(this.IsInAlliance);
-
-            if (this.IsInAlliance)
+            if (amount > 0)
             {
-                stream.WriteLogicLong(this.Alliance.Identifier);
-                stream.WriteString(this.Alliance.Name);
-                stream.WriteDataReference(this.Alliance.BadgeData);
-            }
+                switch (commodity)
+                {
+                    case LogicCommodityType.Gold:
+                    {
+                        this.SetCommodityCount(LogicCommodityType.Gold, this.Gold + amount);
+                        break;
+                    }
+                    case LogicCommodityType.Diamonds:
+                    {
+                        this.SetCommodityCount(LogicCommodityType.Diamonds, this.Diamonds + amount);
+                        break;
+                    }
+                    case LogicCommodityType.FreeDiamonds:
+                    {
+                        this.SetCommodityCount(LogicCommodityType.FreeDiamonds, this.FreeDiamonds + amount);
+                        this.SetCommodityCount(LogicCommodityType.Diamonds, this.Diamonds + amount);
+                        break;
+                    }
+                    case LogicCommodityType.Energy:
+                    {
+                        this.SetCommodityCount(LogicCommodityType.Energy, this.Energy + amount);
+                        break;
+                    }
+                    case LogicCommodityType.Experience:
+                    {
 
-            stream.WriteInt(this.League);
+                        if (this.ExpLevel == 35 && this.ExpPoints >= 2500000)
+                        {
+                            return;
+                        }
+
+                        double finalValue = amount;
+
+                        if (this.Booster.BoostActive)
+                        {
+                            finalValue *= this.Booster.BoostPackage.Boost;
+                        }
+
+                        this.ExpPoints += (int)finalValue;
+
+                        LogicExperienceLevelData experienceLevels = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataWithID(this.ExpLevel - 1);
+
+                        if (experienceLevels.ExpPoints <= this.ExpPoints)
+                        {
+                            this.ExpPoints -= experienceLevels.ExpPoints;
+                            this.ExpLevel++;
+                        }
+                        
+                        break;
+                    }
+                    case LogicCommodityType.Orb1:
+                    {
+                        this.SetCommodityCount(LogicCommodityType.Orb1, this.Orb1 + amount);
+                        break;
+                    }
+                    case LogicCommodityType.Orb2:
+                    {
+                        this.SetCommodityCount(LogicCommodityType.Orb2, this.Orb2 + amount);
+                        break;
+                    }
+                    case LogicCommodityType.Orb3:
+                    {
+                        this.SetCommodityCount(LogicCommodityType.Orb3, this.Orb3 + amount);
+                        break;
+                    }
+                    case LogicCommodityType.Orb4:
+                    {
+                        this.SetCommodityCount(LogicCommodityType.Orb4, this.Orb4 + amount);
+                        break;
+                    }
+                }
+            }
         }
 
         /// <summary>

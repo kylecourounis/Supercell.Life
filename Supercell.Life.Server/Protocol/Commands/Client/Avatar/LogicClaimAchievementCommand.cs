@@ -5,6 +5,7 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
+    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Network;
 
     internal class LogicClaimAchievementCommand : LogicCommand
@@ -32,8 +33,8 @@
             {
                 gamemode.Avatar.AchievementProgress.AddItem(this.Achievement.GlobalID, this.Achievement.ActionCount);
 
-                gamemode.Avatar.AddXP(this.Achievement.ExpReward);
-                gamemode.Avatar.AddDiamonds(this.Achievement.DiamondReward, true);
+                gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, this.Achievement.ExpReward);
+                gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.FreeDiamonds, this.Achievement.DiamondReward);
             }
             else
             {
