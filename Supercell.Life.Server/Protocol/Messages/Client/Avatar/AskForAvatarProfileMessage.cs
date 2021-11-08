@@ -34,7 +34,7 @@
 
         internal override void Decode()
         {
-            this.VisitID = this.Stream.ReadLong();
+            this.VisitID = this.Stream.ReadLogicLong();
 
             if (this.Stream.ReadBoolean())
             {
@@ -44,8 +44,6 @@
 
         internal override void Handle()
         {
-            this.ShowValues();
-
             if (this.VisitID > 0)
             {
                 new AvatarProfileMessage(this.Connection, this.VisitID).Send();

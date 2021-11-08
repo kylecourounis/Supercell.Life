@@ -562,7 +562,6 @@ namespace Supercell.Life.Server.Logic.Avatar
                     }
                     case LogicCommodityType.Experience:
                     {
-
                         if (this.ExpLevel == 35 && this.ExpPoints >= 2500000)
                         {
                             return;

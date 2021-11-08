@@ -23,7 +23,7 @@
         {
             foreach (LogicTauntData taunt in CSV.Tables.Get(Gamefile.Taunts).Datas.Cast<LogicTauntData>().Where(taunt => taunt.UnlockedInBeginning))
             {
-                this.AddItem(taunt.GlobalID, 1);
+                this.AddItem(taunt.GlobalID, 2); // 1 = put in the inventory, 2 = equip
             }
         }
     }

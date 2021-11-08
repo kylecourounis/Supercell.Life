@@ -45,7 +45,7 @@
                     {
                         if (!string.IsNullOrEmpty(taunt.CharacterUnlock))
                         {
-                            LogicHeroData hero = (LogicHeroData) CSV.Tables.Get(Gamefile.Heroes).GetDataByName(taunt.CharacterUnlock);
+                            LogicHeroData hero = (LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataByName(taunt.CharacterUnlock);
 
                             if (!gamemode.Avatar.HeroLevels.ContainsKey(hero.GlobalID))
                             {
@@ -56,7 +56,7 @@
 
                         if (taunt.Cost > 0)
                         {
-                            LogicResourceData resource = (LogicResourceData) CSV.Tables.Get(Gamefile.Resources).GetDataByName(taunt.Resource);
+                            LogicResourceData resource = (LogicResourceData)CSV.Tables.Get(Gamefile.Resources).GetDataByName(taunt.Resource);
 
                             if (gamemode.Avatar.Resources.GetCount(resource.GlobalID) < taunt.Cost)
                             {
@@ -68,6 +68,10 @@
                         }
 
                         gamemode.Avatar.Extras.Set(taunt.GlobalID, 1);
+                    }
+                    else
+                    {
+                        gamemode.Avatar.Extras.Set(taunt.GlobalID, 2);
                     }
                 }
                 else
