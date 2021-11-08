@@ -22,7 +22,7 @@
         internal LogicGameMode(Connection connection)
         {
             this.Connection     = connection;
-            this.MessageManager = new MessageManager();
+            this.MessageManager = new MessageManager(connection);
             this.CommandManager = new LogicCommandManager(connection);
         }
         

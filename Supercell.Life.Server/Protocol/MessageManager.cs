@@ -6,12 +6,13 @@
 
     using Supercell.Life.Titan.Helpers;
 
-    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Messages;
 
     internal class MessageManager
     {
+        private readonly Connection Connection;
+
         private readonly Thread SendThread;
         private readonly Thread ReceiveThread;
 
@@ -24,8 +25,10 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageManager"/> class.
         /// </summary>
-        internal MessageManager()
+        internal MessageManager(Connection connection)
         {
+            this.Connection        = connection;
+
             this.SendQueue         = new ConcurrentQueue<PiranhaMessage>();
             this.ReceiveQueue      = new ConcurrentQueue<PiranhaMessage>();
 
@@ -59,7 +62,7 @@
         /// </summary>
         private void ReceiveMessage()
         {
-            while (true)
+            while (this.Connection.IsConnected)
             {
                 this.ReceiveResetEvent.WaitOne();
 
@@ -88,7 +91,7 @@
         /// </summary>
         private void SendMessage()
         {
-            while (true)
+            while (this.Connection.IsConnected)
             {
                 this.SendResetEvent.WaitOne();
 

@@ -7,7 +7,6 @@
 
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
-    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Avatar.Items;
     using Supercell.Life.Server.Logic.Avatar.Slots;
     using Supercell.Life.Server.Logic.Enums;
@@ -31,6 +30,14 @@
             {
                 return this.Timer.Started;
             }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogicSailingTimer"/> class.
+        /// </summary>
+        internal LogicSailingTimer()
+        {
+            this.Timer = new LogicTimer();
         }
 
         /// <summary>

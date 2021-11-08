@@ -1,9 +1,8 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
-    using Supercell.Life.Server.Files.CsvHelpers;
-    using Supercell.Life.Server.Logic;
     using Supercell.Life.Titan.DataStream;
-    
+
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
 

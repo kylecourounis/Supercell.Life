@@ -14,6 +14,7 @@
         internal readonly LogicClientAvatar Avatar;
 
         #region ItemsData
+
         internal static readonly LogicItemsData EnergyRecycler  = (LogicItemsData)CSV.Tables.Get(Gamefile.Items).GetDataByName("GetEnergy");
         internal static readonly LogicItemsData PlunderThunder  = (LogicItemsData)CSV.Tables.Get(Gamefile.Items).GetDataByName("GetXP");
         internal static readonly LogicItemsData RobbersHood     = (LogicItemsData)CSV.Tables.Get(Gamefile.Items).GetDataByName("GetGold");
@@ -26,6 +27,7 @@
         internal static readonly LogicItemsData AdventurersSnap = (LogicItemsData)CSV.Tables.Get(Gamefile.Items).GetDataByName("DoubleDmg");
         internal static readonly LogicItemsData SmackAttack     = (LogicItemsData)CSV.Tables.Get(Gamefile.Items).GetDataByName("DmgPlus");
         internal static readonly LogicItemsData BubbleArmor     = (LogicItemsData)CSV.Tables.Get(Gamefile.Items).GetDataByName("Shield");
+
         #endregion
 
         /// <summary>
