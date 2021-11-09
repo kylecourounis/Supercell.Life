@@ -1,6 +1,6 @@
 ﻿namespace Supercell.Life.Server.Protocol.Messages.Server
 {
-    using Supercell.Life.Server.Logic.Slots.Items;
+    using Supercell.Life.Server.Logic.Collections.Items;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
     

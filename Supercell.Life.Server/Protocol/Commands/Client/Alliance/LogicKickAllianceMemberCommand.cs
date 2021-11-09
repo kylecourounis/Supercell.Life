@@ -6,7 +6,7 @@
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Alliance;
     using Supercell.Life.Server.Logic.Avatar;
-    using Supercell.Life.Server.Logic.Slots;
+    using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Network;
 
     internal class LogicKickAllianceMemberCommand : LogicCommand

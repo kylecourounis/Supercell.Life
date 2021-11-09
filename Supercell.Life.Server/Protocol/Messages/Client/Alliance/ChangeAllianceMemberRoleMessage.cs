@@ -5,7 +5,7 @@
 
     using Supercell.Life.Server.Logic.Alliance;
     using Supercell.Life.Server.Logic.Alliance.Streams;
-    using Supercell.Life.Server.Logic.Slots;
+    using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Commands.Server;
     using Supercell.Life.Server.Protocol.Enums;

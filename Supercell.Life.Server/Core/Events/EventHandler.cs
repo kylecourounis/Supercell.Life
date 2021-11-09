@@ -8,7 +8,7 @@
 
     using Supercell.Life.Titan.Logic.Enums;
     
-    using Supercell.Life.Server.Logic.Slots;
+    using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Protocol.Messages;
     using Supercell.Life.Server.Protocol.Messages.Server;
 

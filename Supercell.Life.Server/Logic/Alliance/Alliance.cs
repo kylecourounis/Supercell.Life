@@ -15,7 +15,7 @@
     using Supercell.Life.Server.Logic.Alliance.Streams;
     using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Logic.Avatar.Timers;
-    using Supercell.Life.Server.Logic.Slots;
+    using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Protocol.Messages;
     using Supercell.Life.Server.Protocol.Messages.Server;
 

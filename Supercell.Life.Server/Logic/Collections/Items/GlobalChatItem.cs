@@ -1,4 +1,4 @@
-﻿namespace Supercell.Life.Server.Logic.Slots.Items
+﻿namespace Supercell.Life.Server.Logic.Collections.Items
 {
     using Supercell.Life.Server.Logic.Avatar;
 

@@ -6,7 +6,7 @@
 
     using Supercell.Life.Titan.Core;
 
-    using Supercell.Life.Server.Logic.Slots;
+    using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Protocol;
     using Supercell.Life.Server.Protocol.Messages;
 

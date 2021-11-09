@@ -1,7 +1,7 @@
 ﻿namespace Supercell.Life.Server.Helpers
 {
-    using Supercell.Life.Server.Logic.Slots;
-    using Supercell.Life.Server.Logic.Slots.Items;
+    using Supercell.Life.Server.Logic.Collections;
+    using Supercell.Life.Server.Logic.Collections.Items;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Messages;
     using Supercell.Life.Server.Protocol.Messages.Server;

@@ -8,7 +8,7 @@
 
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Avatar;
-    using Supercell.Life.Server.Logic.Slots;
+    using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Network;
 
     internal class LogicRankCommand : LogicChatCommand

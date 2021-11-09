@@ -10,7 +10,7 @@
     using Supercell.Life.Server.Core;
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Logic;
-    using Supercell.Life.Server.Logic.Slots;
+    using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
     using Supercell.Life.Server.Protocol.Messages.Server;

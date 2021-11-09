@@ -6,7 +6,7 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Alliance;
-    using Supercell.Life.Server.Logic.Slots;
+    using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
     using Supercell.Life.Server.Protocol.Commands.Server;

@@ -23,7 +23,7 @@ namespace Supercell.Life.Server.Logic.Avatar
     using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Server.Logic.Game.Objects.Quests;
-    using Supercell.Life.Server.Logic.Slots;
+    using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Network;
 
     internal class LogicClientAvatar

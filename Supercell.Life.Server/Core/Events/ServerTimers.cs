@@ -4,7 +4,7 @@
     using System.Reflection;
     using System.Timers;
 
-    using Supercell.Life.Server.Logic.Slots;
+    using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Network;
 
     using Debugger = Supercell.Life.Debugger;

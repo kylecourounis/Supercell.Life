@@ -1,4 +1,4 @@
-﻿namespace Supercell.Life.Server.Logic.Slots
+﻿namespace Supercell.Life.Server.Logic.Collections
 {
     using System;
     using System.Collections.Concurrent;

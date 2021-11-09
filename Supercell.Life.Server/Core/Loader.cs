@@ -7,8 +7,8 @@
     using Supercell.Life.Server.Core.Events;
     using Supercell.Life.Server.Database;
     using Supercell.Life.Server.Files;
+    using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Logic.Game;
-    using Supercell.Life.Server.Logic.Slots;
     using Supercell.Life.Server.Network;
 
     internal static class Loader

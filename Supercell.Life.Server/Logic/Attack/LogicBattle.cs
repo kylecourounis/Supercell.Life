@@ -14,7 +14,7 @@
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Logic.Game;
-    using Supercell.Life.Server.Logic.Slots;
+    using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Protocol.Commands;
     using Supercell.Life.Server.Protocol.Messages;
     using Supercell.Life.Server.Protocol.Messages.Server;
