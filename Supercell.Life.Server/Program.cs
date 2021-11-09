@@ -28,16 +28,26 @@
             Console.SetWindowSize(Program.Width, Program.Height);
             Console.SetBufferSize(Program.Width, Program.Height);
 
+            Console.ForegroundColor = ConsoleColor.Magenta;
+
+            Console.Write(@"
+     _____                     _      
+    / ____|                   | |     
+   | (___  _ __ ___   __ _ ___| |__   
+    \___ \| '_ ` _ \ / _` / __| '_ \ 
+    ____) | | | | | | (_| \__ \ | | |
+   |_____/|_| |_| |_|\__,_|___/_| |_|");
+
             Console.ForegroundColor = ConsoleColor.Green;
 
             Console.Write(@"
-     _____                     _       _                     _ 
-    / ____|                   | |     | |                   | |
-   | (___  _ __ ___   __ _ ___| |__   | |     __ _ _ __   __| |
-    \___ \| '_ ` _ \ / _` / __| '_ \  | |    / _` | '_ \ / _` |
-    ____) | | | | | | (_| \__ \ | | | | |___| (_| | | | | (_| |
-   |_____/|_| |_| |_|\__,_|___/_| |_| |______\__,_|_| |_|\__,_|
-                                                                                                      
+        _                     _ 
+       | |                   | |
+       | |     __ _ _ __   __| |
+       | |    / _` | '_ \ / _` |
+       | |___| (_| | | | | (_| |
+       |______\__,_|_| |_|\__,_|      
+
             " + Environment.NewLine);
 
             Console.ForegroundColor = ConsoleColor.White;
