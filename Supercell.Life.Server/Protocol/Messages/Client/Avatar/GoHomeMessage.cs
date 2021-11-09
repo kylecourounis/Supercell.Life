@@ -39,7 +39,7 @@
         {
             this.ShowValues();
 
-            if (this.Connection.GameMode.Avatar.Resigned)
+            if (this.Connection.GameMode.Resigned)
             {
                 this.Connection.GameMode.Avatar.LoseBattle();
             }
@@ -48,7 +48,7 @@
                 this.GetBattleResult();
             }
              
-            this.Connection.GameMode.Avatar.Resigned = false;
+            this.Connection.GameMode.Resigned = false;
 
             new OwnAvatarDataMessage(this.Connection).Send();
         }

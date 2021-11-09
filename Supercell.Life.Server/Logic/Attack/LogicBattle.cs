@@ -73,7 +73,7 @@
         {
             get
             {
-                return this.Avatars.All(avatar => avatar.Battle == null);
+                return this.Avatars.All(avatar => avatar.Connection.GameMode.Battle == null);
             }
         }
 

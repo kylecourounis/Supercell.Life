@@ -2,6 +2,7 @@
 {
     using System;
 
+    using Supercell.Life.Server.Logic.Attack;
     using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol;
@@ -11,11 +12,15 @@
     {
         internal Connection Connection;
 
-        internal LogicClientAvatar Avatar;
-
         internal readonly MessageManager MessageManager;
         internal readonly LogicCommandManager CommandManager;
-        
+
+        internal LogicClientAvatar Avatar;
+
+        internal LogicBattle Battle;
+
+        internal bool Resigned;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicGameMode"/> class.
         /// </summary>

@@ -86,7 +86,7 @@
                 }
             }
 
-            var battle = gamemode.Avatar.Battle;
+            var battle = gamemode.Battle;
 
             if (battle != null)
             {

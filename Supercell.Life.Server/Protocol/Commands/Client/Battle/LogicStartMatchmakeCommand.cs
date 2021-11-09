@@ -44,8 +44,8 @@
 
                 Battles.Add(battle);
 
-                gamemode.Avatar.Battle = battle;
-                opponent.Battle        = battle;
+                gamemode.Avatar.Connection.GameMode.Battle = battle;
+                opponent.Connection.GameMode.Battle        = battle;
 
                 battle.Start();
             }

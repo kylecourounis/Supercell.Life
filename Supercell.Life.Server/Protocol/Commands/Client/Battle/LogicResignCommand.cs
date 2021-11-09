@@ -36,9 +36,9 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            gamemode.Avatar.Resigned = true;
+            gamemode.Resigned = true;
 
-            var battle = gamemode.Avatar.Battle;
+            var battle = gamemode.Battle;
 
             if (battle != null)
             {

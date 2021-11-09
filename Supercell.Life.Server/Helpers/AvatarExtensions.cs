@@ -46,7 +46,7 @@
         internal static void LoseBattle(this LogicClientAvatar avatar)
         {
             avatar.LoseTrophies(30);
-            avatar.Resigned = false;
+            avatar.Connection.GameMode.Resigned = false;
         }
 
         /// <summary>

@@ -33,6 +33,8 @@
         internal int ReplayGoldReward;
         internal int ReplayXPReward;
 
+        internal bool IsReplaying;
+
         [JsonProperty] internal string Name;
         
         /// <summary>
@@ -101,12 +103,12 @@
                 this.Avatar.Connection.State = State.Battle;
                 this.Avatar.Energy          -= this.Data.Energy;
 
-                if (!this.Avatar.NpcProgress.Crowns.Contains(this.GlobalID))
+                if (this.Level == this.Levels.Size)
                 {
-                    if (this.Level == this.Levels.Size)
+                    this.IsReplaying = true;
+
+                    if (!this.Avatar.NpcProgress.Crowns.Contains(this.GlobalID))
                     {
-                        this.MovesRecord = this.Moves;
-                        
                         this.Avatar.QuestMoves.Set(this.GlobalID, 0);
                     }
                 }
@@ -139,16 +141,24 @@
                 }
                 default:
                 {
+                    if (this.IsReplaying)
+                    {
+                        this.GoldReward = this.ReplayGoldReward;
+                        this.XPReward   = this.ReplayXPReward;
+                    }
+                    else
+                    {
+                        LogicExperienceLevelData expLevelData = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataWithID(this.Avatar.ExpLevel - 1);
+
+                        this.GoldReward = expLevelData.DefaultQuestRewardGoldPerEnergy * this.Data.Energy;
+                        this.XPReward   = expLevelData.DefaultQuestRewardXpPerEnergy * this.Data.Energy;
+                    }
+
                     if (!this.Avatar.NpcProgress.Crowns.Contains(this.GlobalID))
                     {
                         this.Avatar.QuestMoves.AddItem(this.GlobalID, this.SublevelMoveCount);
                     }
-                    else
-                    {
-                        this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, this.ReplayGoldReward);
-                        this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, this.ReplayXPReward);
-                    }
-                    
+
                     if (this.SublevelMoveCount > 0)
                     {
                         if (this.Avatar.NpcProgress.GetCount(this.GlobalID) < this.Levels.Size)
@@ -157,7 +167,7 @@
                             this.SublevelMoveCount = 0;
                         }
 
-                        this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, this.Data.GoldRewardOverride);
+                        this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, this.GoldReward);
 
                         if (this.Avatar.Items.IsAttached(LogicItems.EnergyRecycler))
                         {
@@ -166,16 +176,18 @@
 
                         if (this.Avatar.Items.IsAttached(LogicItems.PlunderThunder))
                         {
-                            this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, (int)Math.Round(this.Data.XpRewardOverride * this.Avatar.Items.PlunderThunderPercentage));
+                            this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, (int)Math.Round(this.XPReward * this.Avatar.Items.PlunderThunderPercentage));
                         }
                         else
                         {
-                            this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, this.Data.XpRewardOverride);
+                            this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, this.XPReward);
                         }
                     }
 
                     if (this.Level == this.Levels.Size)
                     {
+                        this.MovesRecord = this.Moves;
+
                         if (this.Moves <= this.Data.GoalMoveCount)
                         {
                             this.Avatar.NpcProgress.Crowns.Add(this.GlobalID);

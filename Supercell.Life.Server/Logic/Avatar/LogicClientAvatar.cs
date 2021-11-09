@@ -108,10 +108,6 @@ namespace Supercell.Life.Server.Logic.Avatar
 
         internal readonly LogicTime Time;
 
-        internal LogicBattle Battle;
-
-        internal bool Resigned;
-
         /// <summary>
         /// Gets the player identifier.
         /// </summary>
