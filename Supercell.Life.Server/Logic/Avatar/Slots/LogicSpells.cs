@@ -39,10 +39,7 @@
 
                 foreach (var spell in this.Avatar.SpellsReady.Values)
                 {
-                    LogicJSONObject json = new LogicJSONObject();
-                    spell.Save(json);
-
-                    array.Add(json);
+                    array.Add(spell.Save());
                 }
 
                 return array;
@@ -60,10 +57,7 @@
 
                 foreach (var spell in this.Values)
                 {
-                    LogicJSONObject json = new LogicJSONObject();
-                    spell.Save(json);
-
-                    array.Add(json);
+                    array.Add(spell.Save());
                 }
 
                 return array;

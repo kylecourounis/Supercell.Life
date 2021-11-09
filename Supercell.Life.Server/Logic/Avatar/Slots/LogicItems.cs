@@ -85,10 +85,7 @@
                 
                 foreach (var slot in this.Avatar.ItemLevels.Values)
                 {
-                    LogicJSONObject json = new LogicJSONObject();
-                    slot.Save(json);
-
-                    array.Add(json);
+                    array.Add(slot.Save());
                 }
 
                 return array;

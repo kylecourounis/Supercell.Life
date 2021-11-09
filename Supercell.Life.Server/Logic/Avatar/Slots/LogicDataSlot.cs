@@ -71,12 +71,16 @@
         }
 
         /// <summary>
-        /// Saves this <see cref="LogicDataSlot"/> to the specified <see cref="LogicJSONObject"/>.
+        /// Saves this <see cref="LogicDataSlot"/> the returned <see cref="LogicJSONObject"/>.
         /// </summary>
-        internal void Save(LogicJSONObject json)
+        internal LogicJSONObject Save()
         {
+            LogicJSONObject json = new LogicJSONObject();
+
             json.Put("id", new LogicJSONNumber(this.Id));
             json.Put("cnt", new LogicJSONNumber(this.Count));
+
+            return json;
         }
 
         /// <summary>

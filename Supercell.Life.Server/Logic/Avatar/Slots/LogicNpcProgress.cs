@@ -6,8 +6,6 @@
     using Supercell.Life.Titan.Logic;
     using Supercell.Life.Titan.Logic.Json;
 
-    using Supercell.Life.Server.Logic.Game.Objects.Quests;
-
     internal class LogicNpcProgress : LogicDataSlots
     {
         [JsonProperty] internal LogicArrayList<int> Crowns;
@@ -29,11 +27,6 @@
             {
                 this.AddItem(Globals.StartingQuest.GlobalID, 0);
             }
-
-            /* foreach (QuestData Data in CSV.Tables.Get(Gamefile.Quests).Datas.Cast<QuestData>().Where(Data => Data.QuestType == "Unlock"))
-            {
-                this.AddItem(new Item(Data.GlobalID, 1));
-            } */
         }
 
         /// <summary>
@@ -97,12 +90,7 @@
 
                 foreach (var quest in this.Values)
                 {
-                    LogicJSONObject jsonObj = new LogicJSONObject();
-
-                    jsonObj.Put("id", new LogicJSONNumber(quest.Id));
-                    jsonObj.Put("cnt", new LogicJSONNumber(quest.Count));
-
-                    array.Add(jsonObj);
+                    array.Add(quest.Save());
                 }
 
                 return array;
