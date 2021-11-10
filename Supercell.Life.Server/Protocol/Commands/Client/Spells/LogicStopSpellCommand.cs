@@ -15,17 +15,17 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicStopSpellCommand"/> class.
         /// </summary>
-        public LogicStopSpellCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicStopSpellCommand(Connection connection) : base(connection)
         {
             // LogicStopSpellCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.Spell = this.Stream.ReadDataReference<LogicSpellData>();
-            this.Slot  = this.Stream.ReadInt();
+            this.Spell = stream.ReadDataReference<LogicSpellData>();
+            this.Slot  = stream.ReadInt();
 
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

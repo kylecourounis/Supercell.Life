@@ -16,17 +16,17 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicActionSeenCommand"/> class.
         /// </summary>
-        public LogicActionSeenCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicActionSeenCommand(Connection connection) : base(connection)
         {
             // LogicActionSeenCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.ReadHeader();
+            base.Decode(stream);
 
-            this.SeenType = this.Stream.ReadInt();
-            this.Value    = this.Stream.ReadInt();
+            this.SeenType = stream.ReadInt();
+            this.Value    = stream.ReadInt();
         }
 
         internal override void Execute(LogicGameMode gamemode)

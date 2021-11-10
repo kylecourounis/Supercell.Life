@@ -1,5 +1,7 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Server
 {
+    using Supercell.Life.Titan.DataStream;
+
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
 
@@ -15,13 +17,13 @@
             this.Type = Command.DiamondsAdded;
         }
 
-        internal override void Encode()
+        internal override void Encode(ByteStream stream)
         {
-            this.Stream.WriteBoolean(true);
-            this.Stream.WriteInt(this.Diamonds);
-            this.Stream.WriteString("");
+            stream.WriteBoolean(true);
+            stream.WriteInt(this.Diamonds);
+            stream.WriteString("");
 
-            this.WriteHeader();
+            this.WriteHeader(stream);
         }
     }
 }

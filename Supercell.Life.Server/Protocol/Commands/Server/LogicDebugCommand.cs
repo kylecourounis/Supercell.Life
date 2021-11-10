@@ -1,5 +1,7 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Server
 {
+    using Supercell.Life.Titan.DataStream;
+
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Enums;
@@ -21,13 +23,13 @@
             this.Debug = debug;
         }
 
-        internal override void Encode()
+        internal override void Encode(ByteStream stream)
         {
-            this.Stream.WriteInt(this.Debug);
-            this.Stream.WriteInt(0);
-            this.Stream.WriteInt(0);
+            stream.WriteInt(this.Debug);
+            stream.WriteInt(0);
+            stream.WriteInt(0);
 
-            this.WriteHeader();
+            this.WriteHeader(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

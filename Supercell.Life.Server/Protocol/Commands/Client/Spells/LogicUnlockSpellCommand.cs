@@ -14,16 +14,16 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicUnlockSpellCommand"/> class.
         /// </summary>
-        public LogicUnlockSpellCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicUnlockSpellCommand(Connection connection) : base(connection)
         {
             // LogicUnlockSpellCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.Spell = this.Stream.ReadDataReference<LogicSpellData>();
+            this.Spell = stream.ReadDataReference<LogicSpellData>();
 
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

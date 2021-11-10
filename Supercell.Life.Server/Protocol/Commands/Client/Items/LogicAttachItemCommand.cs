@@ -15,17 +15,17 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicAttachItemCommand"/> class.
         /// </summary>
-        public LogicAttachItemCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicAttachItemCommand(Connection connection) : base(connection)
         {
             // LogicAttachItemCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.Item = this.Stream.ReadDataReference<LogicItemsData>();
-            this.Hero = this.Stream.ReadDataReference<LogicHeroData>();
+            this.Item = stream.ReadDataReference<LogicItemsData>();
+            this.Hero = stream.ReadDataReference<LogicHeroData>();
 
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

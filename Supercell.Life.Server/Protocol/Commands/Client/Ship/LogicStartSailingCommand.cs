@@ -16,16 +16,16 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicStartSailingCommand"/> class.
         /// </summary>
-        public LogicStartSailingCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicStartSailingCommand(Connection connection) : base(connection)
         {
             this.Heroes = new LogicArrayList<LogicHeroData>();
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
             for (int i = 0; i < 3; i++)
             {
-                LogicHeroData hero = this.Stream.ReadDataReference<LogicHeroData>();
+                LogicHeroData hero = stream.ReadDataReference<LogicHeroData>();
 
                 if (hero != null)
                 {
@@ -33,7 +33,7 @@
                 }
             }
 
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

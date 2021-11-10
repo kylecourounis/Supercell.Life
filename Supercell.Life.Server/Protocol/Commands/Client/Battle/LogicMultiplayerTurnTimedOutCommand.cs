@@ -15,23 +15,15 @@
         {
             this.Type = Command.TurnTimedOut;
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LogicMultiplayerTurnTimedOutCommand"/> class.
-        /// </summary>
-        public LogicMultiplayerTurnTimedOutCommand(Connection connection, ByteStream stream) : base(connection, stream)
-        {
-            // LogicMultiplayerTurnTimedOutCommand.
-        }
         
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
-        internal override void Encode()
+        internal override void Encode(ByteStream stream)
         {
-            this.WriteHeader();
+            base.Encode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

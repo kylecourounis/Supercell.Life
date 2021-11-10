@@ -15,16 +15,16 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicStartQuestCommand"/> class.
         /// </summary>
-        public LogicStartQuestCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicStartQuestCommand(Connection connection) : base(connection)
         {
             // LogicStartQuestCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.QuestData = this.Stream.ReadDataReference<LogicQuestData>();
+            this.QuestData = stream.ReadDataReference<LogicQuestData>();
 
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

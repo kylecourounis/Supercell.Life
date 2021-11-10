@@ -14,16 +14,16 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicBuyBoosterCommand"/> class.
         /// </summary>
-        public LogicBuyBoosterCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicBuyBoosterCommand(Connection connection) : base(connection)
         {
             // LogicBuyBoosterCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.Booster = this.Stream.ReadDataReference<LogicBoosterData>();
+            this.Booster = stream.ReadDataReference<LogicBoosterData>();
 
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

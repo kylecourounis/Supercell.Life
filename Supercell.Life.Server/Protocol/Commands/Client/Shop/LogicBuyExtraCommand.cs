@@ -18,19 +18,19 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicBuyExtraCommand"/> class.
         /// </summary>
-        public LogicBuyExtraCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicBuyExtraCommand(Connection connection) : base(connection)
         {
             // LogicBuyExtraCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.DataType = this.Stream.ReadInt();
-            this.Data     = this.Stream.ReadDataReference();
+            this.DataType = stream.ReadInt();
+            this.Data     = stream.ReadDataReference();
 
-            this.Stream.ReadInt();
+            stream.ReadInt();
 
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

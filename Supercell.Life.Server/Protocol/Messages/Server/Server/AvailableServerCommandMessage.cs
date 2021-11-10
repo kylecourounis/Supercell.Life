@@ -30,11 +30,9 @@
         
         internal override void Encode()
         {
-            this.Command.Encode();
-
             this.Stream.WriteInt((int)this.Command.Type);
-            this.Stream.Write(this.Command.Stream.ToArray());
-
+            this.Command.Encode(this.Stream);
+            
             this.Command.Execute(this.Connection.GameMode);
         }
     }

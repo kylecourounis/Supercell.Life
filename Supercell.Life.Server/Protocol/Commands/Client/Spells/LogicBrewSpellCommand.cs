@@ -18,20 +18,20 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicBrewSpellCommand"/> class.
         /// </summary>
-        public LogicBrewSpellCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicBrewSpellCommand(Connection connection) : base(connection)
         {
             this.Spells = new LogicArrayList<LogicSpellData>();
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            var count = (int)this.Stream.ReadByte();
+            var count = (int)stream.ReadByte();
             for (int i = 0; i < count; i++)
             {
-                this.Spells.Add(this.Stream.ReadDataReference<LogicSpellData>());
+                this.Spells.Add(stream.ReadDataReference<LogicSpellData>());
             }
 
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

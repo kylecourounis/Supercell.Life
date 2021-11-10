@@ -11,14 +11,14 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicFinishSpellsCommand"/> class.
         /// </summary>
-        public LogicFinishSpellsCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicFinishSpellsCommand(Connection connection) : base(connection)
         {
             // LogicFinishSpellsCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

@@ -17,17 +17,17 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicKickAllianceMemberCommand"/> class.
         /// </summary>
-        public LogicKickAllianceMemberCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicKickAllianceMemberCommand(Connection connection) : base(connection)
         {
             // LogicKickAllianceMemberCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.Identifier = this.Stream.ReadLogicLong();
-            // this.Name       = this.Stream.ReadString();
+            this.Identifier = stream.ReadLogicLong();
+            // this.Name       = stream.ReadString();
 
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

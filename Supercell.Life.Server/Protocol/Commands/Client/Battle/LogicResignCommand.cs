@@ -16,22 +16,14 @@
             this.Type = Command.Resign;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LogicResignCommand"/> class.
-        /// </summary>
-        public LogicResignCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        internal override void Decode(ByteStream stream)
         {
-            // LogicResignCommand.
+            base.Decode(stream);
         }
 
-        internal override void Decode()
+        internal override void Encode(ByteStream stream)
         {
-            this.ReadHeader();
-        }
-
-        internal override void Encode()
-        {
-            this.WriteHeader();
+            base.Encode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

@@ -10,14 +10,14 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicReturnToMapCommand"/> class.
         /// </summary>
-        public LogicReturnToMapCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicReturnToMapCommand(Connection connection) : base(connection)
         {
             // LogicReturnToMapCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

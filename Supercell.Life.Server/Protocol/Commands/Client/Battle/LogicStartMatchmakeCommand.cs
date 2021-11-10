@@ -19,16 +19,16 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicStartMatchmakeCommand"/> class.
         /// </summary>
-        public LogicStartMatchmakeCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicStartMatchmakeCommand(Connection connection) : base(connection)
         {
             // LogicStartMatchmakeCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.Quest = this.Stream.ReadDataReference<LogicQuestData>();
+            this.Quest = stream.ReadDataReference<LogicQuestData>();
 
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

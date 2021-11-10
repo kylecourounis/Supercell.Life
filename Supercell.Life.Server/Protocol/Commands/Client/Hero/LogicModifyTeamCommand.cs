@@ -15,20 +15,20 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicModifyTeamCommand"/> class.
         /// </summary>
-        public LogicModifyTeamCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicModifyTeamCommand(Connection connection) : base(connection)
         {
             this.Heroes = new LogicArrayList<LogicHeroData>();
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.Heroes.Add(this.Stream.ReadDataReference<LogicHeroData>());
-            this.Heroes.Add(this.Stream.ReadDataReference<LogicHeroData>());
-            this.Heroes.Add(this.Stream.ReadDataReference<LogicHeroData>());
+            this.Heroes.Add(stream.ReadDataReference<LogicHeroData>());
+            this.Heroes.Add(stream.ReadDataReference<LogicHeroData>());
+            this.Heroes.Add(stream.ReadDataReference<LogicHeroData>());
 
-            this.Stream.ReadInt(); // -1 (not sure what this is for)
+            stream.ReadInt(); // -1 (not sure what this is for)
 
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

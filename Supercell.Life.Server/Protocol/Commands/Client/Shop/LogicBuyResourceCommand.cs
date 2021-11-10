@@ -16,19 +16,19 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicBuyResourceCommand"/> class.
         /// </summary>
-        public LogicBuyResourceCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicBuyResourceCommand(Connection connection) : base(connection)
         {
             // LogicBuyResourceCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.Resource = (Resource)this.Stream.ReadInt();
-            this.Amount   = this.Stream.ReadInt();
+            this.Resource = (Resource)stream.ReadInt();
+            this.Amount   = stream.ReadInt();
 
-            this.Stream.ReadByte();
+            stream.ReadByte();
 
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

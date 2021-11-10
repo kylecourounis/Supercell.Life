@@ -14,16 +14,16 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicSendTauntCommand"/> class.
         /// </summary>
-        public LogicSendTauntCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicSendTauntCommand(Connection connection) : base(connection)
         {
             // LogicSendTauntCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.ReadHeader();
+            base.Decode(stream);
 
-            this.Taunt = this.Stream.ReadDataReference<LogicTauntData>();
+            this.Taunt = stream.ReadDataReference<LogicTauntData>();
         }
 
         internal override void Execute(LogicGameMode gamemode)

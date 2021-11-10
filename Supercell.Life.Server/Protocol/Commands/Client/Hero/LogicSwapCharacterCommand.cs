@@ -17,27 +17,19 @@
         {
             this.Type = Command.SwapCharacter;
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LogicSwapCharacterCommand"/> class.
-        /// </summary>
-        public LogicSwapCharacterCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        
+        internal override void Decode(ByteStream stream)
         {
-            // LogicSwapCharacterCommand.
+            this.Unknown = stream.ReadInt();
+
+            base.Decode(stream);
         }
 
-        internal override void Decode()
+        internal override void Encode(ByteStream stream)
         {
-            this.Unknown = this.Stream.ReadInt();
-
-            this.ReadHeader();
-        }
-
-        internal override void Encode()
-        {
-            this.Stream.WriteInt(this.Unknown);
-
-            this.WriteHeader();
+            stream.WriteInt(this.Unknown);
+            
+            base.Encode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

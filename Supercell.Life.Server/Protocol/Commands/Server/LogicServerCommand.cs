@@ -3,6 +3,7 @@
     using Supercell.Life.Titan.Logic.Math;
 
     using Supercell.Life.Server.Network;
+    using Supercell.Life.Titan.DataStream;
 
     internal class LogicServerCommand : LogicCommand
     {
@@ -17,11 +18,11 @@
         /// <summary>
         /// Writes the header.
         /// </summary>
-        internal new void WriteHeader()
+        internal void WriteHeader(ByteStream stream)
         {
-            this.Stream.WriteInt(this.Subtick);
-            this.Stream.WriteInt(this.Subtick);
-            new LogicLong(this.Connection.GameMode.Avatar.HighID, this.Connection.GameMode.Avatar.LowID).Encode(this.Stream);
+            stream.WriteInt(this.Subtick);
+            stream.WriteInt(this.Subtick);
+            new LogicLong(this.Connection.GameMode.Avatar.HighID, this.Connection.GameMode.Avatar.LowID).Encode(stream);
         }
     }
 }

@@ -40,45 +40,29 @@
         }
 
         /// <summary>
-        /// Gets the stream.
-        /// </summary>
-        internal ByteStream Stream
-        {
-            get;
-        }
-        
-        /// <summary>
         /// Initializes a new instance of the <see cref="LogicCommand"/> class.
         /// </summary>
         internal LogicCommand(Connection connection)
         {
             this.Connection = connection;
-            this.Stream     = new ByteStream();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LogicCommand"/> class.
-        /// </summary>
-        internal LogicCommand(Connection connection, ByteStream stream)
-        {
-            this.Connection = connection;
-            this.Stream     = stream;
         }
 
         /// <summary>
         /// Decodes this instance.
         /// </summary>
-        internal virtual void Decode()
+        internal virtual void Decode(ByteStream stream)
         {
-            // Decode.
+            this.ExecuteSubTick = stream.ReadInt();
+            this.ExecutorID     = stream.ReadLogicLong();
         }
 
         /// <summary>
         /// Encodes this instance.
         /// </summary>
-        internal virtual void Encode()
+        internal virtual void Encode(ByteStream stream)
         {
-            // Encode.
+            stream.WriteInt(this.ExecuteSubTick);
+            stream.WriteLogicLong(this.ExecutorID);
         }
 
         /// <summary>
@@ -86,33 +70,15 @@
         /// </summary>
         internal virtual void Execute(LogicGameMode gamemode)
         {
-            // Process.
+            // Execute.
         }
-
-        /// <summary>
-        /// Reads the header.
-        /// </summary>
-        internal void ReadHeader()
-        {
-            this.ExecuteSubTick = this.Stream.ReadInt();
-            this.ExecutorID     = this.Stream.ReadLogicLong();
-        }
-
-        /// <summary>
-        /// Writes the header.
-        /// </summary>
-        internal void WriteHeader()
-        {
-            this.Stream.WriteInt(this.ExecuteSubTick);
-            this.Stream.WriteLogicLong(this.ExecutorID);
-        }
-
+        
         /// <summary>
         /// Shows the buffer of this <see cref="LogicCommand"/>.
         /// </summary>
-        internal void ShowBuffer()
+        internal void ShowBuffer(ByteStream stream)
         {
-            Debugger.Debug(this.Stream.ToHexa());
+            Debugger.Debug(stream.ToHexa());
         }
         
         /// <summary>

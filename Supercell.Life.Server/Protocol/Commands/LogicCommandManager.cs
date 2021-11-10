@@ -33,7 +33,7 @@
         internal void DecodeCommand(ByteStream stream, int subtick)
         {
             int id      = stream.ReadInt();
-            var command = LogicCommandManager.CreateCommand(id, this.Connection, stream);
+            var command = LogicCommandManager.CreateCommand(id, this.Connection);
 
             if (command != null)
             {
@@ -42,7 +42,7 @@
                     Debugger.Info($"Command {command.GetType().Name.Pad(34)} received from {this.Connection.EndPoint}.");
 
                     command.Subtick = subtick;
-                    command.Decode();
+                    command.Decode(stream);
 
                     this.Commands.Add(command);
                 }
@@ -59,7 +59,7 @@
         internal void DecodeBattleCommand(ByteStream stream, int subtick)
         {
             int id      = stream.ReadInt();
-            var command = LogicCommandManager.CreateCommand(id, this.Connection, stream);
+            var command = LogicCommandManager.CreateCommand(id, this.Connection);
 
             if (id >= 600)
             {
@@ -70,7 +70,7 @@
                         Debugger.Info($"Battle Command {command.GetType().Name.Pad(34)} received from {this.Connection.EndPoint}.");
 
                         command.Subtick = subtick;
-                        command.Decode();
+                        command.Decode(stream);
 
                         this.SectorCommands.Add(command);
                     }
@@ -147,153 +147,153 @@
         /// <summary>
         /// Creates a <see cref="LogicCommand"/> using the specified type.
         /// </summary>
-        internal static LogicCommand CreateCommand(int type, Connection connection, ByteStream stream)
+        internal static LogicCommand CreateCommand(int type, Connection connection)
         {
             switch ((Command)type)
             {
                 case Command.StartQuest:
                 {
-                    return new LogicStartQuestCommand(connection, stream);
+                    return new LogicStartQuestCommand(connection);
                 }
                 case Command.BuyHero:
                 {
-                    return new LogicBuyHeroCommand(connection, stream);
+                    return new LogicBuyHeroCommand(connection);
                 }
                 case Command.UpgradeHero:
                 {
-                    return new LogicUpgradeHeroCommand(connection, stream);
+                    return new LogicUpgradeHeroCommand(connection);
                 }
                 case Command.ModifyTeam:
                 {
-                    return new LogicModifyTeamCommand(connection, stream);
+                    return new LogicModifyTeamCommand(connection);
                 }
                 case Command.BuyResource:
                 {
-                    return new LogicBuyResourceCommand(connection, stream);
+                    return new LogicBuyResourceCommand(connection);
                 }
                 case Command.StartMatchmake:
                 {
-                    return new LogicStartMatchmakeCommand(connection, stream);
+                    return new LogicStartMatchmakeCommand(connection);
                 }
                 case Command.KickAllianceMember:
                 {
-                    return new LogicKickAllianceMemberCommand(connection, stream);
+                    return new LogicKickAllianceMemberCommand(connection);
                 }
                 case Command.BuyExtra:
                 {
-                    return new LogicBuyExtraCommand(connection, stream);
+                    return new LogicBuyExtraCommand(connection);
                 }
                 case Command.BuyBooster:
                 {
-                    return new LogicBuyBoosterCommand(connection, stream);
+                    return new LogicBuyBoosterCommand(connection);
                 }
                 case Command.ClaimAchievement:
                 {
-                    return new LogicClaimAchievementCommand(connection, stream);
+                    return new LogicClaimAchievementCommand(connection);
                 }
                 case Command.CollectMapChest:
                 {
-                    return new LogicCollectMapChestCommand(connection, stream);
+                    return new LogicCollectMapChestCommand(connection);
                 }
                 case Command.StartSailing:
                 {
-                    return new LogicStartSailingCommand(connection, stream);
+                    return new LogicStartSailingCommand(connection);
                 }
                 case Command.CollectShipReward:
                 {
-                    return new LogicCollectShipRewardCommand(connection, stream);
+                    return new LogicCollectShipRewardCommand(connection);
                 }
                 case Command.SpeedUpShip:
                 {
-                    return new LogicSpeedUpShipCommand(connection, stream);
+                    return new LogicSpeedUpShipCommand(connection);
                 }
                 case Command.FinishHeroUpgrade:
                 {
-                    return new LogicFinishHeroUpgradeCommand(connection, stream);
+                    return new LogicFinishHeroUpgradeCommand(connection);
                 }
                 case Command.BuyEnergyPackage:
                 {
-                    return new LogicBuyEnergyPackageCommand(connection, stream);
+                    return new LogicBuyEnergyPackageCommand(connection);
                 }
                 case Command.UpgradeShip:
                 {
-                    return new LogicUpgradeShipCommand(connection, stream);
+                    return new LogicUpgradeShipCommand(connection);
                 }
                 case Command.FinishShipUpgrade:
                 {
-                    return new LogicFinishShipUpgradeCommand(connection, stream);
+                    return new LogicFinishShipUpgradeCommand(connection);
                 }
                 case Command.UnlockSpellSlot:
                 {
-                    return new LogicUnlockSpellSlotCommand(connection, stream);
+                    return new LogicUnlockSpellSlotCommand(connection);
                 }
                 case Command.UnlockSpell:
                 {
-                    return new LogicUnlockSpellCommand(connection, stream);
+                    return new LogicUnlockSpellCommand(connection);
                 }
                 case Command.BrewSpell:
                 {
-                    return new LogicBrewSpellCommand(connection, stream);
+                    return new LogicBrewSpellCommand(connection);
                 }
                 case Command.StopSpell:
                 {
-                    return new LogicStopSpellCommand(connection, stream);
+                    return new LogicStopSpellCommand(connection);
                 }
                 case Command.FinishSpells:
                 {
-                    return new LogicFinishSpellsCommand(connection, stream);
+                    return new LogicFinishSpellsCommand(connection);
                 }
                 case Command.BuyItem:
                 {
-                    return new LogicBuyItemCommand(connection, stream);
+                    return new LogicBuyItemCommand(connection);
                 }
                 case Command.UpgradeItem:
                 {
-                    return new LogicUpgradeItemCommand(connection, stream);
+                    return new LogicUpgradeItemCommand(connection);
                 }
                 case Command.AttachItem:
                 {
-                    return new LogicAttachItemCommand(connection, stream);
+                    return new LogicAttachItemCommand(connection);
                 }
                 case Command.SpeedUpItem:
                 {
-                    return new LogicSpeedUpItemCommand(connection, stream);
+                    return new LogicSpeedUpItemCommand(connection);
                 }
                 case Command.MoveCharacter:
                 {
-                    return new LogicMoveCharacterCommand(connection, stream);
+                    return new LogicMoveCharacterCommand(connection);
                 }
                 case Command.ReturnToMap:
                 {
-                    return new LogicReturnToMapCommand(connection, stream);
+                    return new LogicReturnToMapCommand(connection);
                 }
                 case Command.TurnTimedOut:
                 {
-                    return new LogicMultiplayerTurnTimedOutCommand(connection, stream);
+                    return new LogicMultiplayerTurnTimedOutCommand(connection);
                 }
                 case Command.SwapCharacter:
                 {
-                    return new LogicSwapCharacterCommand(connection, stream);
+                    return new LogicSwapCharacterCommand(connection);
                 }
                 case Command.Resign:
                 {
-                    return new LogicResignCommand(connection, stream);
+                    return new LogicResignCommand(connection);
                 }
                 case Command.SendTaunt:
                 {
-                    return new LogicSendTauntCommand(connection, stream);
+                    return new LogicSendTauntCommand(connection);
                 }
                 case Command.AimCharacter:
                 {
-                    return new LogicAimCharacterCommand(connection, stream);
+                    return new LogicAimCharacterCommand(connection);
                 }
                 case Command.UseSpell:
                 {
-                    return new LogicUseSpellCommand(connection, stream);
+                    return new LogicUseSpellCommand(connection);
                 }
                 case Command.ActionSeen:
                 {
-                    return new LogicActionSeenCommand(connection, stream);
+                    return new LogicActionSeenCommand(connection);
                 }
                 default:
                 {

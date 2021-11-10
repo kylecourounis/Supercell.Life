@@ -10,14 +10,14 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicFinishHeroUpgradeCommand"/> class.
         /// </summary>
-        public LogicFinishHeroUpgradeCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicFinishHeroUpgradeCommand(Connection connection) : base(connection)
         {
             // LogicFinishHeroUpgradeCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

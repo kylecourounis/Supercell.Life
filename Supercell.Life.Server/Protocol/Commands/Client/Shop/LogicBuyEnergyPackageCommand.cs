@@ -14,16 +14,16 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicBuyEnergyPackageCommand"/> class.
         /// </summary>
-        public LogicBuyEnergyPackageCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicBuyEnergyPackageCommand(Connection connection) : base(connection)
         {
             // LogicBuyEnergyPackageCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.EnergyPackage = this.Stream.ReadDataReference<LogicEnergyPackageData>();
+            this.EnergyPackage = stream.ReadDataReference<LogicEnergyPackageData>();
 
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

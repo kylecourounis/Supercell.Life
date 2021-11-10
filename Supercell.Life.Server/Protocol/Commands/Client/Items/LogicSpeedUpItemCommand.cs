@@ -14,16 +14,16 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicSpeedUpItemCommand"/> class.
         /// </summary>
-        public LogicSpeedUpItemCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicSpeedUpItemCommand(Connection connection) : base(connection)
         {
             // LogicSpeedUpItemCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.ItemData = this.Stream.ReadDataReference<LogicItemsData>();
+            this.ItemData = stream.ReadDataReference<LogicItemsData>();
 
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

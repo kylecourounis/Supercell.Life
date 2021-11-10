@@ -34,10 +34,8 @@
 
                 if (removed)
                 {
-                    command.Encode();
-
                     this.Stream.WriteInt((int)command.Type);
-                    this.Stream.Write(command.Stream.ToArray());
+                    command.Encode(this.Stream);
                 }
             }
         }

@@ -1,5 +1,7 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Server
 {
+    using Supercell.Life.Titan.DataStream;
+
     using Supercell.Life.Server.Logic.Alliance;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
@@ -18,10 +20,10 @@
             this.Alliance = this.Connection.GameMode.Avatar.Alliance;
         }
 
-        internal override void Encode()
+        internal override void Encode(ByteStream stream)
         {
-            this.Stream.WriteLogicLong(this.Alliance.Identifier);
-            this.Stream.WriteInt((int)this.Role);
+            stream.WriteLogicLong(this.Alliance.Identifier);
+            stream.WriteInt((int)this.Role);
         }
     }
 }

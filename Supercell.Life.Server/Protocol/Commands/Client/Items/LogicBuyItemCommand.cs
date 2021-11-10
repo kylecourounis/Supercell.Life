@@ -16,16 +16,16 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicBuyItemCommand"/> class.
         /// </summary>
-        public LogicBuyItemCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicBuyItemCommand(Connection connection) : base(connection)
         {
             // LogicBuyItemCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.Item = this.Stream.ReadDataReference<LogicItemsData>();
+            this.Item = stream.ReadDataReference<LogicItemsData>();
 
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

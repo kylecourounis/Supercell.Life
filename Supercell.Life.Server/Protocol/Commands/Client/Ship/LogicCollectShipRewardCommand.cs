@@ -16,14 +16,14 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicCollectShipRewardCommand"/> class.
         /// </summary>
-        public LogicCollectShipRewardCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicCollectShipRewardCommand(Connection connection) : base(connection)
         {
             // LogicCollectShipRewardCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

@@ -1,9 +1,9 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
-    using Supercell.Life.Server.Logic;
     using Supercell.Life.Titan.DataStream;
     using Supercell.Life.Titan.Logic.Math;
 
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
 
@@ -23,35 +23,27 @@
             this.Type = Command.MoveCharacter;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LogicMoveCharacterCommand"/> class.
-        /// </summary>
-        public LogicMoveCharacterCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        internal override void Decode(ByteStream stream)
         {
-            // LogicMoveCharacterCommand.
-        }
+            this.DirectionX = stream.ReadInt();
+            this.DirectionY = stream.ReadInt();
 
-        internal override void Decode()
-        {
-            this.DirectionX = this.Stream.ReadInt();
-            this.DirectionY = this.Stream.ReadInt();
-
-            this.Value      = this.Stream.ReadByte();
+            this.Value      = stream.ReadByte();
 
             this.S = this.Value == 1 || this.Value == 3;
             this.F = this.Value >= 2;
 
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
-        internal override void Encode()
+        internal override void Encode(ByteStream stream)
         {
-            this.Stream.WriteInt(this.DirectionX);
-            this.Stream.WriteInt(this.DirectionY);
+            stream.WriteInt(this.DirectionX);
+            stream.WriteInt(this.DirectionY);
 
-            this.Stream.WriteByte(this.Value);
+            stream.WriteByte(this.Value);
 
-            this.WriteHeader();
+            base.Encode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

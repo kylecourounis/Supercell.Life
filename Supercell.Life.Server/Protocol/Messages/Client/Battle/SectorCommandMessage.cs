@@ -24,8 +24,8 @@
 
         internal override void Handle()
         {
-            var command = LogicCommandManager.CreateCommand(this.Command, this.Connection, this.Stream);
-            command.Decode();
+            var command = LogicCommandManager.CreateCommand(this.Command, this.Connection);
+            command.Decode(this.Stream);
             command.Execute(this.Connection.GameMode);
         }
     }

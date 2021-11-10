@@ -15,16 +15,16 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicBuyHeroCommand"/> class.
         /// </summary>
-        public LogicBuyHeroCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicBuyHeroCommand(Connection connection) : base(connection)
         {
             // LogicBuyHeroCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.Hero = this.Stream.ReadDataReference<LogicHeroData>();
+            this.Hero = stream.ReadDataReference<LogicHeroData>();
 
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

@@ -1,5 +1,7 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Server
 {
+    using Supercell.Life.Titan.DataStream;
+
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
 
@@ -13,12 +15,12 @@
             this.Type = Command.ChangeName;
         }
 
-        internal override void Encode()
+        internal override void Encode(ByteStream stream)
         {
-            this.Stream.WriteString(this.Connection.GameMode.Avatar.Name);
-            this.Stream.WriteBoolean(this.Connection.GameMode.Avatar.NameSetByUser);
+            stream.WriteString(this.Connection.GameMode.Avatar.Name);
+            stream.WriteBoolean(this.Connection.GameMode.Avatar.NameSetByUser);
 
-            this.WriteHeader();
+            base.Encode(stream);
         }
     }
 }

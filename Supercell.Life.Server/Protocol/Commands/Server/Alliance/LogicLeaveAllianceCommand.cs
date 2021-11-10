@@ -1,5 +1,6 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Server
 {
+    using Supercell.Life.Titan.DataStream;
     using Supercell.Life.Titan.Logic.Math;
 
     using Supercell.Life.Server.Network;
@@ -18,9 +19,9 @@
             this.AllianceID = allianceId;
         }
 
-        internal override void Encode()
+        internal override void Encode(ByteStream stream)
         {
-            this.Stream.WriteLogicLong(this.AllianceID);
+            stream.WriteLogicLong(this.AllianceID);
         }
     }
 }

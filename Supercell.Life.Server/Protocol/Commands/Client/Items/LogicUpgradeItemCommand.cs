@@ -16,16 +16,16 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicUpgradeItemCommand"/> class.
         /// </summary>
-        public LogicUpgradeItemCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicUpgradeItemCommand(Connection connection) : base(connection)
         {
             // LogicUpgradeItemCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.Item = this.Stream.ReadDataReference<LogicItemsData>();
+            this.Item = stream.ReadDataReference<LogicItemsData>();
             
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

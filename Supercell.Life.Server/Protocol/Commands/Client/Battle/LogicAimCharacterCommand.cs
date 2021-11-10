@@ -18,28 +18,20 @@
             this.Type = Command.AimCharacter;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LogicAimCharacterCommand"/> class.
-        /// </summary>
-        public LogicAimCharacterCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        internal override void Decode(ByteStream stream)
         {
-            // LogicAimCharacterCommand.
+            base.Decode(stream);
+
+            this.X = stream.ReadInt();
+            this.Y = stream.ReadInt();
         }
 
-        internal override void Decode()
+        internal override void Encode(ByteStream stream)
         {
-            this.ReadHeader();
+            base.Encode(stream);
 
-            this.X = this.Stream.ReadInt();
-            this.Y = this.Stream.ReadInt();
-        }
-
-        internal override void Encode()
-        {
-            this.WriteHeader();
-
-            this.Stream.WriteInt(this.X);
-            this.Stream.WriteInt(this.Y);
+            stream.WriteInt(this.X);
+            stream.WriteInt(this.Y);
         }
 
         internal override void Execute(LogicGameMode gamemode)

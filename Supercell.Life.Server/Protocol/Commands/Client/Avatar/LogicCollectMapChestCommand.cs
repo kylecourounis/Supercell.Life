@@ -11,14 +11,14 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicCollectMapChestCommand"/> class.
         /// </summary>
-        public LogicCollectMapChestCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicCollectMapChestCommand(Connection connection) : base(connection)
         {
             // LogicCollectMapChestCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)

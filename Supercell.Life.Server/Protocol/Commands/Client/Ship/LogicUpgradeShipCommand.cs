@@ -14,14 +14,14 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicUpgradeShipCommand"/> class.
         /// </summary>
-        public LogicUpgradeShipCommand(Connection connection, ByteStream stream) : base(connection, stream)
+        public LogicUpgradeShipCommand(Connection connection) : base(connection)
         {
             // LogicSpeedUpShipCommand.
         }
 
-        internal override void Decode()
+        internal override void Decode(ByteStream stream)
         {
-            this.ReadHeader();
+            base.Decode(stream);
         }
 
         internal override void Execute(LogicGameMode gamemode)
