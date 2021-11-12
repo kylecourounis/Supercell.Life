@@ -35,7 +35,7 @@
             if (this.Avatar.Identifier != 0)
             {
                 this.Stream.WriteByte(1);
-                this.Stream.WriteLong(this.Avatar.Identifier);
+                this.Stream.WriteLogicLong(this.Avatar.Identifier);
             }
             else this.Stream.WriteByte(0);
 

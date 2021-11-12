@@ -1,8 +1,6 @@
 ﻿namespace Supercell.Life.Titan.DataStream
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
 
     using Supercell.Life.Titan.Core;
@@ -10,7 +8,7 @@
     using Supercell.Life.Titan.Logic.Math;
     using Supercell.Life.Titan.Logic.Utils;
 
-    public class ByteStream : IDisposable
+    public class ByteStream : ChecksumEncoder, IDisposable
     {
         private byte[] Buffer;
         private int Offset;
@@ -49,6 +47,17 @@
         }
 
         /// <summary>
+        /// Gets a value indicating whether this <see cref="ChecksumEncoder"/> is in checksum only mode.
+        /// </summary>
+        public override bool IsCheckSumOnlyMode
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ByteStream"/> class.
         /// </summary>
         public ByteStream(int size = Constants.BufferSize)
@@ -67,17 +76,23 @@
         /// <summary>
         /// Writes the byte.
         /// </summary>
-        public void WriteByte(byte value)
+        public override void WriteByte(byte value)
         {
+            base.WriteByte(value);
+            this.EnsureCapacity(1);
+
             this.Buffer[this.Offset++] = value;
         }
 
         /// <summary>
         /// Writes the boolean.
         /// </summary>
-        public void WriteBoolean(bool value)
+        public override void WriteBoolean(bool value)
         {
-            this.WriteByte((byte)(value ? 1 : 0));
+            base.WriteBoolean(value);
+            this.EnsureCapacity(1);
+
+            this.Buffer[this.Offset++] = (byte)(value ? 1 : 0);
         }
 
         /// <summary>
@@ -96,114 +111,112 @@
                     boolean |= (byte)(1 << i);
                 }
             }
-
+            
             this.WriteByte(boolean);
         }
 
         /// <summary>
-        /// Writes the short.
+        /// Writes the Int16.
         /// </summary>
-        public void WriteShort(short value)
+        public override void WriteShort(short value)
         {
-            this.Write(BitConverter.GetBytes(value).Reverse());
+            base.WriteShort(value);
+            this.EnsureCapacity(2);
+
+            this.Buffer[this.Offset++] = (byte)(value >> 8);
+            this.Buffer[this.Offset++] = (byte)value;
         }
         
         /// <summary>
-        /// Writes the int24.
+        /// Writes the Int32.
         /// </summary>
-        public void WriteInt24(int value)
+        public override void WriteInt(int value)
         {
-            this.Write(BitConverter.GetBytes(value).Reverse().Skip(1));
-        }
-        
-        /// <summary>
-        /// Writes the int.
-        /// </summary>
-        public void WriteInt(int value)
-        {
-            this.Write(BitConverter.GetBytes(value).Reverse());
+            base.WriteInt(value);
+            this.EnsureCapacity(4);
+
+            this.Buffer[this.Offset++] = (byte)(value >> 24);
+            this.Buffer[this.Offset++] = (byte)(value >> 16);
+            this.Buffer[this.Offset++] = (byte)(value >> 8);
+            this.Buffer[this.Offset++] = (byte)value;
         }
 
         /// <summary>
-        /// Writes the int endian.
+        /// Writes the Int32 endian.
         /// </summary>
         public void WriteIntEndian(int value)
         {
-            this.Write(BitConverter.GetBytes(value));
+            base.WriteInt(value);
+            this.EnsureCapacity(4);
+
+            this.Buffer[this.Offset++] = (byte)value;
+            this.Buffer[this.Offset++] = (byte)(value >> 8);
+            this.Buffer[this.Offset++] = (byte)(value >> 16);
+            this.Buffer[this.Offset++] = (byte)(value >> 24);
         }
 
         /// <summary>
-        /// Writes the long.
+        /// Writes the Int32 to byte array without modifying the checksum.
         /// </summary>
-        public void WriteLong(long value)
+        public void WriteIntToByteArray(int value)
         {
-            this.Write(BitConverter.GetBytes(value).Reverse());
+            this.EnsureCapacity(4);
+
+            this.Buffer[this.Offset++] = (byte)(value >> 24);
+            this.Buffer[this.Offset++] = (byte)(value >> 16);
+            this.Buffer[this.Offset++] = (byte)(value >> 8);
+            this.Buffer[this.Offset++] = (byte)value;
         }
 
         /// <summary>
-        /// Writes the LogicLong.
+        /// Writes the Int64.
         /// </summary>
-        public void WriteLogicLong(int high, int low)
+        public override void WriteLong(long value)
         {
-            this.WriteLogicLong(new LogicLong(high, low));
+            base.WriteLong(value);
+
+            this.WriteIntToByteArray((int)(value >> 32));
+            this.WriteIntToByteArray((int)value);
         }
 
         /// <summary>
         /// Writes the <see cref="LogicLong"/>.
         /// </summary>
-        public void WriteLogicLong(LogicLong value)
+        public void WriteLogicLong(int high, int low)
         {
-            value.Encode(this);
-        }
-        
-        /// <summary>
-        /// Writes a VInt - Thank you to nameless for making this shorter as well! 
-        /// </summary>
-        public void WriteVInt(int value)
-        {
-            int tmp = (value >> 25) & 0x40;
-            int flipped = value ^ (value >> 31);
-
-            tmp |= value & 0x3F;
-            value >>= 6;
-
-            if ((flipped >>= 6) == 0)
-            {
-                this.WriteByte((byte)tmp);
-                return;
-            }
-
-            this.WriteByte((byte)(tmp | 0x80));
-
-            do
-            {
-                this.WriteByte((byte)((value & 0x7F) | ((flipped >>= 7) != 0 ? 0x80 : 0)));
-                value >>= 7;
-            } while (flipped != 0);
+            base.WriteLogicLong(new LogicLong(high, low));
         }
 
         /// <summary>
         /// Writes the string.
         /// </summary>
-        public void WriteString(string value)
+        public override void WriteString(string value)
         {
+            base.WriteString(value);
+
             if (value != null)
             {
-                int length = value.Length;
+                byte[] bytes = LogicStringUtil.GetBytes(value);
+                int length = bytes.Length;
 
-                if (length > 0)
+                if (length <= 900000)
                 {
-                    this.WriteInt(length);
-                    this.Write(LogicStringUtil.GetBytes(value), length);
+                    this.EnsureCapacity(length + 4);
+
+                    this.WriteIntToByteArray(length);
+                    this.Write(bytes);
+
+                    this.Offset += length;
                 }
                 else
                 {
-                    this.WriteInt(0);
+                    Debugger.Warning($"Invalid string length {length}");
+                    this.WriteIntToByteArray(-1);
                 }
             }
             else
             {
-                this.WriteInt(-1);
+                this.WriteIntToByteArray(-1);
             }
         }
 
@@ -222,7 +235,7 @@
 
                     byte[] compressed = ZlibStream.CompressString(value);
 
-                    this.WriteInt(compressed.Length + 4);
+                    this.WriteIntToByteArray(compressed.Length + 4);
                     this.WriteIntEndian(length);
                     this.Write(compressed);
                 }
@@ -240,62 +253,48 @@
         }
 
         /// <summary>
-        /// Writes the bytes.
+        /// Writes the length of the byte array as an int, followed by the bytes.
         /// </summary>
-        public void WriteBytes(byte[] buffer)
+        public override void WriteBytes(byte[] value, int length)
         {
-            if (buffer != null)
-            {
-                int length = buffer.Length;
+            base.WriteBytes(value, length);
 
-                if (length > 0)
-                {
-                    this.WriteInt(length);
-                    this.Write(buffer);
-                }
-                else
-                {
-                    this.WriteInt(0);
-                }
+            if (value == null)
+            {
+                this.WriteIntToByteArray(-1);
             }
             else
             {
-                this.WriteInt(-1);
+                this.EnsureCapacity(length + 4);
+
+                this.WriteIntToByteArray(length);
+                this.Write(value, length);
+
+                this.Offset += length;
             }
         }
 
         /// <summary>
-        /// Writes the hexadecimal string.
+        /// Writes the bytes without writing the length as an int.
         /// </summary>
-        public void WriteHex(string value)
+        public void WriteBytesWithoutLength(byte[] value, int length)
         {
-            this.Write(value.HexaToBytes());
+            base.WriteBytes(value, length);
+
+            if (value != null)
+            {
+                this.EnsureCapacity(length);
+                this.Write(value);
+                this.Offset += length;
+            }
         }
 
         /// <summary>
         /// Writes the specified buffer.
         /// </summary>
-        public void Write(IEnumerable<byte> buffer)
+        public void Write(byte[] bytes, int length = 0)
         {
-            byte[] bytes = buffer.ToArray();
-
-            this.EnsureCapacity(bytes.Length);
-            
-            Array.Copy(bytes, 0, this.Buffer, this.Offset, bytes.Length);
-            this.Offset += bytes.Length;
-        }
-
-        /// <summary>
-        /// Writes the specified buffer.
-        /// </summary>
-        public void Write(IEnumerable<byte> buffer, int length)
-        {
-            byte[] bytes = buffer.ToArray();
-
-            this.EnsureCapacity(length);
-
-            Array.Copy(bytes, 0, this.Buffer, this.Offset, length);
-            this.Offset += length;
+            System.Buffer.BlockCopy(bytes, 0, this.Buffer, this.Offset, (length > 0 ? length : bytes.Length));
         }
 
         /// <summary>
@@ -332,54 +331,33 @@
         /// </summary>
         public short ReadShort()
         {
-            return this.ReadBytes(2).ToInt16();
+            return (short)((this.ReadByte() << 8) | this.ReadByte());
         }
         
-        /// <summary>
-        /// Reads the Int24.
-        /// </summary>
-        public int ReadInt24()
-        {
-            return this.ReadBytes(3).ToInt24();
-        }
-
         /// <summary>
         /// Reads the Int32.
         /// </summary>
         public int ReadInt()
         {
-            return this.ReadBytes(4).ToInt32();
+            return (this.ReadByte() << 24) | (this.ReadByte() << 16) | (this.ReadByte() << 8) | this.ReadByte();
         }
 
         /// <summary>
-        /// Reads the long.
+        /// Reads the Int64.
         /// </summary>
         public long ReadLong()
         {
-            return this.ReadBytes(8).ToInt64();
+            LogicLong logicLong = new LogicLong();
+            logicLong.Decode(this);
+            return logicLong.Value;
         }
 
         /// <summary>
-        /// Reads the long.
+        /// Reads the <see cref="LogicLong"/>.
         /// </summary>
         public LogicLong ReadLogicLong()
         {
             return new LogicLong().Decode(this);
-        }
-
-        /// <summary>
-        /// Reads a VInt - Thanks to nameless for making this so much shorter!
-        /// </summary>
-        public int ReadVInt()
-        {
-            int b, sign = ((b = this.ReadByte()) >> 6) & 1, i = b & 0x3F, offset = 6;
-
-            for (int j = 0; j < 4 && (b & 0x80) != 0; j++, offset += 7)
-            {
-                i |= ((b = this.ReadByte()) & 0x7F) << offset;
-            }
-
-            return (b & 0x80) != 0 ? -1 : i | (sign == 1 && offset < 32 ? i | (int)(0xFFFFFFFF << offset) : i);
         }
 
         /// <summary>

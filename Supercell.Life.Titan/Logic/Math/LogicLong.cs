@@ -69,10 +69,10 @@
         /// <summary>
         /// Encodes this instance.
         /// </summary>
-        public void Encode(ByteStream stream)
+        public void Encode(ChecksumEncoder encoder)
         {
-            stream.WriteInt(this.High);
-            stream.WriteInt(this.Low);
+            encoder.WriteInt(this.High);
+            encoder.WriteInt(this.Low);
         }
 
         /// <summary>

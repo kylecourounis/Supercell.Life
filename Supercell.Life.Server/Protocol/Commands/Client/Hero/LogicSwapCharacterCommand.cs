@@ -25,11 +25,11 @@
             base.Decode(stream);
         }
 
-        internal override void Encode(ByteStream stream)
+        internal override void Encode(ChecksumEncoder encoder)
         {
-            stream.WriteInt(this.Unknown);
+            encoder.WriteInt(this.Unknown);
             
-            base.Encode(stream);
+            base.Encode(encoder);
         }
 
         internal override void Execute(LogicGameMode gamemode)
@@ -47,8 +47,7 @@
                     ExecutorID     = this.ExecutorID
                 };
 
-                battle.GetOwnQueue(gamemode.Avatar).Enqueue(cmd);
-                battle.GetEnemyQueue(gamemode.Avatar).Enqueue(cmd);
+                battle.EnqueueCommand(this, this);
             }
         }
     }

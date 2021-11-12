@@ -17,13 +17,13 @@
             this.Type = Command.DiamondsAdded;
         }
 
-        internal override void Encode(ByteStream stream)
+        internal override void Encode(ChecksumEncoder encoder)
         {
-            stream.WriteBoolean(true);
-            stream.WriteInt(this.Diamonds);
-            stream.WriteString("");
+            encoder.WriteBoolean(true);
+            encoder.WriteInt(this.Diamonds);
+            encoder.WriteString("");
 
-            this.WriteHeader(stream);
+            this.WriteHeader(encoder);
         }
     }
 }

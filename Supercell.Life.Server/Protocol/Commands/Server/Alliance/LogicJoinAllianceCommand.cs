@@ -20,14 +20,14 @@
             this.Alliance = this.Connection.GameMode.Avatar.Alliance;
         }
 
-        internal override void Encode(ByteStream stream)
+        internal override void Encode(ChecksumEncoder encoder)
         {
-            stream.WriteLogicLong(this.Alliance.Identifier);
-            stream.WriteString(this.Alliance.Name);
+            encoder.WriteLogicLong(this.Alliance.Identifier);
+            encoder.WriteString(this.Alliance.Name);
 
-            stream.WriteDataReference(this.Alliance.BadgeData);
+            encoder.WriteDataReference(this.Alliance.BadgeData);
 
-            stream.WriteBoolean(this.Alliance.Members.Size < 0);
+            encoder.WriteBoolean(this.Alliance.Members.Size < 0);
         }
     }
 }

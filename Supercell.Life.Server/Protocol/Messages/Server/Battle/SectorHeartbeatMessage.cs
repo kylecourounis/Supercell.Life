@@ -8,8 +8,6 @@
 
     internal class SectorHeartbeatMessage : PiranhaMessage
     {
-        internal int Turn;
-
         internal ConcurrentQueue<LogicCommand> Commands;
 
         /// <summary>
@@ -23,7 +21,7 @@
 
         internal override void Encode()
         {
-            this.Stream.WriteInt(this.Turn);
+            this.Stream.WriteInt(0);
             this.Stream.WriteInt(0);
 
             this.Stream.WriteInt(this.Commands.Count);

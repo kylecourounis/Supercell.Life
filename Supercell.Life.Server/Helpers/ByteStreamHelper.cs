@@ -33,9 +33,9 @@
         /// <summary>
         /// Writes a data reference.
         /// </summary>
-        internal static void WriteDataReference(this ByteStream stream, LogicData data)
+        internal static void WriteDataReference(this ChecksumEncoder encoder, LogicData data)
         {
-            stream.WriteInt(data?.GlobalID ?? 0);
+            encoder.WriteInt(data?.GlobalID ?? 0);
         }
     }
 }

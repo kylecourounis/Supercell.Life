@@ -59,10 +59,10 @@
         /// <summary>
         /// Encodes this instance.
         /// </summary>
-        internal virtual void Encode(ByteStream stream)
+        internal virtual void Encode(ChecksumEncoder encoder)
         {
-            stream.WriteInt(this.ExecuteSubTick);
-            stream.WriteLogicLong(this.ExecutorID);
+            encoder.WriteInt(this.ExecuteSubTick);
+            encoder.WriteLogicLong(this.ExecutorID);
         }
 
         /// <summary>

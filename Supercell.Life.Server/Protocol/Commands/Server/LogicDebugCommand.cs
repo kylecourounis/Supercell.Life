@@ -23,13 +23,13 @@
             this.Debug = debug;
         }
 
-        internal override void Encode(ByteStream stream)
+        internal override void Encode(ChecksumEncoder encoder)
         {
-            stream.WriteInt(this.Debug);
-            stream.WriteInt(0);
-            stream.WriteInt(0);
+            encoder.WriteInt(this.Debug);
+            encoder.WriteInt(0);
+            encoder.WriteInt(0);
 
-            this.WriteHeader(stream);
+            this.WriteHeader(encoder);
         }
 
         internal override void Execute(LogicGameMode gamemode)

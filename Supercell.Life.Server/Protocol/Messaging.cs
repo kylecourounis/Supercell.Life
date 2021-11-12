@@ -13,6 +13,8 @@
 
     internal class Messaging
     {
+        internal const int HeaderLength = 7;
+
         internal readonly Connection Connection;
 
         internal RC4Encrypter Crypto;
@@ -51,13 +53,13 @@
         {
             if (buffer != null && this.IsConnected)
             {
-                if (buffer.Length >= 7 && buffer.Length <= Constants.BufferSize)
+                if (buffer.Length >= Messaging.HeaderLength && buffer.Length <= Constants.BufferSize)
                 {
                     Messaging.ReadHeader(buffer, out int id, out int length, out int version);
 
-                    if ((id - 10000 < 10000) && (buffer.Length - 7 >= length))
+                    if ((id - 10000 < 10000) && (buffer.Length - Messaging.HeaderLength >= length))
                     {
-                        using (ByteStream stream = new ByteStream(buffer.Skip(7).ToArray()))
+                        using (ByteStream stream = new ByteStream(buffer.Skip(Messaging.HeaderLength).ToArray()))
                         {
                             PiranhaMessage message = LogicLifeMessageFactory.CreateMessageByType(id, this.Connection, stream);
 
@@ -74,11 +76,11 @@
 
                             if (!this.Connection.Token.Aborting)
                             {
-                                this.Connection.Token.Packet.RemoveRange(0, length + 7);
+                                this.Connection.Token.Packet.RemoveRange(0, length + Messaging.HeaderLength);
 
-                                if (buffer.Length - 7 - length >= 7)
+                                if (buffer.Length - Messaging.HeaderLength - length >= Messaging.HeaderLength)
                                 {
-                                    this.OnReceive(stream.ReadBytes(buffer.Length - 7 - length));
+                                    this.OnReceive(stream.ReadBytes(buffer.Length - Messaging.HeaderLength - length));
                                 }
                             }
                         }
@@ -105,6 +107,34 @@
             id      = buffer[0] << 8 | buffer[1];
             length  = buffer[2] << 16 | buffer[3] << 8 | buffer[4];
             version = buffer[5] << 8 | buffer[6];
+        }
+
+        /// <summary>
+        /// Writes the message header.
+        /// </summary>
+        internal static void WriteHeader(PiranhaMessage message, ref byte[] buffer)
+        {
+            int id      = (int)message.Type;
+            int length  = message.Length;
+            int version = message.Version;
+
+            // Identifier - Int16
+            buffer[0] = (byte)(id >> 8);
+            buffer[1] = (byte)(id);
+
+            // Length - Int24
+            buffer[2] = (byte)(length >> 16);
+            buffer[3] = (byte)(length >> 8);
+            buffer[4] = (byte)(length);
+
+            // Version - Int16
+            buffer[5] = (byte)(version >> 8);
+            buffer[6] = (byte)(version);
+
+            if (length >= 0x1000000)
+            {
+                Debugger.Error($"Trying to send too big message, type {id}");
+            }
         }
 
         /// <summary>

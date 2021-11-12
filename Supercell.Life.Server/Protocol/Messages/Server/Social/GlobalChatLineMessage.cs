@@ -35,8 +35,8 @@
             this.Stream.WriteInt(0);
             this.Stream.WriteInt(this.Connection.GameMode.Avatar.League);
 
-            this.Stream.WriteLong(this.Connection.GameMode.Avatar.Identifier);
-            this.Stream.WriteLong(this.Connection.GameMode.Avatar.Identifier);
+            this.Stream.WriteLogicLong(this.Connection.GameMode.Avatar.Identifier);
+            this.Stream.WriteLogicLong(this.Connection.GameMode.Avatar.Identifier);
         }
     }
 }

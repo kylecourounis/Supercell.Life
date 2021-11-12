@@ -49,12 +49,8 @@
 
         internal Dictionary<LogicClientAvatar, ConcurrentQueue<LogicCommand>> CommandQueues;
         
-        internal int Turn;
-
-        internal int BattleTime => (int)DateTime.UtcNow.Subtract(this.StartTime).TotalSeconds * 2;
-
-        private object Gate;
-
+        internal LogicLong WhoseTurn;
+        
         /// <summary>
         /// Gets the identifier for this <see cref="LogicBattle"/>.
         /// </summary>
@@ -95,7 +91,7 @@
         {
             this.TurnTimer = new Timer
             {
-                AutoReset = true,
+                AutoReset = false,
                 Interval  = Globals.PVPFirstTurnTimeSeconds * 1000
             };
             
@@ -177,6 +173,15 @@
         }
 
         /// <summary>
+        /// Adds the specified <see cref="LogicCommand"/> to both queues. 
+        /// </summary>
+        internal void EnqueueCommand(LogicCommand self, LogicCommand opponent)
+        {
+            this.GetOwnQueue(self.Connection.GameMode.Avatar).Enqueue(self);
+            this.GetEnemyQueue(self.Connection.GameMode.Avatar).Enqueue(opponent);
+        }
+
+        /// <summary>
         /// Gets the enemy's command queue.
         /// </summary>
         internal ConcurrentQueue<LogicCommand> GetOwnQueue(LogicClientAvatar avatar)
@@ -207,8 +212,7 @@
                     {
                         new SectorHeartbeatMessage(avatar.Connection)
                         {
-                            Commands = this.CommandQueues[avatar],
-                            Turn = this.Turn
+                            Commands = this.CommandQueues[avatar]
                         }.Send();
                     }
                     
@@ -233,19 +237,24 @@
         /// </summary>
         internal void SetTurn(object sender, ElapsedEventArgs args)
         { 
-            this.Reset();
+            this.ResetTurn();
         }
 
         /// <summary>
         /// Resets this the turn timer.
         /// </summary>
-        internal void Reset()
+        internal void ResetTurn()
         {
+            this.TurnTimer.Stop();
+
             if ((int)this.TurnTimer.Interval == Globals.PVPFirstTurnTimeSeconds * 1000)
             {
-                this.TurnTimer.Stop();
                 this.TurnTimer.Interval = Globals.PVPMaxTurnTimeSeconds * 1000;
             }
+
+            this.WhoseTurn = this.Avatars.Find(avatar => avatar.Identifier != this.WhoseTurn).Identifier;
+
+            this.TurnTimer.Start();
         }
 
         /// <summary>

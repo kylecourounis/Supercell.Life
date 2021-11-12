@@ -21,9 +21,9 @@
             base.Decode(stream);
         }
 
-        internal override void Encode(ByteStream stream)
+        internal override void Encode(ChecksumEncoder encoder)
         {
-            base.Encode(stream);
+            base.Encode(encoder);
         }
 
         internal override void Execute(LogicGameMode gamemode)
@@ -36,8 +36,7 @@
             {
                 LogicResignCommand cmd = new LogicResignCommand(battle.Avatars.Find(avatar => avatar.Identifier != gamemode.Avatar.Identifier).Connection);
 
-                battle.GetOwnQueue(gamemode.Avatar).Enqueue(this);
-                battle.GetEnemyQueue(gamemode.Avatar).Enqueue(cmd);
+                battle.EnqueueCommand(this, cmd);
 
                 battle.Stop();
             }

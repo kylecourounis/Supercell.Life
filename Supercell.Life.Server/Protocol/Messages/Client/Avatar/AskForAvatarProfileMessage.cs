@@ -9,9 +9,9 @@
 
     internal class AskForAvatarProfileMessage : PiranhaMessage
     {
-        private long VisitID;
+        private LogicLong VisitID;
 
-        private long Unknown;
+        private LogicLong Unknown;
 
         /// <summary>
         /// The service node for this message.
@@ -38,7 +38,7 @@
 
             if (this.Stream.ReadBoolean())
             {
-                this.Unknown = this.Stream.ReadLong();
+                this.Unknown = this.Stream.ReadLogicLong();
             }
         }
 

@@ -15,12 +15,12 @@
             this.Type = Command.ChangeName;
         }
 
-        internal override void Encode(ByteStream stream)
+        internal override void Encode(ChecksumEncoder encoder)
         {
-            stream.WriteString(this.Connection.GameMode.Avatar.Name);
-            stream.WriteBoolean(this.Connection.GameMode.Avatar.NameSetByUser);
+            encoder.WriteString(this.Connection.GameMode.Avatar.Name);
+            encoder.WriteBoolean(this.Connection.GameMode.Avatar.NameSetByUser);
 
-            base.Encode(stream);
+            base.Encode(encoder);
         }
     }
 }

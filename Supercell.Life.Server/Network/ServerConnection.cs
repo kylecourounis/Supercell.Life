@@ -255,7 +255,7 @@
                     DisconnectReuseSocket = false
                 };
 
-                writeEvent.SetBuffer(message.ToArray(), message.Offset, message.Length + 7 - message.Offset);
+                writeEvent.SetBuffer(message.ToArray(), message.Offset, message.Length + Messaging.HeaderLength - message.Offset);
 
                 writeEvent.AcceptSocket   = message.Connection.Socket;
                 writeEvent.RemoteEndPoint = message.Connection.EndPoint;
@@ -281,11 +281,11 @@
             {
                 message.Offset += args.BytesTransferred;
 
-                if (message.Length + 7 > message.Offset)
+                if (message.Length + Messaging.HeaderLength > message.Offset)
                 {
                     if (message.Connection.IsConnected)
                     {
-                        args.SetBuffer(message.Offset, (message.Length + 7 - message.Offset));
+                        args.SetBuffer(message.Offset, (message.Length + Messaging.HeaderLength - message.Offset));
 
                         if (!message.Connection.Socket.SendAsync(args))
                         {

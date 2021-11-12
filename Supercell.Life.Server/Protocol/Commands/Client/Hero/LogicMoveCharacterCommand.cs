@@ -36,14 +36,14 @@
             base.Decode(stream);
         }
 
-        internal override void Encode(ByteStream stream)
+        internal override void Encode(ChecksumEncoder encoder)
         {
-            stream.WriteInt(this.DirectionX);
-            stream.WriteInt(this.DirectionY);
+            encoder.WriteInt(this.DirectionX);
+            encoder.WriteInt(this.DirectionY);
 
-            stream.WriteByte(this.Value);
+            encoder.WriteByte(this.Value);
 
-            base.Encode(stream);
+            base.Encode(encoder);
         }
 
         internal override void Execute(LogicGameMode gamemode)
@@ -82,7 +82,7 @@
 
             if (battle != null)
             {
-                battle.Turn++;
+                battle.ResetTurn();
 
                 var opponent = battle.Avatars.Find(avatar => avatar.Identifier != gamemode.Avatar.Identifier);
 
@@ -95,8 +95,7 @@
                     ExecutorID     = this.ExecutorID
                 };
 
-                battle.GetOwnQueue(gamemode.Avatar).Enqueue(this);
-                battle.GetEnemyQueue(gamemode.Avatar).Enqueue(cmd);
+                battle.EnqueueCommand(this, cmd);
             }
 
             Debugger.Debug($"DirectionX : {this.DirectionX}, DirectionY : {this.DirectionY}, S : {this.S}, F : {this.F}");

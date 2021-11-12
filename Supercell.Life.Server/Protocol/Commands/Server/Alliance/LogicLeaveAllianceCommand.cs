@@ -19,9 +19,9 @@
             this.AllianceID = allianceId;
         }
 
-        internal override void Encode(ByteStream stream)
+        internal override void Encode(ChecksumEncoder encoder)
         {
-            stream.WriteLogicLong(this.AllianceID);
+            encoder.WriteLogicLong(this.AllianceID);
         }
     }
 }

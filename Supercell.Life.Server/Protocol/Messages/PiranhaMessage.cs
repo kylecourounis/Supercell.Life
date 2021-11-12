@@ -89,15 +89,12 @@
         /// </summary>
         internal byte[] ToArray()
         {
-            using (ByteStream packet = new ByteStream())
-            {
-                packet.WriteShort(this.Identifier);
-                packet.WriteInt24(this.Length);
-                packet.WriteShort(this.Version);
-                packet.Write(this.Stream.ToArray());
+            byte[] buffer = new byte[this.Length + Messaging.HeaderLength];
 
-                return packet.ToArray();
-            }
+            Messaging.WriteHeader(this, ref buffer);
+            Buffer.BlockCopy(this.Stream.ToArray(), 0, buffer, Messaging.HeaderLength, this.Length);
+
+            return buffer;
         }
 
         /// <summary>

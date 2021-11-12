@@ -18,11 +18,11 @@
         /// <summary>
         /// Writes the header.
         /// </summary>
-        internal void WriteHeader(ByteStream stream)
+        internal void WriteHeader(ChecksumEncoder encoder)
         {
-            stream.WriteInt(this.Subtick);
-            stream.WriteInt(this.Subtick);
-            new LogicLong(this.Connection.GameMode.Avatar.HighID, this.Connection.GameMode.Avatar.LowID).Encode(stream);
+            encoder.WriteInt(this.Subtick);
+            encoder.WriteInt(this.Subtick);
+            encoder.WriteLogicLong(new LogicLong(this.Connection.GameMode.Avatar.HighID, this.Connection.GameMode.Avatar.LowID));
         }
     }
 }

@@ -21,9 +21,9 @@
             base.Decode(stream);
         }
 
-        internal override void Encode(ByteStream stream)
+        internal override void Encode(ChecksumEncoder encoder)
         {
-            base.Encode(stream);
+            base.Encode(encoder);
         }
 
         internal override void Execute(LogicGameMode gamemode)
@@ -32,7 +32,7 @@
 
             if (battle != null)
             {
-                battle.Reset();
+                battle.ResetTurn();
 
                 var cmd = new LogicMultiplayerTurnTimedOutCommand(battle.Avatars.Find(avatar => avatar.Identifier != gamemode.Avatar.Identifier).Connection)
                 {
@@ -40,8 +40,7 @@
                     ExecutorID     = this.ExecutorID
                 };
 
-                battle.GetOwnQueue(gamemode.Avatar).Enqueue(this);
-                battle.GetEnemyQueue(gamemode.Avatar).Enqueue(cmd);
+                battle.EnqueueCommand(this, cmd);
             }
         }
     }
