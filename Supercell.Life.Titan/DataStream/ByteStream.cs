@@ -72,7 +72,7 @@
         {
             this.Buffer = buffer;
         }
-        
+
         /// <summary>
         /// Writes the byte.
         /// </summary>
@@ -111,7 +111,7 @@
                     boolean |= (byte)(1 << i);
                 }
             }
-            
+
             this.WriteByte(boolean);
         }
 
@@ -126,7 +126,7 @@
             this.Buffer[this.Offset++] = (byte)(value >> 8);
             this.Buffer[this.Offset++] = (byte)value;
         }
-        
+
         /// <summary>
         /// Writes the Int32.
         /// </summary>
@@ -204,9 +204,7 @@
                     this.EnsureCapacity(length + 4);
 
                     this.WriteIntToByteArray(length);
-                    this.Write(bytes);
-
-                    this.Offset += length;
+                    this.WriteBytesWithoutLength(bytes);
                 }
                 else
                 {
@@ -237,7 +235,7 @@
 
                     this.WriteIntToByteArray(compressed.Length + 4);
                     this.WriteIntEndian(length);
-                    this.Write(compressed);
+                    this.WriteBytesWithoutLength(compressed);
                 }
                 else
                 {
@@ -268,23 +266,23 @@
                 this.EnsureCapacity(length + 4);
 
                 this.WriteIntToByteArray(length);
-                this.Write(value, length);
-
-                this.Offset += length;
+                this.WriteBytesWithoutLength(value, length);
             }
         }
 
         /// <summary>
         /// Writes the bytes without writing the length as an int.
         /// </summary>
-        public void WriteBytesWithoutLength(byte[] value, int length)
+        public void WriteBytesWithoutLength(byte[] value, int length = 0)
         {
+            length = (length > 0 ? length : value.Length);
+
             base.WriteBytes(value, length);
 
             if (value != null)
             {
                 this.EnsureCapacity(length);
-                this.Write(value);
+                this.Write(value, length);
                 this.Offset += length;
             }
         }
@@ -292,9 +290,9 @@
         /// <summary>
         /// Writes the specified buffer.
         /// </summary>
-        public void Write(byte[] bytes, int length = 0)
+        public void Write(byte[] bytes, int length)
         {
-            System.Buffer.BlockCopy(bytes, 0, this.Buffer, this.Offset, (length > 0 ? length : bytes.Length));
+            Array.Copy(bytes, 0, this.Buffer, this.Offset, length);
         }
 
         /// <summary>
