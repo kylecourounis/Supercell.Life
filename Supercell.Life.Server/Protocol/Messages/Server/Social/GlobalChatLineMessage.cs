@@ -1,12 +1,12 @@
 ﻿namespace Supercell.Life.Server.Protocol.Messages.Server
 {
-    using Supercell.Life.Server.Logic.Collections.Items;
+    using Supercell.Life.Server.Logic.Game.Objects;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
     
     internal class GlobalChatLineMessage : PiranhaMessage
     {
-        internal GlobalChatItem Chat;
+        internal GlobalChatLine Chat;
 
         /// <summary>
         /// The service node for this message.

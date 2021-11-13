@@ -5,6 +5,7 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
+    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Network;
 
     internal class LogicBuyEnergyPackageCommand : LogicCommand
@@ -47,9 +48,9 @@
 
                     gamemode.Avatar.EnergyPackages.AddItem(this.EnergyPackage.GlobalID, 1);
                     gamemode.Avatar.EnergyTimer.Stop();
-                    
-                    gamemode.Avatar.Diamonds -= cost;
-                    gamemode.Avatar.Energy    = gamemode.Avatar.MaxEnergy;
+
+                    gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Diamonds, -cost);
+                    gamemode.Avatar.SetCommodityCount(LogicCommodityType.Energy, gamemode.Avatar.MaxEnergy);
                 }
                 else Debugger.Error("Unable to buy the energy package. The player has already bought all of the packages.");
             }

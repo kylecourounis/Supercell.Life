@@ -1,8 +1,8 @@
-﻿namespace Supercell.Life.Server.Logic.Collections.Items
+﻿namespace Supercell.Life.Server.Logic.Game.Objects
 {
     using Supercell.Life.Server.Logic.Avatar;
 
-    internal struct GlobalChatItem
+    internal class GlobalChatLine
     {
         /// <summary>
         /// Gets or sets the message.
@@ -32,7 +32,7 @@
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="GlobalChatItem"/> will be sent from the system.
+        /// Gets or sets a value indicating whether this <see cref="GlobalChatLine"/> will be sent from the system.
         /// </summary>
         internal bool System
         {
@@ -41,7 +41,7 @@
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="GlobalChatItem"/> will use a regex.
+        /// Gets or sets a value indicating whether this <see cref="GlobalChatLine"/> will use a regex.
         /// </summary>
         internal bool Regex
         {
@@ -50,13 +50,13 @@
         }
 
         /// <summary>
-        /// Gets an empty instance of <see cref="GlobalChatItem"/>.
+        /// Gets an empty instance of <see cref="GlobalChatLine"/>.
         /// </summary>
-        internal static GlobalChatItem Empty
+        internal static GlobalChatLine Empty
         {
             get
             {
-                return new GlobalChatItem
+                return new GlobalChatLine
                 {
                     Message = string.Empty
                 };

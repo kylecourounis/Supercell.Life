@@ -1,7 +1,7 @@
 ﻿namespace Supercell.Life.Server.Helpers
 {
     using Supercell.Life.Server.Logic.Collections;
-    using Supercell.Life.Server.Logic.Collections.Items;
+    using Supercell.Life.Server.Logic.Game.Objects;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Messages;
     using Supercell.Life.Server.Protocol.Messages.Server;
@@ -17,7 +17,7 @@
             {
                 new GlobalChatLineMessage(connection)
                 {
-                    Chat = new GlobalChatItem
+                    Chat = new GlobalChatLine
                     {
                         Message = message,
                         Sender = connection.GameMode.Avatar,
@@ -29,7 +29,7 @@
             {
                 Connections.ForEach(item => new GlobalChatLineMessage(item)
                 {
-                    Chat = new GlobalChatItem
+                    Chat = new GlobalChatLine
                     {
                         Message = message,
                         Sender = connection.GameMode.Avatar,

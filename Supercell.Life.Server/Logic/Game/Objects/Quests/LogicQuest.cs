@@ -4,6 +4,7 @@
 
     using Newtonsoft.Json;
 
+    using Supercell.Life.Server.Core;
     using Supercell.Life.Server.Files;
     using Supercell.Life.Titan.Logic;
     using Supercell.Life.Titan.Logic.Enums;
@@ -168,7 +169,9 @@
                             this.SublevelMoveCount = 0;
                         }
 
-                        this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, this.GoldReward);
+                        int goldDrop = Loader.Random.Rand(this.Data.MinGoldDrop, this.Data.MaxGoldDrop); // Best I can do until object collision works
+                        
+                        this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, this.GoldReward + goldDrop);
 
                         if (this.Avatar.Items.IsAttached(LogicItems.EnergyRecycler))
                         {

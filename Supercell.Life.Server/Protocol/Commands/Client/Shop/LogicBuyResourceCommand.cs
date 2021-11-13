@@ -2,7 +2,6 @@
 {
     using Supercell.Life.Titan.DataStream;
 
-    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Logic.Game;
@@ -41,7 +40,7 @@
 
                     if (gamemode.Avatar.Diamonds >= cost)
                     {
-                        gamemode.Avatar.Diamonds -= cost;
+                        gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Diamonds, -cost);
                         gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, this.Amount);
                     }
 
@@ -53,7 +52,7 @@
 
                     if (gamemode.Avatar.Diamonds >= cost)
                     {
-                        gamemode.Avatar.Diamonds -= cost;
+                        gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Diamonds, -cost);
                         gamemode.Avatar.EnergyTimer.Stop();
                         gamemode.Avatar.SetCommodityCount(LogicCommodityType.Energy, gamemode.Avatar.MaxEnergy);
                     }

@@ -3,7 +3,6 @@
     using Supercell.Life.Titan.DataStream;
 
     using Supercell.Life.Server.Logic;
-    using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Server.Network;
 
     internal class LogicFinishShipUpgradeCommand : LogicCommand
@@ -23,11 +22,6 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            var cost = LogicGamePlayUtil.GetSpeedUpCost(86400, LogicGamePlayUtil.GetSpeedUpCostMultiplier(1));
-            Debugger.Debug(cost);
-
-            gamemode.Avatar.Diamonds -= cost;
-
             gamemode.Avatar.ShipUpgrade.Finish();
         }
     }

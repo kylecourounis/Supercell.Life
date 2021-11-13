@@ -4,6 +4,7 @@
     using Supercell.Life.Titan.Logic.Math;
 
     using Supercell.Life.Server.Logic;
+    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Network;
 
     internal class LogicSpeedUpShipCommand : LogicCommand
@@ -30,7 +31,7 @@
 
             }
 
-            gamemode.Avatar.Diamonds -= cost;
+            gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Diamonds, -cost);
 
             gamemode.Avatar.Sailing.Finish();
         }

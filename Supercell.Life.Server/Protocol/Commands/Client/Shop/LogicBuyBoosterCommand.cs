@@ -5,6 +5,7 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
+    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Network;
 
     internal class LogicBuyBoosterCommand : LogicCommand
@@ -41,7 +42,7 @@
                     }
                 }
 
-                gamemode.Avatar.Diamonds -= cost;
+                gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Diamonds, -cost);
 
                 gamemode.Avatar.Booster.BoostPackage = this.Booster;
                 gamemode.Avatar.Booster.Start();

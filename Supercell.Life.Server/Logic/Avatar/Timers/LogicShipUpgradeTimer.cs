@@ -7,7 +7,6 @@
 
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
-    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Logic.Game;
 
@@ -65,7 +64,7 @@
                 int cost = LogicGamePlayUtil.GetSpeedUpCost(this.Timer.RemainingSecs, LogicGamePlayUtil.GetSpeedUpCostMultiplier(1));
                 Debugger.Debug(cost);
 
-                this.Avatar.Diamonds -= cost;
+                this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Diamonds, -cost);
 
                 this.Avatar.ShipLevel++;
                 this.Avatar.Save();

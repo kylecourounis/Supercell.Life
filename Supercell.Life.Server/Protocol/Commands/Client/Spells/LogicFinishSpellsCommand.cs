@@ -3,6 +3,7 @@
     using Supercell.Life.Titan.DataStream;
 
     using Supercell.Life.Server.Logic;
+    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Server.Network;
 
@@ -27,7 +28,7 @@
 
             if (gamemode.Avatar.Diamonds >= speedUpCost)
             {
-                gamemode.Avatar.Diamonds -= speedUpCost;
+                gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Diamonds, -speedUpCost);
                 gamemode.Avatar.SpellTimer.Finish();
             }
         }
