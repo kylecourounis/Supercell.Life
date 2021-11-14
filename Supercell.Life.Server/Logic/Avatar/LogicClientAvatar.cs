@@ -16,7 +16,6 @@ namespace Supercell.Life.Server.Logic.Avatar
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Alliance;
-    using Supercell.Life.Server.Logic.Attack;
     using Supercell.Life.Server.Logic.Avatar.Slots;
     using Supercell.Life.Server.Logic.Avatar.Socials;
     using Supercell.Life.Server.Logic.Avatar.Timers;
@@ -305,9 +304,9 @@ namespace Supercell.Life.Server.Logic.Avatar
         }
 
         /// <summary>
-        /// Sets this <see cref="LogicClientAvatar"/>'s JSON.
+        /// Gets this <see cref="LogicClientAvatar"/>'s JSON.
         /// </summary>
-        internal void SetAvatarJSON(ByteStream stream)
+        internal LogicJSONObject GetAvatarJSON()
         {
             LogicJSONObject json = new LogicJSONObject();
 
@@ -343,7 +342,7 @@ namespace Supercell.Life.Server.Logic.Avatar
 
             json.Put("league", new LogicJSONNumber(this.League));
             json.Put("help_opened", new LogicJSONBoolean(true));
-            
+
             this.EnergyTimer.Save(json);
 
             json.Put("map_chest", new LogicJSONNumber());
@@ -357,8 +356,16 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.HeroUpgrade.Save(json);
 
             json.Put("tutorial_mask", new LogicJSONNumber(this.TutorialMask));
-            
-            stream.WriteCompressedString(json.ToString());
+
+            return json;
+        }
+
+        /// <summary>
+        /// Sets this <see cref="LogicClientAvatar"/>'s JSON.
+        /// </summary>
+        internal void SetAvatarJSON(ByteStream stream)
+        {
+            stream.WriteCompressedString(this.GetAvatarJSON().ToString());
         }
 
         /// <summary>

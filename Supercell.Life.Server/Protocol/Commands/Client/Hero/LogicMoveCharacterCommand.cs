@@ -1,6 +1,8 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
     using Supercell.Life.Titan.DataStream;
+    using Supercell.Life.Titan.Logic.Enums;
+    using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Math;
 
     using Supercell.Life.Server.Logic;
@@ -48,7 +50,9 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            if (gamemode.Avatar.OngoingQuestData != null)
+            var battle = gamemode.Battle;
+
+            if (battle == null && gamemode.Avatar.Connection.State == State.Battle)
             {
                 if (gamemode.Avatar.OngoingQuestData.Data.QuestType != "PvP")
                 {
@@ -78,18 +82,16 @@
                 }
             }
 
-            var battle = gamemode.Battle;
-
             if (battle != null)
             {
-                battle.ResetTurn();
+                battle.ResetTurn(gamemode.Avatar);
 
                 var opponent = battle.Avatars.Find(avatar => avatar.Identifier != gamemode.Avatar.Identifier);
 
                 LogicMoveCharacterCommand cmd = new LogicMoveCharacterCommand(opponent.Connection)
                 {
-                    DirectionX     = this.DirectionX,
-                    DirectionY     = this.DirectionY,
+                    DirectionX     = -this.DirectionX,
+                    DirectionY     = -this.DirectionY,
                     Value          = this.Value,
                     ExecuteSubTick = this.ExecuteSubTick,
                     ExecutorID     = this.ExecutorID
@@ -99,6 +101,28 @@
             }
 
             Debugger.Debug($"DirectionX : {this.DirectionX}, DirectionY : {this.DirectionY}, S : {this.S}, F : {this.F}");
+        }
+
+        internal override void LoadCommandFromJSON(LogicJSONObject json)
+        {
+            base.LoadCommandFromJSON(json);
+
+            this.DirectionX = json.GetJsonNumber("dx").GetIntValue();
+            this.DirectionY = json.GetJsonNumber("dy").GetIntValue();
+            this.S          = json.GetJsonBoolean("s").IsTrue();
+            this.F          = json.GetJsonBoolean("f").IsTrue();
+        }
+
+        internal override LogicJSONObject SaveCommandToJSON()
+        {
+            var json = base.SaveCommandToJSON();
+
+            json.Put("dx", new LogicJSONNumber(this.DirectionX));
+            json.Put("dy", new LogicJSONNumber(this.DirectionY));
+            json.Put("s", new LogicJSONBoolean(this.S));
+            json.Put("f", new LogicJSONBoolean(this.F));
+
+            return json;
         }
     }
 }

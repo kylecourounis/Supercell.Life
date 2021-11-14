@@ -14,28 +14,6 @@
         internal byte[] byte_2B415A = { 2, 0, 0, 0, 0, 0, 1, 0, 5, 0, 0, 2, 0, 0, 1, 0, 1 };
 
         /// <summary>
-        /// Adds to the player's gold.
-        /// </summary>
-        private int Gold
-        {
-            set
-            {
-                this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, value);
-            }
-        }
-
-        /// <summary>
-        /// Adds to the player's experience.
-        /// </summary>
-        private int XP
-        {
-            set
-            {
-                this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, value);
-            }
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="LogicChest"/> class.
         /// </summary>
         internal LogicChest(LogicClientAvatar avatar)
@@ -55,8 +33,8 @@
             var gold = Loader.Random.Rand(expLevelData.MapChestMinGold, expLevelData.MapChestMaxGold);
             var xp   = Loader.Random.Rand(expLevelData.MapChestMinXP, expLevelData.MapChestMaxXP);
 
-            this.Gold = gold;
-            this.XP   = xp;
+            this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, gold);
+            this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, xp);
         }
 
         /// <summary>

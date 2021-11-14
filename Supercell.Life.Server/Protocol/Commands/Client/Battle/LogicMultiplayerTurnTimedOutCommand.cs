@@ -32,7 +32,7 @@
 
             if (battle != null)
             {
-                battle.ResetTurn();
+                battle.ResetTurn(gamemode.Avatar);
 
                 var cmd = new LogicMultiplayerTurnTimedOutCommand(battle.Avatars.Find(avatar => avatar.Identifier != gamemode.Avatar.Identifier).Connection)
                 {

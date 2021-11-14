@@ -1,8 +1,6 @@
 ﻿namespace Supercell.Life.Server.Protocol.Messages.Client
 {
     using Supercell.Life.Titan.DataStream;
-    using Supercell.Life.Titan.Helpers;
-    using Supercell.Life.Titan.Logic;
 
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Commands;

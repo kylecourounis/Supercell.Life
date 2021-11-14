@@ -5,7 +5,7 @@
 
     internal class BattleEventMessage : PiranhaMessage
     {
-        internal int Unknown;
+        internal int EventType;
 
         internal int X;
         internal int Y;
@@ -20,7 +20,7 @@
 
         internal override void Encode()
         {
-            this.Stream.WriteInt(this.Unknown);
+            this.Stream.WriteInt(this.EventType);
 
             this.Stream.WriteInt(this.X);
             this.Stream.WriteInt(this.Y);

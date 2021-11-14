@@ -4,6 +4,7 @@
     using Supercell.Life.Titan.Helpers;
     using Supercell.Life.Titan.Logic;
     using Supercell.Life.Titan.Logic.Enums;
+    using Supercell.Life.Titan.Logic.Json;
 
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
@@ -65,14 +66,15 @@
             {
                 if (command != null)
                 {
-                    if (this.IsCommandAllowedInCurrentState(command))
+                    // if (this.IsCommandAllowedInCurrentState(command))
                     {
                         Debugger.Info($"Battle Command {command.GetType().Name.Pad(34)} received from {this.Connection.EndPoint}.");
 
                         command.Subtick = subtick;
                         command.Decode(stream);
+                        command.Execute(this.Connection.GameMode);
 
-                        this.SectorCommands.Add(command);
+                        // this.SectorCommands.Add(command);
                     }
                 }
                 else
@@ -103,7 +105,29 @@
             }
             else Debugger.Error("Execute command failed! subtick is not valid.");
         }
-        
+
+        /// <summary>
+        /// Loads the <see cref="LogicCommandManager"/> from the specified <see cref="LogicJSONObject"/>.
+        /// </summary>
+        internal static LogicCommand LoadCommandFromJSON(LogicJSONObject json, Connection connection)
+        {
+            var id = json.GetJsonNumber("ct");
+
+            if (id != null)
+            {
+                LogicCommand command = LogicCommandManager.CreateCommand(id.GetIntValue(), connection);
+
+                command.LoadCommandFromJSON(json.GetJsonObject("c"));
+
+                return command;
+            }
+            else
+            {
+                Debugger.Error("Unknown command type");
+                return null;
+            }
+        }
+
         /// <summary>
         /// Determines whether the specified <see cref="LogicCommand"/> is allowed in the current state.
         /// </summary>
@@ -279,9 +303,9 @@
                 {
                     return new LogicResignCommand(connection);
                 }
-                case Command.SendTaunt:
+                case Command.SpeechBubbleReplay:
                 {
-                    return new LogicSendTauntCommand(connection);
+                    return new LogicSpeechBubbleForReplayCommand(connection);
                 }
                 case Command.AimCharacter:
                 {

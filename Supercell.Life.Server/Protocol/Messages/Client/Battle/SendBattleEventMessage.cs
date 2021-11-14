@@ -7,7 +7,7 @@
 
     internal class SendBattleEventMessage : PiranhaMessage
     {
-        private int Unknown;
+        private int EventType;
 
         private int X;
         private int Y;
@@ -22,32 +22,55 @@
 
         internal override void Decode()
         {
-            this.Unknown = this.Stream.ReadInt();
-            this.X       = this.Stream.ReadInt();
-            this.Y       = this.Stream.ReadInt();
+            this.EventType = this.Stream.ReadInt();
+            this.X         = this.Stream.ReadInt();
+            this.Y         = this.Stream.ReadInt();
         }
 
         internal override void Handle()
         {
             this.ShowValues();
 
-            if (this.X != 0 && this.Y != 0)
+            if (this.Connection.GameMode.Battle != null)
             {
-                if (this.Connection.GameMode.Battle != null)
+                switch (this.EventType)
                 {
-                    new BattleEventMessage(this.Connection)
+                    case 0: // Emote??
                     {
-                        Unknown = this.Unknown,
-                        X       = this.X,
-                        Y       = this.Y
-                    }.Send();
+                        new BattleEventMessage(this.Connection)
+                        {
+                            EventType = this.EventType,
+                            X         = this.X,
+                            Y         = this.Y
+                        }.Send();
 
-                    new BattleEventMessage(this.Connection.GameMode.Battle.Avatars.Find(avatar => avatar.Identifier != this.Connection.GameMode.Avatar.Identifier).Connection)
+                        new BattleEventMessage(this.Connection.GameMode.Battle.Avatars.Find(avatar => avatar.Identifier != this.Connection.GameMode.Avatar.Identifier).Connection)
+                        {
+                            EventType = this.EventType,
+                            X         = this.X,
+                            Y         = this.Y
+                        }.Send(); 
+                        
+                        break;
+                    }
+                    case 1: // Aiming
                     {
-                        Unknown = this.Unknown,
-                        X       = -this.X,
-                        Y       = -this.Y
-                    }.Send();
+                        new BattleEventMessage(this.Connection)
+                        {
+                            EventType = this.EventType,
+                            X         = this.X,
+                            Y         = this.Y
+                        }.Send();
+
+                        new BattleEventMessage(this.Connection.GameMode.Battle.Avatars.Find(avatar => avatar.Identifier != this.Connection.GameMode.Avatar.Identifier).Connection)
+                        {
+                            EventType = this.EventType,
+                            X         = -this.X,
+                            Y         = -this.Y
+                        }.Send();
+                        
+                        break;
+                    }
                 }
             }
         }

@@ -1,6 +1,7 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
     using Supercell.Life.Titan.DataStream;
+    using Supercell.Life.Titan.Logic.Json;
 
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
@@ -8,7 +9,7 @@
 
     internal class LogicSwapCharacterCommand : LogicCommand
     {
-        internal int Unknown;
+        internal int Identifier;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicSwapCharacterCommand"/> class.
@@ -20,14 +21,14 @@
         
         internal override void Decode(ByteStream stream)
         {
-            this.Unknown = stream.ReadInt();
+            this.Identifier = stream.ReadInt();
 
             base.Decode(stream);
         }
 
         internal override void Encode(ChecksumEncoder encoder)
         {
-            encoder.WriteInt(this.Unknown);
+            encoder.WriteInt(this.Identifier);
             
             base.Encode(encoder);
         }
@@ -42,13 +43,29 @@
 
                 var cmd = new LogicSwapCharacterCommand(enemy.Connection)
                 {
-                    Unknown        = this.Unknown,
+                    Identifier     = this.Identifier,
                     ExecuteSubTick = this.ExecuteSubTick,
                     ExecutorID     = this.ExecutorID
                 };
 
-                battle.EnqueueCommand(this, this);
+                // battle.EnqueueCommand(this, cmd);
             }
+        }
+
+        internal override void LoadCommandFromJSON(LogicJSONObject json)
+        {
+            base.LoadCommandFromJSON(json);
+
+            this.Identifier = json.GetJsonNumber("id").GetIntValue();
+        }
+
+        internal override LogicJSONObject SaveCommandToJSON()
+        {
+            var json = base.SaveCommandToJSON();
+
+            json.Put("id", new LogicJSONNumber(this.Identifier));
+
+            return json;
         }
     }
 }

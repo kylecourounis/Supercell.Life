@@ -7,13 +7,13 @@
     using System.Timers;
 
     using Supercell.Life.Titan.DataStream;
+    using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Math;
 
     using Supercell.Life.Server.Core;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Avatar;
-    using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Protocol.Commands;
     using Supercell.Life.Server.Protocol.Messages;
@@ -36,8 +36,7 @@
         internal LogicQuestData PvPTier;
         internal LogicEventsData Event;
 
-        internal Timer BattleTimer;
-        internal Timer TurnTimer;
+        internal Timer BattleTick;
 
         internal List<LogicClientAvatar> Avatars
         {
@@ -47,10 +46,14 @@
             }
         }
 
-        internal Dictionary<LogicClientAvatar, ConcurrentQueue<LogicCommand>> CommandQueues;
-        
+        internal int StartingPlayer;
+
         internal LogicLong WhoseTurn;
-        
+
+        internal Dictionary<LogicClientAvatar, ConcurrentQueue<LogicCommand>> CommandQueues;
+
+        internal LogicJSONArray ReplayCommands;
+
         /// <summary>
         /// Gets the identifier for this <see cref="LogicBattle"/>.
         /// </summary>
@@ -89,20 +92,13 @@
         /// </summary>
         internal LogicBattle()
         {
-            this.TurnTimer = new Timer
-            {
-                AutoReset = false,
-                Interval  = Globals.PVPFirstTurnTimeSeconds * 1000
-            };
-            
-            this.BattleTimer = new Timer
+            this.BattleTick = new Timer
             {
                 AutoReset = true,
                 Interval  = 500
             };
 
-            this.BattleTimer.Elapsed += this.Tick;
-            this.TurnTimer.Elapsed   += this.SetTurn;
+            this.BattleTick.Elapsed += this.Tick;
         }
 
         /// <summary>
@@ -115,14 +111,37 @@
                 { avatar1, new ConcurrentQueue<LogicCommand>() },
                 { avatar2, new ConcurrentQueue<LogicCommand>() }
             };
+
+            this.ReplayCommands = new LogicJSONArray();
         }
 
         /// <summary>
         /// Encodes this <see cref="LogicBattle"/> using specified stream.
         /// </summary>
-        internal void Encode(ByteStream stream)
+        internal void Encode(ByteStream stream, int side)
         {
-            stream.WriteInt(Loader.Random.Next(0, 1)); // Coin toss to check who goes first
+            switch (side) 
+            {
+                case 0:
+                {
+                    this.Avatars[0].Encode(stream);
+                    this.Avatars[1].Encode(stream);
+
+                    stream.WriteInt(this.StartingPlayer == 0 ? 1 : 0); // Coin toss to determine who goes first
+
+                    break;
+                }
+                case 1:
+                {
+                    this.Avatars[1].Encode(stream);
+                    this.Avatars[0].Encode(stream);
+
+                    stream.WriteInt(this.StartingPlayer == 1 ? 1 : 0);
+
+                    break;
+                }
+            }
+
             stream.WriteInt(0);
             stream.WriteInt(0);
             stream.WriteInt(0);
@@ -145,21 +164,22 @@
 
                 if (!this.Stopped)
                 {
-                    int idx = 0;
+                    int side = 0;
+
+                    this.StartingPlayer = Loader.Random.Next(0, 1);
 
                     foreach (LogicClientAvatar avatar in this.Avatars.Where(avatar => avatar.Connection != null))
                     {
                         new StopHomeLogicMessage(avatar.Connection).Send();
-                        new SectorStateMessage(avatar.Connection, idx)
+                        new SectorStateMessage(avatar.Connection, side)
                         {
                             Battle = this
                         }.Send();
 
-                        idx++;
+                        side++;
                     }
 
-                    this.BattleTimer.Start();
-                    this.TurnTimer.Start();
+                    this.BattleTick.Start();
                 }
                 else
                 {
@@ -177,8 +197,16 @@
         /// </summary>
         internal void EnqueueCommand(LogicCommand self, LogicCommand opponent)
         {
-            this.GetOwnQueue(self.Connection.GameMode.Avatar).Enqueue(self);
-            this.GetEnemyQueue(self.Connection.GameMode.Avatar).Enqueue(opponent);
+            if (self != null)
+            {
+                this.GetOwnQueue(self.Connection.GameMode.Avatar).Enqueue(self);
+                this.ReplayCommands.Add(self.SaveToJSON());
+            }
+
+            if (opponent != null)
+            {
+                this.GetEnemyQueue(self.Connection.GameMode.Avatar).Enqueue(opponent);
+            }
         }
 
         /// <summary>
@@ -233,28 +261,13 @@
         }
 
         /// <summary>
-        /// Sets the turn.
-        /// </summary>
-        internal void SetTurn(object sender, ElapsedEventArgs args)
-        { 
-            this.ResetTurn();
-        }
-
-        /// <summary>
         /// Resets this the turn timer.
         /// </summary>
-        internal void ResetTurn()
+        internal void ResetTurn(LogicClientAvatar turnFinished)
         {
-            this.TurnTimer.Stop();
+            this.WhoseTurn = this.Avatars.Find(avatar => avatar.Identifier != turnFinished.Identifier).Identifier;
 
-            if ((int)this.TurnTimer.Interval == Globals.PVPFirstTurnTimeSeconds * 1000)
-            {
-                this.TurnTimer.Interval = Globals.PVPMaxTurnTimeSeconds * 1000;
-            }
-
-            this.WhoseTurn = this.Avatars.Find(avatar => avatar.Identifier != this.WhoseTurn).Identifier;
-
-            this.TurnTimer.Start();
+            Debugger.Debug($"{this.WhoseTurn} turn.");
         }
 
         /// <summary>
@@ -268,8 +281,7 @@
 
                 if (this.Started)
                 {
-                    this.BattleTimer.Stop();
-                    this.TurnTimer.Stop();
+                    this.BattleTick.Stop();
 
                     foreach (LogicClientAvatar avatar in this.Avatars)
                     {
@@ -288,5 +300,6 @@
                 Debugger.Error("Battle already stopped when Stop() was called.");
             }
         }
+
     }
 }

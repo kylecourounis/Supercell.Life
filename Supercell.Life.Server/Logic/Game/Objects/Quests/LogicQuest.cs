@@ -149,8 +149,8 @@
                     }
                     else
                     {
-                        int id = Files.CsvHelpers.GlobalID.GetID(this.GlobalID) - 2;
-                        LogicExperienceLevelData expLevelData = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataWithID(id >= 35 ? 35 : id);
+                        int id = Files.CsvHelpers.GlobalID.GetID(this.GlobalID) - 1;
+                        LogicExperienceLevelData expLevelData = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataByName(id >= 35 ? "35" : id.ToString());
 
                         this.GoldReward = expLevelData.DefaultQuestRewardGoldPerEnergy * this.Data.Energy;
                         this.XPReward   = expLevelData.DefaultQuestRewardXpPerEnergy * this.Data.Energy;

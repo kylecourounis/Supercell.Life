@@ -37,6 +37,10 @@
                 {
                     return new AskForPlayingFacebookFriendsMessage(connection, stream);
                 }
+                case Message.SectorCommand:
+                {
+                    return new SectorCommandMessage(connection, stream);
+                }
                 case Message.Unknown_1:
                 {
                     return new UnknownMessage(connection, stream);

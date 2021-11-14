@@ -10,6 +10,7 @@
     
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
+    using Supercell.Life.Titan.Logic.Json;
 
     internal class LogicCommand
     {
@@ -80,7 +81,56 @@
         {
             Debugger.Debug(stream.ToHexa());
         }
-        
+
+        /// <summary>
+        /// Loads this <see cref="LogicCommand"/> from the specified <see cref="LogicJSONObject"/>.
+        /// </summary>
+        internal virtual void LoadCommandFromJSON(LogicJSONObject json)
+        {
+            LogicJSONObject b = json.GetJsonObject("b");
+
+            if (b != null)
+            {
+                this.ExecuteSubTick = b.GetJsonNumber("t").GetIntValue();
+                this.ExecutorID = new LogicLong(b.GetJsonNumber("id1").GetIntValue(), b.GetJsonNumber("id2").GetIntValue());
+            }
+            else
+            {
+                Debugger.Error($"Replay {this.GetType().Name} load failed! Base missing!");
+            }
+        }
+
+        /// <summary>
+        /// Saves the base of this <see cref="LogicCommand"/> to the returned <see cref="LogicJSONObject"/>.
+        /// </summary>
+        internal virtual LogicJSONObject SaveCommandToJSON()
+        {
+            LogicJSONObject b = new LogicJSONObject();
+
+            b.Put("t", new LogicJSONNumber(this.ExecuteSubTick));
+            b.Put("id1", new LogicJSONNumber(this.ExecutorID.High));
+            b.Put("id2", new LogicJSONNumber(this.ExecutorID.Low));
+
+            LogicJSONObject json = new LogicJSONObject();
+
+            json.Put("b", b);
+
+            return json;
+        }
+
+        /// <summary>
+        /// Saves this <see cref="LogicCommand"/> to the returned <see cref="LogicJSONObject"/>.
+        /// </summary>
+        internal LogicJSONObject SaveToJSON()
+        {
+            LogicJSONObject json = new LogicJSONObject();
+
+            json.Put("ct", new LogicJSONNumber((int)this.Type));
+            json.Put("c", this.SaveCommandToJSON());
+
+            return json;
+        }
+
         /// <summary>
         /// Shows the values of this <see cref="LogicCommand"/>.
         /// </summary>

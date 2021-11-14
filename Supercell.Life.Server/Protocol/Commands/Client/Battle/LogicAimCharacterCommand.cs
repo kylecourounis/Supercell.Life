@@ -1,6 +1,7 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
     using Supercell.Life.Titan.DataStream;
+    using Supercell.Life.Titan.Logic.Json;
 
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
@@ -8,7 +9,7 @@
 
     internal class LogicAimCharacterCommand : LogicCommand
     {
-        internal int X, Y;
+        internal int DirectionX, DirectionY;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicAimCharacterCommand"/> class.
@@ -22,16 +23,16 @@
         {
             base.Decode(stream);
 
-            this.X = stream.ReadInt();
-            this.Y = stream.ReadInt();
+            this.DirectionX = stream.ReadInt();
+            this.DirectionY = stream.ReadInt();
         }
 
         internal override void Encode(ChecksumEncoder encoder)
         {
             base.Encode(encoder);
 
-            encoder.WriteInt(this.X);
-            encoder.WriteInt(this.Y);
+            encoder.WriteInt(this.DirectionX);
+            encoder.WriteInt(this.DirectionY);
         }
 
         internal override void Execute(LogicGameMode gamemode)
@@ -42,12 +43,32 @@
             {
                 LogicAimCharacterCommand cmd = new LogicAimCharacterCommand(battle.Avatars.Find(avatar => avatar.Identifier != gamemode.Avatar.Identifier).Connection)
                 {
-                    X = this.X,
-                    Y = this.Y
+                    DirectionX     = -this.DirectionX,
+                    DirectionY     = -this.DirectionY,
+                    ExecuteSubTick = this.ExecuteSubTick,
+                    ExecutorID     = this.ExecutorID
                 };
-
+                
                 battle.EnqueueCommand(this, cmd);
             }
+        }
+
+        internal override void LoadCommandFromJSON(LogicJSONObject json)
+        {
+            base.LoadCommandFromJSON(json);
+
+            this.DirectionX = json.GetJsonNumber("dx").GetIntValue();
+            this.DirectionY = json.GetJsonNumber("dy").GetIntValue();
+        }
+
+        internal override LogicJSONObject SaveCommandToJSON()
+        {
+            var json = base.SaveCommandToJSON();
+
+            json.Put("dx", new LogicJSONNumber(this.DirectionX));
+            json.Put("dy", new LogicJSONNumber(this.DirectionY));
+
+            return json;
         }
     }
 }

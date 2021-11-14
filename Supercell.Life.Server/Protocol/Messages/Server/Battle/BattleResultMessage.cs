@@ -19,8 +19,8 @@
 
         internal override void Encode()
         {
-            this.Stream.WriteInt(1);
-            this.Stream.WriteInt(this.TrophyReward);
+            this.Stream.WriteInt(0);
+            this.Stream.WriteInt(0);
             this.Stream.WriteInt(0);
             this.Stream.WriteInt(0);
             this.Stream.WriteInt(0);

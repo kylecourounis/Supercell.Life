@@ -2,8 +2,13 @@
 {
     using System;
 
+    using Supercell.Life.Titan.Logic.Json;
+
+    using Supercell.Life.Server.Files;
+    using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic.Attack;
     using Supercell.Life.Server.Logic.Avatar;
+    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol;
     using Supercell.Life.Server.Protocol.Commands;
@@ -30,7 +35,52 @@
             this.MessageManager = new MessageManager(connection);
             this.CommandManager = new LogicCommandManager(connection);
         }
-        
+
+        /// <summary>
+        /// Loads a <see cref="LogicReplay"/> from the specified <see cref="LogicJSONObject"/>.
+        /// </summary>
+        internal LogicReplay LoadReplay(LogicJSONObject json)
+        {
+            return new LogicReplay(this)
+            {
+                Quest          = (LogicQuestData)CSV.Tables.Get(Gamefile.Quests).GetDataWithID(json.GetJsonObject("quest").GetJsonNumber("quest_data").GetIntValue()),
+                Event          = (LogicEventsData)CSV.Tables.Get(Gamefile.Events).GetDataWithID(json.GetJsonNumber("event_data").GetIntValue()),
+                LevelIndex     = json.GetJsonNumber("level_idx").GetIntValue(),
+                Challenge      = json.GetJsonNumber("challenge").GetIntValue(),
+                StartingPlayer = json.GetJsonNumber("starting_player").GetIntValue(),
+                Avatar         = json.GetJsonObject("avatar"),
+                Avatar2        = json.GetJsonObject("avatar2"),
+                EndTick        = json.GetJsonNumber("end_tick").GetIntValue(),
+                Commands       = LogicReplay.GetCommands(json.GetJsonArray("cmd"), this.Connection)
+            };
+        }
+
+        /// <summary>
+        /// Saves a <see cref="LogicReplay"/> to the returned <see cref="LogicJSONObject"/>.
+        /// </summary>
+        internal LogicJSONObject SaveReplay()
+        {
+            LogicJSONObject replayJSON = new LogicJSONObject();
+
+            var quest = new LogicJSONObject();
+            quest.Put("quest_data", new LogicJSONNumber(this.Battle.PvPTier.GlobalID));
+            
+            replayJSON.Put("quest", quest);
+            replayJSON.Put("event_data", new LogicJSONNumber(this.Battle.Event?.GlobalID ?? 0));
+
+            replayJSON.Put("level_idx", new LogicJSONNumber());
+            replayJSON.Put("challenge", new LogicJSONNumber());
+            replayJSON.Put("starting_player", new LogicJSONNumber());
+
+            replayJSON.Put("avatar", this.Battle.Avatars[0].GetAvatarJSON());
+            replayJSON.Put("avatar2", this.Battle.Avatars[1].GetAvatarJSON());
+
+            replayJSON.Put("end_tick", new LogicJSONNumber());
+            replayJSON.Put("cmd", this.Battle.ReplayCommands);
+
+            return replayJSON;
+        }
+
         /// <summary>
         /// Adjusts the sub tick.
         /// </summary>

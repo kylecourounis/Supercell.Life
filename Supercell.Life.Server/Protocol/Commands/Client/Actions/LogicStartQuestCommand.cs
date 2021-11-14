@@ -7,6 +7,7 @@
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Game.Objects.Quests;
     using Supercell.Life.Server.Network;
+    using Supercell.Life.Titan.Logic.Enums;
 
     internal class LogicStartQuestCommand : LogicCommand
     {
@@ -30,6 +31,7 @@
         internal override void Execute(LogicGameMode gamemode)
         {
             LogicQuest quest = gamemode.Avatar.Quests[this.QuestData.GlobalID];
+            this.Connection.State = State.Battle;
             quest.Start(gamemode.Avatar, this.QuestData);
         }
     }

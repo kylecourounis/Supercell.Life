@@ -35,7 +35,7 @@
         TurnTimedOut       = 605,
         SwapCharacter      = 606,
         Resign             = 609,
-        SendTaunt          = 611,
+        SpeechBubbleReplay = 611,
         AimCharacter       = 612,
         UseSpell           = 613,
         ActionSeen         = 800,
