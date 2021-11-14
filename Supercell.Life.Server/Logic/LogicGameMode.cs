@@ -70,7 +70,7 @@
 
             replayJSON.Put("level_idx", new LogicJSONNumber());
             replayJSON.Put("challenge", new LogicJSONNumber());
-            replayJSON.Put("starting_player", new LogicJSONNumber());
+            replayJSON.Put("starting_player", new LogicJSONNumber(this.Battle.StartingPlayer));
 
             replayJSON.Put("avatar", this.Battle.Avatars[0].GetAvatarJSON());
             replayJSON.Put("avatar2", this.Battle.Avatars[1].GetAvatarJSON());

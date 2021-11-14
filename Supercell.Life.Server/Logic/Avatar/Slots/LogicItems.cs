@@ -38,23 +38,22 @@
         }
 
         /// <summary>
-        /// Gets the XP boost percentage based on the level of plunder thunder.
+        /// Returns a multiplier value based on the level of the specified item.
         /// </summary>
-        internal double PlunderThunderPercentage
+        internal double PercentageMultiplier(LogicItemsData item, double basePercentage, double increment)
         {
-            get
-            {
-                double percentage = 1.05;
-                double increment  = 0.02;
+            double percentage = basePercentage;
 
-                for (int i = 1; i <= this.Avatar.ItemLevels.GetCount(LogicItems.PlunderThunder.GlobalID); i++)
+            if (this.Avatar.ItemLevels.GetCount(item.GlobalID) > 0)
+            {
+                for (int i = 1; i <= this.Avatar.ItemLevels.GetCount(item.GlobalID); i++)
                 {
                     percentage += increment;
-                    increment  += 0.01;
+                    increment += 0.01;
                 }
-
-                return percentage;
             }
+
+            return percentage;
         }
 
         /// <summary>
