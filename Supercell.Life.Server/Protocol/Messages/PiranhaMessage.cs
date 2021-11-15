@@ -92,7 +92,7 @@
             byte[] buffer = new byte[this.Length + Messaging.HeaderLength];
 
             Messaging.WriteHeader(this, ref buffer);
-            Buffer.BlockCopy(this.Stream.ToArray(), 0, buffer, Messaging.HeaderLength, this.Length);
+            Buffer.BlockCopy(this.Stream.GetBuffer(), 0, buffer, Messaging.HeaderLength, this.Length);
 
             return buffer;
         }
