@@ -126,7 +126,7 @@
         /// </summary>
         internal void Encrypt()
         {
-            byte[] encrypted = this.Connection.Messaging.Crypto.Encrypt(this.Stream.ToArray());
+            byte[] encrypted = this.Connection.Messaging.Crypto.Encrypt(this.Stream.GetBuffer());
 
             this.Stream = new ByteStream(encrypted);
             this.Length = this.Stream.Length;
