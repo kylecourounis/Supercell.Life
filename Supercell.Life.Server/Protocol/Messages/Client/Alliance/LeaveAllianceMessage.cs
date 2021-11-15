@@ -3,9 +3,7 @@
     using Supercell.Life.Titan.DataStream;
 
     using Supercell.Life.Server.Core;
-    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Alliance;
-    using Supercell.Life.Server.Logic.Alliance.Streams;
     using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Network;
@@ -61,7 +59,7 @@
                 }
 
                 new AvailableServerCommandMessage(this.Connection, new LogicLeaveAllianceCommand(this.Connection, alliance.Identifier)).Send();
-                alliance.AddEntry(new StreamEntry(member, member, StreamEntry.StreamEvent.Left));
+                alliance.AddEntry(new AllianceStreamEntry(member, member, AllianceStreamEntry.AllianceStreamEvent.Left));
 
                 alliance.Members.Remove(member);
 
@@ -99,8 +97,8 @@
                 }
             }
 
-            alliance.AddEntry(new StreamEntry(member, member, StreamEntry.StreamEvent.Demoted));
-            alliance.AddEntry(new StreamEntry(newLeader, member, StreamEntry.StreamEvent.Promoted));
+            alliance.AddEntry(new AllianceStreamEntry(member, member, AllianceStreamEntry.AllianceStreamEvent.Demoted));
+            alliance.AddEntry(new AllianceStreamEntry(newLeader, member, AllianceStreamEntry.AllianceStreamEvent.Promoted));
 
             avatar.Save();
             Avatars.Get(newLeader.Identifier).Save();

@@ -1,10 +1,8 @@
 ﻿namespace Supercell.Life.Server.Protocol.Messages.Server
 {
-    using Supercell.Life.Server.Core;
-    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Titan.Logic.Enums;
 
-    using Supercell.Life.Server.Logic.Attack;
+    using Supercell.Life.Server.Logic.Battle;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
 

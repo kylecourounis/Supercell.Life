@@ -4,7 +4,6 @@
     using Supercell.Life.Titan.Logic.Math;
 
     using Supercell.Life.Server.Logic.Alliance;
-    using Supercell.Life.Server.Logic.Alliance.Streams;
     using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
@@ -63,7 +62,7 @@
                     new AvailableServerCommandMessage(this.Connection, new LogicJoinAllianceCommand(this.Connection)).Send();
 
                     new AllianceStreamMessage(this.Connection).Send();
-                    alliance.AddEntry(new StreamEntry(member, member, StreamEntry.StreamEvent.Joined));
+                    alliance.AddEntry(new AllianceStreamEntry(member, member, AllianceStreamEntry.AllianceStreamEvent.Joined));
 
                     this.Connection.GameMode.Avatar.Save();
                 }

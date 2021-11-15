@@ -7,6 +7,7 @@ namespace Supercell.Life.Server.Logic.Avatar
     using Newtonsoft.Json.Linq;
 
     using Supercell.Life.Titan.DataStream;
+    using Supercell.Life.Titan.Logic;
     using Supercell.Life.Titan.Logic.Enums;
     using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Math;
@@ -100,6 +101,8 @@ namespace Supercell.Life.Server.Logic.Avatar
         [JsonProperty] internal LogicShipUpgradeTimer ShipUpgrade;
         [JsonProperty] internal LogicItemUnavailableTimer ItemUnavailableTimer;
         [JsonProperty] internal LogicSpellTimer SpellTimer;
+
+        [JsonProperty] internal LogicArrayList<AvatarStreamEntry> StreamEntries;
 
         internal Dictionary<int, LogicQuest> Quests;
 
@@ -286,6 +289,8 @@ namespace Supercell.Life.Server.Logic.Avatar
 
             this.Diamonds             = Globals.StartingDiamonds;
             this.FreeDiamonds         = Globals.StartingDiamonds;
+
+            this.StreamEntries        = new LogicArrayList<AvatarStreamEntry>(50);
 
             this.Quests               = new Dictionary<int, LogicQuest>(Levels.Quests);
 

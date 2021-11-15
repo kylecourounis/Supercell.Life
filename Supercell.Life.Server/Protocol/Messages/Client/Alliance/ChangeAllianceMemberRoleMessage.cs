@@ -4,7 +4,6 @@
     using Supercell.Life.Titan.Logic.Math;
 
     using Supercell.Life.Server.Logic.Alliance;
-    using Supercell.Life.Server.Logic.Alliance.Streams;
     using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Commands.Server;
@@ -50,13 +49,13 @@
                 AllianceMember member = alliance.Members.Find(m => m.Identifier == this.MemberID);
                 AllianceMember sender = alliance.Members.Find(m => m.Identifier == this.Connection.GameMode.Avatar.Identifier);
 
-                alliance.AddEntry(new StreamEntry(member, sender, ChangeAllianceMemberRoleMessage.IsHigherRoleThan(this.Role, member.Role) ? StreamEntry.StreamEvent.Promoted : StreamEntry.StreamEvent.Demoted));
+                alliance.AddEntry(new AllianceStreamEntry(member, sender, ChangeAllianceMemberRoleMessage.IsHigherRoleThan(this.Role, member.Role) ? AllianceStreamEntry.AllianceStreamEvent.Promoted : AllianceStreamEntry.AllianceStreamEvent.Demoted));
                 member.Role = this.Role;
 
                 if (this.Role == (int)Alliance.Role.Leader)
                 {
                     sender.Role = (int)Alliance.Role.CoLeader;
-                    alliance.AddEntry(new StreamEntry(sender, sender, StreamEntry.StreamEvent.Demoted));
+                    alliance.AddEntry(new AllianceStreamEntry(sender, sender, AllianceStreamEntry.AllianceStreamEvent.Demoted));
                 }
 
                 Alliances.Save(alliance);

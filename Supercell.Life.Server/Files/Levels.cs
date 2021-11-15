@@ -68,7 +68,7 @@
                     {
                         string value = questCsvTable.GetValue("LevelFile", currentQuest.Offset + j);
 
-                        LogicQuest.LogicLevel level = new LogicQuest.LogicLevel(null, LogicJSONParser.ParseObject(File.ReadAllText($"Gamefiles/{value}")));
+                        LogicLevel level = new LogicLevel(null, LogicJSONParser.ParseObject(File.ReadAllText($"Gamefiles/{value}")));
 
                         if (Levels.Quests.ContainsKey(questCsv.GetDataByName(name).GlobalID))
                         {

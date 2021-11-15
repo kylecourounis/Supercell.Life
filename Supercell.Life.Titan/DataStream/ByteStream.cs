@@ -292,7 +292,7 @@
         /// </summary>
         public void Write(byte[] bytes, int length)
         {
-            Array.Copy(bytes, 0, this.Buffer, this.Offset, length);
+            System.Buffer.BlockCopy(bytes, 0, this.Buffer, this.Offset, length);
         }
 
         /// <summary>
@@ -303,7 +303,7 @@
             if (this.Buffer.Length < this.Offset + count)
             {
                 byte[] nBuffer = new byte[this.Buffer.Length * 2 > this.Buffer.Length + count ? this.Buffer.Length * 2 : this.Buffer.Length + count];
-                Array.Copy(this.Buffer, 0, nBuffer, 0, this.Offset);
+                System.Buffer.BlockCopy(this.Buffer, 0, nBuffer, 0, this.Offset);
                 this.Buffer = nBuffer;
             }
         }
@@ -412,15 +412,19 @@
         }
 
         /// <summary>
-        /// Converts this instance to a byte array.
+        /// Reads all of the bytes left in this instance.
         /// </summary>
-        public byte[] ToArray()
+        public byte[] ReadAllBytes()
         {
-            byte[] bytes = new byte[this.Length];
+            return this.ReadBytes(this.BytesLeft);
+        }
 
-            Array.Copy(this.Buffer, 0, bytes, 0, this.Length);
-
-            return bytes;
+        /// <summary>
+        /// Returns <see cref="ByteStream.Buffer"/>.
+        /// </summary>
+        public byte[] GetBuffer()
+        {
+            return this.Buffer;
         }
 
         /// <summary>
@@ -438,14 +442,6 @@
                     this.Buffer = buffer;
                 }
             }
-        }
-
-        /// <summary>
-        /// Reads all of the bytes left in this instance.
-        /// </summary>
-        public byte[] ReadAllBytes()
-        {
-            return this.ReadBytes(this.BytesLeft);
         }
 
         /// <summary>

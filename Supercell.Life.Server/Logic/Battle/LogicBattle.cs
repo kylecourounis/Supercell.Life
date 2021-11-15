@@ -1,4 +1,4 @@
-﻿namespace Supercell.Life.Server.Logic.Attack
+﻿namespace Supercell.Life.Server.Logic.Battle
 {
     using System;
     using System.Collections.Concurrent;

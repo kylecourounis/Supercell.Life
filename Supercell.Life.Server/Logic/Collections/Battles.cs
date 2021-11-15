@@ -3,8 +3,9 @@
     using System.Collections.Concurrent;
     using System.Threading;
 
-    using Supercell.Life.Server.Logic.Attack;
     using Supercell.Life.Titan.Logic.Math;
+
+    using Supercell.Life.Server.Logic.Battle;
 
     internal static class Battles
     {

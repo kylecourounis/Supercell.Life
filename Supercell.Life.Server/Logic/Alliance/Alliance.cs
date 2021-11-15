@@ -12,7 +12,7 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Enums;
-    using Supercell.Life.Server.Logic.Alliance.Streams;
+    using Supercell.Life.Server.Logic.Alliance;
     using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Logic.Avatar.Timers;
     using Supercell.Life.Server.Logic.Collections;
@@ -37,7 +37,7 @@
         [JsonProperty] internal Hiring Type = Hiring.Open;
         
         [JsonProperty] internal LogicArrayList<AllianceMember> Members;
-        [JsonProperty] internal LogicArrayList<StreamEntry> Entries;
+        [JsonProperty] internal LogicArrayList<AllianceStreamEntry> Entries;
 
         internal LogicTeamGoalData TeamGoal => (LogicTeamGoalData)CSV.Tables.Get(Gamefile.TeamGoals).GetDataByName("clear_bats0");
 
@@ -85,7 +85,7 @@
         internal Alliance()
         {
             this.Members = new LogicArrayList<AllianceMember>(50);
-            this.Entries = new LogicArrayList<StreamEntry>(40);
+            this.Entries = new LogicArrayList<AllianceStreamEntry>(40);
         }
 
         /// <summary>
@@ -150,9 +150,9 @@
         }
 
         /// <summary>
-        /// Adds the specified <see cref="StreamEntry"/>.
+        /// Adds the specified <see cref="AllianceStreamEntry"/>.
         /// </summary>
-        internal void AddEntry(StreamEntry entry)
+        internal void AddEntry(AllianceStreamEntry entry)
         {
             entry.LowID = this.Seed;
 

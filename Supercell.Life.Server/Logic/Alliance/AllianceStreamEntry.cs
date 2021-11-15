@@ -1,4 +1,4 @@
-﻿namespace Supercell.Life.Server.Logic.Alliance.Streams
+﻿namespace Supercell.Life.Server.Logic.Alliance
 {
     using System;
 
@@ -7,7 +7,7 @@
     using Supercell.Life.Titan.DataStream;
     using Supercell.Life.Titan.Logic.Math;
     
-    internal class StreamEntry
+    internal class AllianceStreamEntry
     {
         [JsonProperty] internal int HighID;
         [JsonProperty] internal int LowID;
@@ -35,13 +35,13 @@
         [JsonProperty] internal int ExecutorHighID;
         [JsonProperty] internal int ExecutorLowID;
 
-        [JsonProperty] internal StreamEvent Event;
+        [JsonProperty] internal AllianceStreamEvent Event;
         [JsonProperty] internal string ExecutorName;
 
         [JsonProperty] internal string Message;
 
         /// <summary>
-        /// Gets the age of this <see cref="StreamEntry"/>.
+        /// Gets the age of this <see cref="AllianceStreamEntry"/>.
         /// </summary>
         [JsonIgnore]
         internal int Age
@@ -53,17 +53,17 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StreamEntry"/> class.
+        /// Initializes a new instance of the <see cref="AllianceStreamEntry"/> class.
         /// </summary>
-        internal StreamEntry()
+        internal AllianceStreamEntry()
         {
             // StreamEntry.
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StreamEntry"/> class.
+        /// Initializes a new instance of the <see cref="AllianceStreamEntry"/> class.
         /// </summary>
-        internal StreamEntry(AllianceMember member)
+        internal AllianceStreamEntry(AllianceMember member)
         {
             this.SenderHighID = member.HighID;
             this.SenderLowID  = member.LowID;
@@ -75,17 +75,17 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StreamEntry"/> class.
+        /// Initializes a new instance of the <see cref="AllianceStreamEntry"/> class.
         /// </summary>
-        internal StreamEntry(AllianceMember member, string message) : this(member)
+        internal AllianceStreamEntry(AllianceMember member, string message) : this(member)
         {
             this.Message = message;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StreamEntry"/> class.
+        /// Initializes a new instance of the <see cref="AllianceStreamEntry"/> class.
         /// </summary>
-        internal StreamEntry(AllianceMember member, AllianceMember executor, StreamEvent streamEvent) : this(member)
+        internal AllianceStreamEntry(AllianceMember member, AllianceMember executor, AllianceStreamEvent streamEvent) : this(member)
         {
             this.ExecutorHighID = executor.HighID;
             this.ExecutorLowID  = executor.LowID;
@@ -159,7 +159,7 @@
         }
         #endregion
 
-        internal enum StreamEvent
+        internal enum AllianceStreamEvent
         {
             Kick = 1,
             Accepted,

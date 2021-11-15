@@ -6,8 +6,8 @@
 
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
-    using Supercell.Life.Server.Logic.Attack;
     using Supercell.Life.Server.Logic.Avatar;
+    using Supercell.Life.Server.Logic.Battle;
     using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol;

@@ -1,4 +1,4 @@
-﻿namespace Supercell.Life.Server.Logic.Attack
+﻿namespace Supercell.Life.Server.Logic.Battle
 {
     using Supercell.Life.Titan.Logic;
     using Supercell.Life.Titan.Logic.Json;

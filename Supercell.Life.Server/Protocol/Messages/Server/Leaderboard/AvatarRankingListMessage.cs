@@ -33,10 +33,7 @@
 
             this.Stream.WriteInt(avatarList.Count);
 
-            foreach (LogicClientAvatar avatar in avatarList)
-            {
-                this.EncodeRankingEntry(avatar);
-            }
+            avatarList.ForEach(this.EncodeRankingEntry);
         }
 
         /// <summary>

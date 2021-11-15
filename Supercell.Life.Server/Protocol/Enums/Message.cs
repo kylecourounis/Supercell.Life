@@ -60,6 +60,7 @@
         AllianceRankingList       = 24401,
         AvatarRankingList         = 24403,
         AvatarStream              = 24411,
+        AvatarStreamEntry         = 24412,
         GlobalChatLine            = 24715,
         Disconnected              = 25892,
     }

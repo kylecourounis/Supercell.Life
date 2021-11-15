@@ -1,12 +1,12 @@
 ﻿namespace Supercell.Life.Server.Protocol.Messages.Server
 {
-    using Supercell.Life.Server.Logic.Alliance.Streams;
+    using Supercell.Life.Server.Logic.Alliance;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
 
     internal class AllianceStreamEntryMessage : PiranhaMessage
     {
-        private readonly StreamEntry StreamEntry;
+        private readonly AllianceStreamEntry StreamEntry;
 
         /// <summary>
         /// The service node for this message.
@@ -22,7 +22,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="AllianceStreamEntryMessage"/> class.
         /// </summary>
-        internal AllianceStreamEntryMessage(Connection connection, StreamEntry streamEntry) : base(connection)
+        internal AllianceStreamEntryMessage(Connection connection, AllianceStreamEntry streamEntry) : base(connection)
         {
             this.Type        = Message.AllianceStreamEntry;
             this.StreamEntry = streamEntry;

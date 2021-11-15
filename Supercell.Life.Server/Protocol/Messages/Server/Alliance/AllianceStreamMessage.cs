@@ -1,6 +1,6 @@
 ﻿namespace Supercell.Life.Server.Protocol.Messages.Server
 {
-    using Supercell.Life.Server.Logic.Alliance.Streams;
+    using Supercell.Life.Server.Logic.Alliance;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
 
@@ -29,10 +29,10 @@
         {
             this.Stream.WriteInt(this.Connection.GameMode.Avatar.Alliance.Entries.Count);
 
-            foreach (StreamEntry entry in this.Connection.GameMode.Avatar.Alliance.Entries)
+            this.Connection.GameMode.Avatar.Alliance.Entries.ForEach(entry =>
             {
                 entry.Encode(this.Stream);
-            }
+            });
         }
     }
 }
