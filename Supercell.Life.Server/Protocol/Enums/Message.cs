@@ -26,6 +26,7 @@
         LeaveAlliance             = 14308,
         ChatToAlliance            = 14315,
         ChangeAllianceSettings    = 14316,
+        AllianceInvitation        = 14322,
         AskForAvatarProfile       = 14325,
         AskForAllianceRankingList = 14401,
         AskForAvatarRankingList   = 14403,

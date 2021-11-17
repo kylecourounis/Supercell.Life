@@ -101,7 +101,7 @@
                         command.Execute(this.Connection.GameMode);
                     }
                 }
-                else Debugger.Error($"Execute command failed! Command should already executed. (type={command.Type}, server_tick)");
+                else Debugger.Error($"Execute command failed! Command should have already executed. (type={command.Type}, server_tick)");
             }
             else Debugger.Error("Execute command failed! subtick is not valid.");
         }
@@ -246,6 +246,10 @@
                 case Command.FinishShipUpgrade:
                 {
                     return new LogicFinishShipUpgradeCommand(connection);
+                }
+                case Command.SendAllianceMail:
+                {
+                    return new LogicSendAllianceMailCommand(connection);
                 }
                 case Command.UnlockSpellSlot:
                 {

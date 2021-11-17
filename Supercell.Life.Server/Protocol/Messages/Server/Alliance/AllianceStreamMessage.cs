@@ -31,6 +31,7 @@
 
             this.Connection.GameMode.Avatar.Alliance.Entries.ForEach(entry =>
             {
+                this.Stream.WriteInt((int)entry.StreamType);
                 entry.Encode(this.Stream);
             });
         }

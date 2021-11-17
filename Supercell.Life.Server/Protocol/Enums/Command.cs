@@ -21,6 +21,7 @@
         BuyEnergyPackage   = 524,
         UpgradeShip        = 526,
         FinishShipUpgrade  = 527,
+        SendAllianceMail   = 528,
         UnlockSpellSlot    = 530,
         UnlockSpell        = 531,
         BrewSpell          = 532,

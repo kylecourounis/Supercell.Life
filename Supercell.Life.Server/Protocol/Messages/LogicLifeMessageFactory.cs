@@ -109,6 +109,10 @@
                 {
                     return new ChangeAllianceSettingsMessage(connection, stream);
                 }
+                case Message.AllianceInvitation:
+                {
+                    return new SendAllianceInvitationMessage(connection, stream);
+                }
                 case Message.AskForAvatarProfile:
                 {
                     return new AskForAvatarProfileMessage(connection, stream);

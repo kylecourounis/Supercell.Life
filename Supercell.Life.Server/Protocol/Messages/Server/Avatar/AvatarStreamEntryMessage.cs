@@ -30,6 +30,7 @@
 
         internal override void Encode()
         {
+            this.Stream.WriteInt((int)this.StreamEntry.StreamType);
             this.StreamEntry.Encode(this.Stream);
         }
     }

@@ -46,7 +46,7 @@
 
                 avatar.Save();
 
-                if (alliance.Members.Size == 0)
+                if (alliance.Members.Size == 1)
                 {
                     Alliances.Delete(alliance);
                 }

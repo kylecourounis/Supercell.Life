@@ -1,7 +1,6 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
     using Supercell.Life.Titan.DataStream;
-    using Supercell.Life.Titan.Logic.Enums;
     using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Math;
 
@@ -52,9 +51,9 @@
         {
             var battle = gamemode.Battle;
 
-            if (battle == null && gamemode.Avatar.Connection.State == State.Battle)
+            if (battle == null)
             {
-                if (gamemode.Avatar.OngoingQuestData.Data.QuestType != "PvP")
+                if (gamemode.Avatar.OngoingQuestData.Data.QuestType != "Unlock" || gamemode.Avatar.OngoingQuestData.Data.QuestType != "PvP")
                 {
                     if (this.DirectionX + 256 >= 512)
                     {
@@ -78,11 +77,10 @@
                     gamemode.Avatar.OngoingQuestData.SublevelMoveCount += 1;
 
                     var ongoingLevel = gamemode.Avatar.OngoingQuestData.Levels[gamemode.Avatar.OngoingQuestData.Level];
-                    ongoingLevel.Battles[gamemode.Avatar.Quests[gamemode.Avatar.OngoingQuestData.GlobalID].Levels[0].CurrentBattle].CheckCollision(this.DirectionX, this.DirectionY);
+                    ongoingLevel.Battles[ongoingLevel.CurrentBattle].CheckCollision(this.DirectionX, this.DirectionY);
                 }
             }
-
-            if (battle != null)
+            else
             {
                 battle.ResetTurn(gamemode.Avatar);
 
@@ -90,11 +88,11 @@
 
                 LogicMoveCharacterCommand cmd = new LogicMoveCharacterCommand(opponent.Connection)
                 {
-                    DirectionX     = -this.DirectionX,
-                    DirectionY     = -this.DirectionY,
-                    Value          = this.Value,
+                    DirectionX = -this.DirectionX,
+                    DirectionY = -this.DirectionY,
+                    Value = this.Value,
                     ExecuteSubTick = this.ExecuteSubTick,
-                    ExecutorID     = this.ExecutorID
+                    ExecutorID = this.ExecutorID
                 };
 
                 battle.EnqueueCommand(this, cmd);

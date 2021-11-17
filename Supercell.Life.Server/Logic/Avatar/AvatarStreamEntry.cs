@@ -1,113 +1,120 @@
 ﻿namespace Supercell.Life.Server.Logic.Avatar
 {
-    using Supercell.Life.Server.Files.CsvHelpers;
+    using System;
+
+    using Newtonsoft.Json;
+
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic.Avatar.Entries;
+    using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Titan.DataStream;
     using Supercell.Life.Titan.Logic.Math;
 
     internal class AvatarStreamEntry
     {
         internal LogicClientAvatar Avatar;
+        internal LogicClientAvatar Sender;
+        
+        [JsonProperty] internal int HighID;
+        [JsonProperty] internal int LowID;
 
-        internal LogicLong SenderAvatarID;
+        [JsonProperty] internal int SenderHighID;
+        [JsonProperty] internal int SenderLowID;
 
-        internal string SenderName;
+        [JsonProperty] internal string SenderName;
 
-        internal int AgeSeconds;
+        [JsonProperty] internal DateTime Created = DateTime.UtcNow;
 
-        internal bool Removed;
+        [JsonProperty] internal bool IsRemoved;
+        [JsonProperty] internal bool IsNew;
 
-        internal bool New;
+        [JsonProperty] internal AvatarStreamType StreamType;
 
-        internal bool Dismissed;
+        /// <summary>
+        /// Gets the age of this <see cref="AvatarStreamEntry"/>.
+        /// </summary>
+        [JsonIgnore]
+        internal int Age
+        {
+            get
+            {
+                return (int)DateTime.UtcNow.Subtract(this.Created).TotalSeconds;
+            }
+        }
 
-        internal int StreamType;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AvatarStreamEntry"/> class.
+        /// </summary>
+        internal AvatarStreamEntry()
+        {
+            // AvatarStreamEntry
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AvatarStreamEntry"/> class.
         /// </summary>
         internal AvatarStreamEntry(LogicClientAvatar avatar)
         {
-            this.Avatar = avatar;
+            if (avatar != null)
+            {
+                this.Avatar = avatar;
+                this.LowID  = this.Avatar.StreamEntries.Count + 1;
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AvatarStreamEntry"/> class.
+        /// </summary>
+        internal AvatarStreamEntry(LogicClientAvatar avatar, LogicClientAvatar sender) : this(avatar)
+        {
+            this.SetSender(sender);
         }
 
         /// <summary>
         /// Encodes this instance.
         /// </summary>
-        internal void Encode(ChecksumEncoder encoder)
+        internal virtual void Encode(ChecksumEncoder encoder)
         {
-            this.EncodeHeader(encoder); // sub_C06A4
+            encoder.WriteLogicLong(new LogicLong(this.HighID, this.LowID));
 
-            switch (this.StreamType)
-            {
-                case 0: // sub_13668
-                {
-                    encoder.WriteString("");
-                    
-                    encoder.WriteInt(0);
-                    encoder.WriteInt(0);
-                    encoder.WriteInt(0);
-                    encoder.WriteInt(0);
+            encoder.WriteLogicLong(new LogicLong(this.SenderHighID, this.SenderLowID));
+            encoder.WriteString(this.SenderName);
 
-                    encoder.WriteByte(0);
+            encoder.WriteInt(0);
+            encoder.WriteInt(0);
+            encoder.WriteInt(this.Age);
 
-                    // Only writes if above byte is equal to 1
-                    encoder.WriteInt(0);
-                    encoder.WriteLong(0);
-
-                    break;
-                }
-                case 2: // sub_97F54
-                {
-                    encoder.WriteLogicLong(0);
-                    encoder.WriteString("");
-
-                    encoder.WriteDataReference(null);
-                    encoder.WriteString("");
-
-                    encoder.WriteByte(0);
-
-                    // Only writes if above byte is equal to 1
-                    encoder.WriteLogicLong(0);
-
-                    break;
-                }
-                case 3: // sub_2F344
-                {
-                    encoder.WriteLogicLong(0);
-                    encoder.WriteString("");
-                    encoder.WriteDataReference(null);
-
-                    break;
-                }
-                case 6: // sub_135394
-                {
-                    encoder.WriteInt(0);
-                    encoder.WriteInt(0);
-
-                    break;
-                }
-            }
+            encoder.WriteBoolean(this.IsRemoved);
+            encoder.WriteBoolean(this.IsNew);
         }
 
         /// <summary>
-        /// Encodes the header for this instance.
+        /// Sets the sender of this <see cref="AvatarStreamEntry"/>.
         /// </summary>
-        private void EncodeHeader(ChecksumEncoder encoder)
+        internal void SetSender(LogicClientAvatar avatar)
         {
-            encoder.WriteInt(this.StreamType);
+            if (avatar == null)
+            {
+                this.Sender = Avatars.Get(new LogicLong(this.SenderHighID, this.SenderLowID));
+            }
+            else
+            {
+                this.Sender       = avatar;
 
-            encoder.WriteLogicLong(this.Avatar.Identifier);
-            encoder.WriteLogicLong(this.Avatar.Identifier);
+                this.SenderHighID = avatar.HighID;
+                this.SenderLowID  = avatar.LowID;
+                this.SenderName   = avatar.Name;
+            }
+        }
 
-            encoder.WriteString(this.Avatar.Name);
-
-            encoder.WriteInt(0);
-            encoder.WriteInt(0);
-            encoder.WriteInt(0);
-
-            encoder.WriteByte(0);
-            encoder.WriteByte(0);
+        internal enum AvatarStreamType
+        {
+            BattleLog,
+            AllianceJoin   = 3,
+            AllianceInvite = 4,
+            AllianceKick   = 5,
+            AllianceMail   = 6,
+            Unknown        = 7
         }
     }
 }

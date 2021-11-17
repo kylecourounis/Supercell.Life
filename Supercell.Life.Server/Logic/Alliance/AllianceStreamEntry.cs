@@ -57,7 +57,7 @@
         /// </summary>
         internal AllianceStreamEntry()
         {
-            // StreamEntry.
+            // AllianceStreamEntry.
         }
 
         /// <summary>
@@ -93,43 +93,41 @@
             this.Event          = streamEvent;
         }
 
-        internal void Encode(ByteStream stream)
+        internal void Encode(ChecksumEncoder encoder)
         {
             if (this.StreamType == AllianceStreamType.Chat)
             {
-                this.EncodeHeader(stream);
+                this.EncodeHeader(encoder);
 
-                stream.WriteString(this.Message);
+                encoder.WriteString(this.Message);
             }
             else
             {
-                this.EncodeHeader(stream);
+                this.EncodeHeader(encoder);
 
-                stream.WriteInt((int)this.Event);
-                stream.WriteLogicLong(new LogicLong(this.ExecutorHighID, this.ExecutorLowID));
-                stream.WriteString(this.ExecutorName);
+                encoder.WriteInt((int)this.Event);
+                encoder.WriteLogicLong(new LogicLong(this.ExecutorHighID, this.ExecutorLowID));
+                encoder.WriteString(this.ExecutorName);
             }
         }
 
         /// <summary>
         /// Encodes this instance.
         /// </summary>
-        internal void EncodeHeader(ByteStream stream)
+        internal void EncodeHeader(ChecksumEncoder encoder)
         {
-            stream.WriteInt((int)this.StreamType);
+            encoder.WriteLogicLong(new LogicLong(this.HighID, this.LowID));
+            encoder.WriteLogicLong(new LogicLong(this.HighID, this.LowID));
 
-            stream.WriteLogicLong(this.HighID, this.LowID);
-            stream.WriteLogicLong(this.HighID, this.LowID);
+            encoder.WriteString(this.SenderName);
 
-            stream.WriteString(this.SenderName);
+            encoder.WriteInt(this.SenderLevel);
+            encoder.WriteInt(this.SenderLeague);
+            encoder.WriteInt((int)this.SenderRole);
 
-            stream.WriteInt(this.SenderLevel);
-            stream.WriteInt(this.SenderLeague);
-            stream.WriteInt((int)this.SenderRole);
+            encoder.WriteInt(this.Age);
 
-            stream.WriteInt(this.Age);
-
-            stream.WriteBoolean(false); // ?
+            encoder.WriteBoolean(false); // ?
         }
 
         #region ShouldSerialize
