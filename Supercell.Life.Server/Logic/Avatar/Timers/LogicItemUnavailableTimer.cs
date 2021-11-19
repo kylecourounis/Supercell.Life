@@ -4,8 +4,6 @@
 
     using Supercell.Life.Titan.Logic.Math;
 
-    using Supercell.Life.Server.Helpers;
-
     internal class LogicItemUnavailableTimer
     {
         internal LogicClientAvatar Avatar;
@@ -91,7 +89,7 @@
         /// </summary>
         internal void Tick()
         {
-            if (this.Timer.Started)
+            if (this.Started)
             {
                 this.Update();
 

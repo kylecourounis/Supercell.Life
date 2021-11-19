@@ -5,11 +5,9 @@
 
     using Supercell.Life.Titan.Logic.Enums;
 
-    using Supercell.Life.Server.Logic.Avatar;
-
     internal static class Waiting
     {
-        private static ConcurrentQueue<LogicClientAvatar> Queue;
+        private static ConcurrentQueue<LogicGameMode> Queue;
 
         private static object Gate;
 
@@ -18,32 +16,32 @@
         /// </summary>
         internal static void Init()
         {
-            Waiting.Queue = new ConcurrentQueue<LogicClientAvatar>();
+            Waiting.Queue = new ConcurrentQueue<LogicGameMode>();
             Waiting.Gate  = new object();
         }
 
         /// <summary>
-        /// Dequeues and returns a <see cref="LogicClientAvatar"/> from this instance.
+        /// Dequeues and returns a <see cref="LogicGameMode"/> from this instance.
         /// </summary>
-        internal static LogicClientAvatar Dequeue()
+        internal static LogicGameMode Dequeue()
         {
             lock (Waiting.Gate)
             {
                 if (Waiting.Queue.Count > 0)
                 {
-                    if (Waiting.Queue.TryDequeue(out LogicClientAvatar avatar))
+                    if (Waiting.Queue.TryDequeue(out LogicGameMode gamemode))
                     {
-                        if (avatar.Connection.State != State.Matchmaking)
+                        if (gamemode.Connection.State != State.Matchmaking)
                         {
                             Debugger.Warning("Dequeued avatar was not in a matchmaking state.");
 
                             while (Waiting.Queue.Count > 0)
                             {
-                                if (Waiting.Queue.TryDequeue(out avatar))
+                                if (Waiting.Queue.TryDequeue(out gamemode))
                                 {
-                                    if (avatar.Connection.State == State.Matchmaking)
+                                    if (gamemode.Connection.State == State.Matchmaking)
                                     {
-                                        return avatar;
+                                        return gamemode;
                                     }
 
                                     Debugger.Warning("Dequeued avatar was not in a matchmaking state.");
@@ -58,7 +56,7 @@
                         }
                         else
                         {
-                            return avatar;
+                            return gamemode;
                         }
                     }
                     else
@@ -76,14 +74,14 @@
         }
 
         /// <summary>
-        /// Enqueues the specified player.
+        /// Enqueues the specified gamemode.
         /// </summary>
-        internal static void Enqueue(LogicClientAvatar avatar)
+        internal static void Enqueue(LogicGameMode gamemode)
         {
-            if (!Waiting.Queue.Contains(avatar))
+            if (!Waiting.Queue.Contains(gamemode))
             {
-                avatar.Connection.State = State.Matchmaking;
-                Waiting.Queue.Enqueue(avatar);
+                gamemode.Connection.State = State.Matchmaking;
+                Waiting.Queue.Enqueue(gamemode);
             }
         }
     }

@@ -34,7 +34,9 @@
             {
                 battle.ResetTurn(gamemode.Avatar);
 
-                var cmd = new LogicMultiplayerTurnTimedOutCommand(battle.Avatars.Find(avatar => avatar.Identifier != gamemode.Avatar.Identifier).Connection)
+                var enemy = battle.GetEnemy(gamemode.Avatar);
+
+                var cmd = new LogicMultiplayerTurnTimedOutCommand(enemy.Connection)
                 {
                     ExecuteSubTick = this.ExecuteSubTick,
                     ExecutorID     = this.ExecutorID

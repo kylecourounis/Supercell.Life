@@ -1,6 +1,7 @@
 ﻿namespace Supercell.Life.Server
 {
     using System;
+    using System.Drawing;
     using System.Reflection;
 
     using Supercell.Life.Titan.Core.Consoles;
@@ -8,6 +9,8 @@
 
     using Supercell.Life.Server.Core;
     using Supercell.Life.Server.Core.Consoles;
+
+    using Console = Colorful.Console;
 
     internal class Program
     {
@@ -28,17 +31,13 @@
             Console.SetWindowSize(Program.Width, Program.Height);
             Console.SetBufferSize(Program.Width, Program.Height);
 
-            Console.ForegroundColor = ConsoleColor.Magenta;
-
             Console.Write(@"
      _____                     _      
     / ____|                   | |     
    | (___  _ __ ___   __ _ ___| |__   
     \___ \| '_ ` _ \ / _` / __| '_ \ 
     ____) | | | | | | (_| \__ \ | | |
-   |_____/|_| |_| |_|\__,_|___/_| |_|");
-
-            Console.ForegroundColor = ConsoleColor.Green;
+   |_____/|_| |_| |_|\__,_|___/_| |_|", Color.Fuchsia);
 
             Console.Write(@"
         _                     _ 
@@ -48,9 +47,9 @@
        | |___| (_| | | | | (_| |
        |______\__,_|_| |_|\__,_|      
 
-            " + Environment.NewLine);
+            " + Environment.NewLine, Color.LimeGreen);
 
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = Color.White;
 
             Console.WriteLine("Starting..." + Environment.NewLine);
 

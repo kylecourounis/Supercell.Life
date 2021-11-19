@@ -39,7 +39,7 @@
 
             if (battle != null)
             {
-                var enemy = battle.Avatars.Find(avatar => avatar.Identifier != gamemode.Avatar.Identifier);
+                var enemy = battle.GetEnemy(gamemode.Avatar);
 
                 var cmd = new LogicSwapCharacterCommand(enemy.Connection)
                 {

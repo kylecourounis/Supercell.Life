@@ -47,7 +47,9 @@
 
             if (battle != null)
             {
-                LogicUseSpellCommand cmd = new LogicUseSpellCommand(battle.Avatars.Find(avatar => avatar.Identifier != gamemode.Avatar.Identifier).Connection)
+                var enemy = battle.GetEnemy(gamemode.Avatar);
+
+                LogicUseSpellCommand cmd = new LogicUseSpellCommand(enemy.Connection)
                 {
                     Spell          = this.Spell,
                     ExecuteSubTick = this.ExecuteSubTick,

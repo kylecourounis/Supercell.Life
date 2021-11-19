@@ -37,7 +37,7 @@ namespace Supercell.Life.Server.Protocol.Messages.Server
                 if (this.Connection.GameMode.Avatar != null)
                 {
                     this.Reason.AppendLine($"Your Player Name    : {this.Connection.GameMode.Avatar.Name}.");
-                    this.Reason.AppendLine($"Your Player ID      : {this.Connection.GameMode.Avatar.HighID}-{this.Connection.GameMode.Avatar.LowID}.");
+                    this.Reason.AppendLine($"Your Player ID      : {this.Connection.GameMode.Avatar.Identifier}.");
                 }
 
                 this.Reason.AppendLine();

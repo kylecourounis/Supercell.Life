@@ -33,11 +33,11 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            LogicClientAvatar opponent = Waiting.Dequeue();
+            LogicGameMode opponent = Waiting.Dequeue();
             
             if (opponent != null)
             {
-                LogicBattle battle = new LogicBattle(gamemode.Avatar, opponent)
+                LogicBattle battle = new LogicBattle(gamemode, opponent)
                 {
                     PvPTier = this.Quest
                 };
@@ -52,7 +52,7 @@
             else
             {
                 new PvpMatchmakeNotificationMessage(this.Connection).Send();
-                Waiting.Enqueue(gamemode.Avatar);
+                Waiting.Enqueue(gamemode);
             }
         }
     }

@@ -22,7 +22,7 @@
         {
             encoder.WriteInt(this.Subtick);
             encoder.WriteInt(this.Subtick);
-            encoder.WriteLogicLong(new LogicLong(this.Connection.GameMode.Avatar.HighID, this.Connection.GameMode.Avatar.LowID));
+            encoder.WriteLogicLong(this.Connection.GameMode.Avatar.Identifier);
         }
     }
 }

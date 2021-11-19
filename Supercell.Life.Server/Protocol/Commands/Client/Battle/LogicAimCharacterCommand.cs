@@ -41,7 +41,9 @@
 
             if (battle != null)
             {
-                LogicAimCharacterCommand cmd = new LogicAimCharacterCommand(battle.Avatars.Find(avatar => avatar.Identifier != gamemode.Avatar.Identifier).Connection)
+                var enemy = battle.GetEnemy(gamemode.Avatar);
+
+                LogicAimCharacterCommand cmd = new LogicAimCharacterCommand(enemy.Connection)
                 {
                     DirectionX     = -this.DirectionX,
                     DirectionY     = -this.DirectionY,

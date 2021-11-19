@@ -7,7 +7,6 @@
 
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
-    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Enums;
 
     internal class LogicBoosterTimer

@@ -84,7 +84,7 @@
             {
                 battle.ResetTurn(gamemode.Avatar);
 
-                var opponent = battle.Avatars.Find(avatar => avatar.Identifier != gamemode.Avatar.Identifier);
+                var opponent = battle.GetEnemy(gamemode.Avatar);
 
                 LogicMoveCharacterCommand cmd = new LogicMoveCharacterCommand(opponent.Connection)
                 {

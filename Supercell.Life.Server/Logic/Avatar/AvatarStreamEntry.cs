@@ -47,7 +47,7 @@
         /// </summary>
         internal AvatarStreamEntry()
         {
-            // AvatarStreamEntry
+            // AvatarStreamEntry.
         }
 
         /// <summary>
@@ -55,11 +55,8 @@
         /// </summary>
         internal AvatarStreamEntry(LogicClientAvatar avatar)
         {
-            if (avatar != null)
-            {
-                this.Avatar = avatar;
-                this.LowID  = this.Avatar.StreamEntries.Count + 1;
-            }
+            this.Avatar = avatar;
+            this.LowID  = this.Avatar.StreamEntries.Count + 1;
         }
 
         /// <summary>

@@ -39,8 +39,6 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            this.ShowValues();
-
             LogicClientAvatar avatar = Avatars.Get(this.Identifier);
 
             if (avatar != null)

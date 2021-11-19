@@ -34,7 +34,9 @@
 
             if (battle != null)
             {
-                LogicResignCommand cmd = new LogicResignCommand(battle.Avatars.Find(avatar => avatar.Identifier != gamemode.Avatar.Identifier).Connection);
+                var enemy = battle.GetEnemy(gamemode.Avatar);
+
+                LogicResignCommand cmd = new LogicResignCommand(enemy.Connection);
 
                 battle.EnqueueCommand(this, cmd);
 

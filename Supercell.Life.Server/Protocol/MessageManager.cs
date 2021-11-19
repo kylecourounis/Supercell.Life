@@ -80,7 +80,7 @@
                     catch (Exception exception)
                     {
                         Debugger.Error($"A {exception.GetType().Name} occured while handling the following message : ID {(int)message.Type}, Length {message.Length}, Version {message.Version}.");
-                        Debugger.Error($"{exception.Message} [{message.Connection.GameMode.Avatar.HighID}-{message.Connection.GameMode.Avatar.LowID}]" + Environment.NewLine + exception.StackTrace);
+                        Debugger.Error($"{exception.Message} [{message.Connection.GameMode.Avatar.Identifier}]" + Environment.NewLine + exception.StackTrace);
                     }
                 }
             }

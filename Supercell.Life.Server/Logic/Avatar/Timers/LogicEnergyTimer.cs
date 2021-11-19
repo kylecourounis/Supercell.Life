@@ -5,7 +5,6 @@
     using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Math;
 
-    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Game;
 
     internal class LogicEnergyTimer

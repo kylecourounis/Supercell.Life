@@ -72,8 +72,8 @@
             replayJSON.Put("challenge", new LogicJSONNumber());
             replayJSON.Put("starting_player", new LogicJSONNumber(this.Battle.StartingPlayer));
 
-            replayJSON.Put("avatar", this.Battle.Avatars[0].GetAvatarJSON());
-            replayJSON.Put("avatar2", this.Battle.Avatars[1].GetAvatarJSON());
+            replayJSON.Put("avatar", this.Battle.GameModes[0].Avatar.GetAvatarJSON());
+            replayJSON.Put("avatar2", this.Battle.GameModes[1].Avatar.GetAvatarJSON());
 
             replayJSON.Put("end_tick", new LogicJSONNumber());
             replayJSON.Put("cmd", this.Battle.ReplayCommands);

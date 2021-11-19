@@ -44,7 +44,7 @@
                             Y         = this.Y
                         }.Send();
 
-                        new BattleEventMessage(this.Connection.GameMode.Battle.Avatars.Find(avatar => avatar.Identifier != this.Connection.GameMode.Avatar.Identifier).Connection)
+                        new BattleEventMessage(this.Connection.GameMode.Battle.GetEnemy(this.Connection.GameMode.Avatar).Connection)
                         {
                             EventType = this.EventType,
                             X         = this.X,
@@ -62,7 +62,7 @@
                             Y         = this.Y
                         }.Send();
 
-                        new BattleEventMessage(this.Connection.GameMode.Battle.Avatars.Find(avatar => avatar.Identifier != this.Connection.GameMode.Avatar.Identifier).Connection)
+                        new BattleEventMessage(this.Connection.GameMode.Battle.GetEnemy(this.Connection.GameMode.Avatar).Connection)
                         {
                             EventType = this.EventType,
                             X         = -this.X,

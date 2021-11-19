@@ -7,6 +7,7 @@
     using System.Timers;
 
     using Supercell.Life.Titan.DataStream;
+    using Supercell.Life.Titan.Logic;
     using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Math;
 
@@ -26,8 +27,6 @@
         internal int HighID;
         internal int LowID;
 
-        internal int Seed;
-
         internal DateTime StartTime;
 
         internal bool Started;
@@ -37,20 +36,12 @@
         internal LogicEventsData Event;
 
         internal Timer BattleTick;
-
-        internal List<LogicClientAvatar> Avatars
-        {
-            get
-            {
-                return this.CommandQueues.Keys.ToList();
-            }
-        }
-
+        
         internal int StartingPlayer;
 
         internal LogicLong WhoseTurn;
 
-        internal Dictionary<LogicClientAvatar, ConcurrentQueue<LogicCommand>> CommandQueues;
+        internal Dictionary<LogicGameMode, ConcurrentQueue<LogicCommand>> CommandQueues;
 
         internal LogicJSONArray ReplayCommands;
 
@@ -66,13 +57,24 @@
         }
 
         /// <summary>
+        /// Gets a list of the instances of <see cref="LogicGameMode"/>s in this <see cref="LogicBattle"/>.
+        /// </summary>
+        internal LogicArrayList<LogicGameMode> GameModes
+        {
+            get
+            {
+                return (LogicArrayList<LogicGameMode>)this.CommandQueues.Keys.ToList();
+            }
+        }
+
+        /// <summary>
         /// Gets a value indicating whether all players are disconnected.
         /// </summary>
         internal bool AllDisconnected
         {
             get
             {
-                return this.Avatars.All(avatar => avatar.Connection.GameMode.Battle == null);
+                return this.GameModes.All(avatar => avatar.Connection.GameMode.Battle == null);
             }
         }
 
@@ -104,12 +106,12 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicBattle"/> class.
         /// </summary>
-        internal LogicBattle(LogicClientAvatar avatar1, LogicClientAvatar avatar2) : this()
+        internal LogicBattle(LogicGameMode gamemode1, LogicGameMode gamemode2) : this()
         {
-            this.CommandQueues = new Dictionary<LogicClientAvatar, ConcurrentQueue<LogicCommand>>
+            this.CommandQueues = new Dictionary<LogicGameMode, ConcurrentQueue<LogicCommand>>
             {
-                { avatar1, new ConcurrentQueue<LogicCommand>() },
-                { avatar2, new ConcurrentQueue<LogicCommand>() }
+                { gamemode1, new ConcurrentQueue<LogicCommand>() },
+                { gamemode2, new ConcurrentQueue<LogicCommand>() }
             };
 
             this.ReplayCommands = new LogicJSONArray();
@@ -124,8 +126,8 @@
             {
                 case 0:
                 {
-                    this.Avatars[0].Encode(stream);
-                    this.Avatars[1].Encode(stream);
+                    this.GameModes[0].Avatar.Encode(stream);
+                    this.GameModes[1].Avatar.Encode(stream);
 
                     stream.WriteInt(this.StartingPlayer == 0 ? 1 : 0); // Coin toss to determine who goes first
 
@@ -133,8 +135,8 @@
                 }
                 case 1:
                 {
-                    this.Avatars[1].Encode(stream);
-                    this.Avatars[0].Encode(stream);
+                    this.GameModes[1].Avatar.Encode(stream);
+                    this.GameModes[0].Avatar.Encode(stream);
 
                     stream.WriteInt(this.StartingPlayer == 1 ? 1 : 0);
 
@@ -153,6 +155,30 @@
         }
 
         /// <summary>
+        /// Gets the enemy of the specified <see cref="LogicClientAvatar"/>.
+        /// </summary>
+        internal LogicClientAvatar GetEnemy(LogicClientAvatar avatar)
+        {
+            return this.GameModes.Find(gamemode => gamemode.Avatar.Identifier != avatar.Identifier).Avatar;
+        }
+
+        /// <summary>
+        /// Gets the enemy's command queue.
+        /// </summary>
+        internal ConcurrentQueue<LogicCommand> GetOwnQueue(LogicClientAvatar avatar)
+        {
+            return this.CommandQueues[this.GameModes.Find(gamemode => gamemode.Avatar.Identifier == avatar.Identifier)];
+        }
+
+        /// <summary>
+        /// Gets the enemy's command queue.
+        /// </summary>
+        internal ConcurrentQueue<LogicCommand> GetEnemyQueue(LogicClientAvatar nonEnemy)
+        {
+            return this.CommandQueues[this.GameModes.Find(gamemode => gamemode.Avatar.Identifier != nonEnemy.Identifier)];
+        }
+
+        /// <summary>
         /// Starts this instance.
         /// </summary>
         internal void Start()
@@ -168,10 +194,10 @@
 
                     this.StartingPlayer = Loader.Random.Next(0, 1);
 
-                    foreach (LogicClientAvatar avatar in this.Avatars.Where(avatar => avatar.Connection != null))
+                    foreach (LogicGameMode gamemode in this.GameModes.Where(gamemode => gamemode.Connection != null))
                     {
-                        new StopHomeLogicMessage(avatar.Connection).Send();
-                        new SectorStateMessage(avatar.Connection, side)
+                        new StopHomeLogicMessage(gamemode.Connection).Send();
+                        new SectorStateMessage(gamemode.Connection, side)
                         {
                             Battle = this
                         }.Send();
@@ -210,22 +236,6 @@
         }
 
         /// <summary>
-        /// Gets the enemy's command queue.
-        /// </summary>
-        internal ConcurrentQueue<LogicCommand> GetOwnQueue(LogicClientAvatar avatar)
-        {
-            return this.CommandQueues[this.Avatars.Find(a => a.Identifier == avatar.Identifier)];
-        }
-
-        /// <summary>
-        /// Gets the enemy's command queue.
-        /// </summary>
-        internal ConcurrentQueue<LogicCommand> GetEnemyQueue(LogicClientAvatar nonEnemy)
-        {
-            return this.CommandQueues[this.Avatars.Find(avatar => avatar.Identifier != nonEnemy.Identifier)];
-        }
-
-        /// <summary>
         /// Ticks this instance.
         /// </summary>
         private void Tick(object sender, ElapsedEventArgs args)
@@ -236,11 +246,11 @@
                 {
                     Debugger.Info("Tick.");
 
-                    foreach (LogicClientAvatar avatar in this.Avatars)
+                    foreach (LogicGameMode gamemode in this.GameModes)
                     {
-                        new SectorHeartbeatMessage(avatar.Connection)
+                        new SectorHeartbeatMessage(gamemode.Connection)
                         {
-                            Commands = this.CommandQueues[avatar]
+                            Commands = this.CommandQueues[gamemode]
                         }.Send();
                     }
                     
@@ -265,7 +275,7 @@
         /// </summary>
         internal void ResetTurn(LogicClientAvatar turnFinished)
         {
-            this.WhoseTurn = this.Avatars.Find(avatar => avatar.Identifier != turnFinished.Identifier).Identifier;
+            this.WhoseTurn = this.GetEnemy(turnFinished).Identifier;
 
             Debugger.Debug($"{this.WhoseTurn} turn.");
         }
@@ -283,9 +293,9 @@
                 {
                     this.BattleTick.Stop();
 
-                    foreach (LogicClientAvatar avatar in this.Avatars)
+                    foreach (LogicGameMode gamemode in this.GameModes)
                     {
-                        new BattleResultMessage(avatar.Connection).Send();
+                        new BattleResultMessage(gamemode.Connection).Send();
                     }
 
                     Battles.Remove(this);
@@ -300,6 +310,5 @@
                 Debugger.Error("Battle already stopped when Stop() was called.");
             }
         }
-
     }
 }
