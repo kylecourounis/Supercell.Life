@@ -48,19 +48,5 @@
             get;
             set;
         }
-
-        /// <summary>
-        /// Gets an empty instance of <see cref="GlobalChatLine"/>.
-        /// </summary>
-        internal static GlobalChatLine Empty
-        {
-            get
-            {
-                return new GlobalChatLine
-                {
-                    Message = string.Empty
-                };
-            }
-        }
     }
 }

@@ -1,5 +1,7 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
+    using System.Linq;
+
     using Supercell.Life.Titan.DataStream;
 
     using Supercell.Life.Server.Files;
@@ -15,6 +17,8 @@
         internal int DataType;
         internal LogicData Data;
 
+        internal int TauntIndex;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicBuyExtraCommand"/> class.
         /// </summary>
@@ -25,10 +29,10 @@
 
         internal override void Decode(ByteStream stream)
         {
-            this.DataType = stream.ReadInt();
-            this.Data     = stream.ReadDataReference();
+            this.DataType    = stream.ReadInt();
+            this.Data        = stream.ReadDataReference();
 
-            stream.ReadInt();
+            this.TauntIndex  = stream.ReadInt();
 
             base.Decode(stream);
         }
@@ -39,7 +43,7 @@
             {
                 if (this.DataType == 0)
                 {
-                    LogicTauntData taunt = (LogicTauntData) this.Data;
+                    LogicTauntData taunt = (LogicTauntData)this.Data;
 
                     if (!gamemode.Avatar.Extras.ContainsKey(taunt.GlobalID))
                     {
@@ -66,8 +70,14 @@
 
                             gamemode.Avatar.Resources.Remove(resource.GlobalID, taunt.Cost);
                         }
+                    }
 
-                        gamemode.Avatar.Extras.Set(taunt.GlobalID, 1);
+                    if (this.TauntIndex > -1)
+                    {
+                        var equippedTaunts = gamemode.Avatar.Extras.Values.Where(slot => slot.Count == 2).ToList();
+
+                        gamemode.Avatar.Extras.Set(equippedTaunts[this.TauntIndex].Id, 1);
+                        gamemode.Avatar.Extras.Set(taunt.GlobalID, 2);
                     }
                     else
                     {

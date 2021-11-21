@@ -29,7 +29,7 @@
             encoder.WriteInt(0);
             encoder.WriteInt(0);
 
-            this.WriteHeader(encoder);
+            base.Encode(encoder);
         }
 
         internal override void Execute(LogicGameMode gamemode)
@@ -88,7 +88,7 @@
                         
                     Debugger.Info($"Change {gamemode.Avatar.Score} trophy score [new {gamemode.Avatar.Score + v44}]");
 
-                    gamemode.Avatar.AddTrophies(v44);
+                    gamemode.Avatar.AddTrophyScoreHelper(v44);
                         
                     break;
                 }

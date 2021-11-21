@@ -21,8 +21,8 @@
 
         internal override void Encode()
         {
-            this.Stream.WriteInt(0);
-            this.Stream.WriteInt(0);
+            this.Stream.WriteInt(this.Connection.GameMode.Avatar.Time.ClientSubTick / 10);
+            this.Stream.WriteInt(this.Connection.GameMode.Avatar.Checksum);
 
             this.Stream.WriteInt(this.Commands.Count);
 

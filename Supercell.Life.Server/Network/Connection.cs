@@ -10,7 +10,11 @@
     using Supercell.Life.Titan.Logic.Enums;
 
     using Supercell.Life.Server.Logic;
+    using Supercell.Life.Server.Logic.Collections;
+    using Supercell.Life.Server.Logic.Game.Objects;
     using Supercell.Life.Server.Protocol;
+    using Supercell.Life.Server.Protocol.Messages;
+    using Supercell.Life.Server.Protocol.Messages.Server;
 
     internal class Connection
     {
@@ -80,6 +84,38 @@
                 }
 
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Sends a chat message.
+        /// </summary>
+        internal void SendChatMessage(string message, bool system = true)
+        {
+            if (system)
+            {
+                new GlobalChatLineMessage(this)
+                {
+                    Chat = new GlobalChatLine
+                    {
+                        Message = message,
+                        Sender  = this.GameMode.Avatar,
+                        System  = true
+                    }
+                }.Send();
+            }
+            else
+            {
+                Connections.ForEach(connection => new GlobalChatLineMessage(connection)
+                {
+                    Chat = new GlobalChatLine
+                    {
+                        Message = message,
+                        Sender  = this.GameMode.Avatar,
+                        WhoSent = this.GameMode.Avatar.Identifier == connection.GameMode.Avatar.Identifier,
+                        Regex   = true
+                    }
+                }.Send());
             }
         }
 

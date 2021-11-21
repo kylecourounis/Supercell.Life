@@ -10,9 +10,8 @@
     internal static class Battles
     {
         private static ConcurrentDictionary<LogicLong, LogicBattle> Pool;
-
         private static int Seed;
-
+        
         /// <summary>
         /// Gets a value indicating whether <see cref="Battles"/> is initialized.
         /// </summary>
@@ -21,7 +20,7 @@
             get;
             private set;
         }
-
+        
         /// <summary>
         /// Initializes the <see cref="Battles"/> class.
         /// </summary>
@@ -35,7 +34,7 @@
             Battles.Pool = new ConcurrentDictionary<LogicLong, LogicBattle>();
             Battles.Seed = 0;
 
-            Waiting.Init();
+            Matchmaking.Init();
 
             Battles.Initialized = true;
         }
@@ -45,9 +44,9 @@
         /// </summary>
         internal static void Add(LogicBattle battle)
         {
-            if (battle.LowID == 0)
+            if (battle.Identifier.Low == 0)
             {
-                battle.LowID = Interlocked.Increment(ref Battles.Seed);
+                battle.Identifier = new LogicLong(0, Interlocked.Increment(ref Battles.Seed));
             }
 
             if (Battles.Pool.ContainsKey(battle.Identifier))

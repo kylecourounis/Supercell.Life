@@ -7,16 +7,16 @@
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
 
-    internal class LogicAimCharacterCommand : LogicCommand
+    internal class LogicAimingArrowForReplayCommand : LogicCommand
     {
         internal int DirectionX, DirectionY;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogicAimCharacterCommand"/> class.
+        /// Initializes a new instance of the <see cref="LogicAimingArrowForReplayCommand"/> class.
         /// </summary>
-        public LogicAimCharacterCommand(Connection connection) : base(connection)
+        public LogicAimingArrowForReplayCommand(Connection connection) : base(connection)
         {
-            this.Type = Command.AimCharacter;
+            this.Type = Command.AimArrowForReplay;
         }
 
         internal override void Decode(ByteStream stream)
@@ -37,22 +37,7 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            var battle = gamemode.Battle;
-
-            if (battle != null)
-            {
-                var enemy = battle.GetEnemy(gamemode.Avatar);
-
-                LogicAimCharacterCommand cmd = new LogicAimCharacterCommand(enemy.Connection)
-                {
-                    DirectionX     = -this.DirectionX,
-                    DirectionY     = -this.DirectionY,
-                    ExecuteSubTick = this.ExecuteSubTick,
-                    ExecutorID     = this.ExecutorID
-                };
-                
-                battle.EnqueueCommand(this, cmd);
-            }
+            gamemode.Battle?.ReplayCommands.Add(this.SaveToJSON());
         }
 
         internal override void LoadCommandFromJSON(LogicJSONObject json)

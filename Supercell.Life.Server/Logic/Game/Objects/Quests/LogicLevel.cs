@@ -119,7 +119,7 @@
             /// <summary>
             /// Checks whether the character at the specified X and Y coordinates collided with an enemy in the battle.
             /// </summary>
-            internal void CheckCollision(int characterX, int characterY)
+            internal void CheckCollision(int dX, int dY)
             {
                 if (this.Enemies.Size > 0)
                 {
@@ -127,10 +127,8 @@
                     {
                         int enemyX = this.Enemies[i].X;
                         int enemyY = this.Enemies[i].Y;
-
-                        Debugger.Debug($"{characterX} ?= {enemyX} && {characterY} ?= {enemyY}");
-
-                        if (characterX == enemyX && characterY == enemyY)
+                        
+                        if (dX == enemyX && dY == enemyY)
                         {
                             Debugger.Debug(this.Enemies[i].Data);
 

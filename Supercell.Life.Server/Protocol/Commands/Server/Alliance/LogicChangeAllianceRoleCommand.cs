@@ -1,6 +1,7 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Server
 {
     using Supercell.Life.Titan.DataStream;
+    using Supercell.Life.Titan.Logic.Math;
 
     using Supercell.Life.Server.Logic.Alliance;
     using Supercell.Life.Server.Network;
@@ -8,7 +9,8 @@
 
     internal class LogicChangeAllianceRoleCommand : LogicServerCommand
     {
-        internal Alliance Alliance;
+        internal LogicLong AllianceID;
+
         internal Alliance.Role Role;
 
         /// <summary>
@@ -16,14 +18,23 @@
         /// </summary>
         public LogicChangeAllianceRoleCommand(Connection connection) : base(connection)
         {
-            this.Type     = Command.ChangeAllianceRole;
-            this.Alliance = this.Connection.GameMode.Avatar.Alliance;
+            this.Type = Command.ChangeAllianceRole;
+        }
+
+        internal override void Decode(ByteStream stream)
+        {
+            this.AllianceID = stream.ReadLogicLong();
+            this.Role       = (Alliance.Role)stream.ReadInt();
+
+            base.Decode(stream);
         }
 
         internal override void Encode(ChecksumEncoder encoder)
         {
-            encoder.WriteLogicLong(this.Alliance.Identifier);
+            encoder.WriteLogicLong(this.Connection.GameMode.Avatar.Alliance.Identifier);
             encoder.WriteInt((int)this.Role);
+
+            base.Encode(encoder);
         }
     }
 }

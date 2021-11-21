@@ -5,19 +5,19 @@
 
     using Supercell.Life.Titan.Logic.Enums;
 
-    internal static class Waiting
+    internal static class Matchmaking
     {
         private static ConcurrentQueue<LogicGameMode> Queue;
 
         private static object Gate;
 
         /// <summary>
-        /// Initializes the <see cref="Waiting"/> class.
+        /// Initializes the <see cref="Matchmaking"/> class.
         /// </summary>
         internal static void Init()
         {
-            Waiting.Queue = new ConcurrentQueue<LogicGameMode>();
-            Waiting.Gate  = new object();
+            Matchmaking.Queue = new ConcurrentQueue<LogicGameMode>();
+            Matchmaking.Gate  = new object();
         }
 
         /// <summary>
@@ -25,19 +25,19 @@
         /// </summary>
         internal static LogicGameMode Dequeue()
         {
-            lock (Waiting.Gate)
+            lock (Matchmaking.Gate)
             {
-                if (Waiting.Queue.Count > 0)
+                if (Matchmaking.Queue.Count > 0)
                 {
-                    if (Waiting.Queue.TryDequeue(out LogicGameMode gamemode))
+                    if (Matchmaking.Queue.TryDequeue(out LogicGameMode gamemode))
                     {
                         if (gamemode.Connection.State != State.Matchmaking)
                         {
                             Debugger.Warning("Dequeued avatar was not in a matchmaking state.");
 
-                            while (Waiting.Queue.Count > 0)
+                            while (Matchmaking.Queue.Count > 0)
                             {
-                                if (Waiting.Queue.TryDequeue(out gamemode))
+                                if (Matchmaking.Queue.TryDequeue(out gamemode))
                                 {
                                     if (gamemode.Connection.State == State.Matchmaking)
                                     {
@@ -78,10 +78,10 @@
         /// </summary>
         internal static void Enqueue(LogicGameMode gamemode)
         {
-            if (!Waiting.Queue.Contains(gamemode))
+            if (!Matchmaking.Queue.Contains(gamemode))
             {
                 gamemode.Connection.State = State.Matchmaking;
-                Waiting.Queue.Enqueue(gamemode);
+                Matchmaking.Queue.Enqueue(gamemode);
             }
         }
     }

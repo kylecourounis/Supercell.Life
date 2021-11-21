@@ -5,7 +5,6 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
-    using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Logic.Battle;
     using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Network;
@@ -33,7 +32,7 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            LogicGameMode opponent = Waiting.Dequeue();
+            LogicGameMode opponent = Matchmaking.Dequeue();
             
             if (opponent != null)
             {
@@ -52,7 +51,7 @@
             else
             {
                 new PvpMatchmakeNotificationMessage(this.Connection).Send();
-                Waiting.Enqueue(gamemode);
+                Matchmaking.Enqueue(gamemode);
             }
         }
     }

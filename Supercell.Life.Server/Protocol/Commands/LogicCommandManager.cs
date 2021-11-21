@@ -10,6 +10,7 @@
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
     using Supercell.Life.Server.Protocol.Commands.Client;
+    using Supercell.Life.Server.Protocol.Commands.Server;
 
     internal class LogicCommandManager
     {
@@ -27,7 +28,7 @@
             this.Commands       = new LogicArrayList<LogicCommand>();
             this.SectorCommands = new LogicArrayList<LogicCommand>();
         }
-
+        
         /// <summary>
         /// Decodes a <see cref="LogicCommand"/>.
         /// </summary>
@@ -175,6 +176,14 @@
         {
             switch ((Command)type)
             {
+                case Command.JoinAlliance:
+                {
+                    return new LogicJoinAllianceCommand(connection);
+                }
+                case Command.ChangeAllianceRole:
+                {
+                    return new LogicChangeAllianceRoleCommand(connection);
+                }
                 case Command.StartQuest:
                 {
                     return new LogicStartQuestCommand(connection);
@@ -311,9 +320,9 @@
                 {
                     return new LogicSpeechBubbleForReplayCommand(connection);
                 }
-                case Command.AimCharacter:
+                case Command.AimArrowForReplay:
                 {
-                    return new LogicAimCharacterCommand(connection);
+                    return new LogicAimingArrowForReplayCommand(connection);
                 }
                 case Command.UseSpell:
                 {

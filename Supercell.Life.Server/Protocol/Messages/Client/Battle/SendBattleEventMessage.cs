@@ -2,15 +2,16 @@
 {
     using Supercell.Life.Titan.DataStream;
 
+    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Messages.Server;
 
     internal class SendBattleEventMessage : PiranhaMessage
     {
-        private int EventType;
+        private BattleEvent EventType;
 
-        private int X;
-        private int Y;
+        private int Value1;
+        private int Value2;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SendBattleEventMessage"/> class.
@@ -22,51 +23,35 @@
 
         internal override void Decode()
         {
-            this.EventType = this.Stream.ReadInt();
-            this.X         = this.Stream.ReadInt();
-            this.Y         = this.Stream.ReadInt();
+            this.EventType = (BattleEvent)this.Stream.ReadInt();
+            this.Value1    = this.Stream.ReadInt();
+            this.Value2    = this.Stream.ReadInt();
         }
 
         internal override void Handle()
         {
-            this.ShowValues();
-
             if (this.Connection.GameMode.Battle != null)
             {
                 switch (this.EventType)
                 {
-                    case 0: // Emote??
+                    case BattleEvent.Taunt:
                     {
-                        new BattleEventMessage(this.Connection)
-                        {
-                            EventType = this.EventType,
-                            X         = this.X,
-                            Y         = this.Y
-                        }.Send();
-
                         new BattleEventMessage(this.Connection.GameMode.Battle.GetEnemy(this.Connection.GameMode.Avatar).Connection)
                         {
-                            EventType = this.EventType,
-                            X         = this.X,
-                            Y         = this.Y
+                            EventType   = this.EventType,
+                            PlayerIndex = this.Value1,
+                            TauntIndex  = this.Value2
                         }.Send(); 
                         
                         break;
                     }
-                    case 1: // Aiming
+                    case BattleEvent.Aim:
                     {
-                        new BattleEventMessage(this.Connection)
-                        {
-                            EventType = this.EventType,
-                            X         = this.X,
-                            Y         = this.Y
-                        }.Send();
-
                         new BattleEventMessage(this.Connection.GameMode.Battle.GetEnemy(this.Connection.GameMode.Avatar).Connection)
                         {
-                            EventType = this.EventType,
-                            X         = -this.X,
-                            Y         = -this.Y
+                            EventType  = this.EventType,
+                            DirectionX = -this.Value1,
+                            DirectionY = -this.Value2
                         }.Send();
                         
                         break;

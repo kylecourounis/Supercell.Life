@@ -1,14 +1,15 @@
 ﻿namespace Supercell.Life.Server.Protocol.Messages.Server
 {
+    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
 
     internal class BattleEventMessage : PiranhaMessage
     {
-        internal int EventType;
+        internal BattleEvent EventType;
 
-        internal int X;
-        internal int Y;
+        internal int DirectionX, DirectionY;
+        internal int PlayerIndex, TauntIndex;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BattleEventMessage"/> class.
@@ -20,10 +21,25 @@
 
         internal override void Encode()
         {
-            this.Stream.WriteInt(this.EventType);
+            this.Stream.WriteInt((int)this.EventType);
 
-            this.Stream.WriteInt(this.X);
-            this.Stream.WriteInt(this.Y);
+            switch (this.EventType) 
+            {
+                case BattleEvent.Taunt:
+                {
+                    this.Stream.WriteInt(this.PlayerIndex == 0 ? 1 : 0); // Invert the Player Index so that the taunt bubble will actually show
+                    this.Stream.WriteInt(this.TauntIndex);
+
+                    break;
+                }
+                case BattleEvent.Aim:
+                {
+                    this.Stream.WriteInt(this.DirectionX);
+                    this.Stream.WriteInt(this.DirectionY);
+
+                    break;
+                }
+            }
         }
     }
 }

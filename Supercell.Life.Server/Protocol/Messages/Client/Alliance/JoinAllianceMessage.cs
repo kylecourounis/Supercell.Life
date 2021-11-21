@@ -59,7 +59,11 @@
                         Role = Alliance.Role.Member
                     }).Send();
 
-                    new AvailableServerCommandMessage(this.Connection, new LogicJoinAllianceCommand(this.Connection)).Send();
+                    new AvailableServerCommandMessage(this.Connection, new LogicJoinAllianceCommand(this.Connection)
+                    {
+                        Alliance    = alliance,
+                        JustCreated = false
+                    }).Send();
 
                     new AllianceStreamMessage(this.Connection).Send();
                     alliance.AddEntry(new AllianceStreamEntry(member, member, AllianceStreamEntry.AllianceStreamEvent.Joined));

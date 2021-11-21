@@ -37,35 +37,23 @@
 
         internal override void Handle()
         {
-            this.ShowValues();
-
             if (this.Connection.GameMode.Resigned)
             {
                 this.Connection.GameMode.Avatar.LoseBattle();
             }
             else
             {
-                this.GetBattleResult();
-            }
-             
-            this.Connection.GameMode.Resigned = false;
-
-            new OwnAvatarDataMessage(this.Connection).Send();
-        }
-
-        private void GetBattleResult()
-        {
-            if (this.Connection.GameMode.Avatar.OngoingQuestData != null)
-            {
                 if (this.Connection.GameMode.Avatar.OngoingQuestData.GlobalID == 6000015)
                 {
                     this.Connection.GameMode.Avatar.OngoingQuestData.Save();
                 }
+                else
+                {
+                    // TODO
+                }
             }
-            else
-            {
-                // this.Connection.GameMode.Avatar.WinBattle();
-            }
+            
+            new OwnAvatarDataMessage(this.Connection).Send();
         }
     }
 }

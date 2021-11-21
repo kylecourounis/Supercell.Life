@@ -26,15 +26,22 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            LogicDataTable globals = CSV.Tables.Get(Gamefile.Globals);
-
-            int cost  = ((LogicGlobalData)globals.GetDataByName("SHIP_UPGRADE_COST")).NumberArray.Find(value => value == gamemode.Avatar.ShipLevel);
-            int xpLvl = ((LogicGlobalData)globals.GetDataByName("SHIP_UPGRADE_REQUIRED_XP_LEVEL")).NumberArray.Find(value => value == gamemode.Avatar.ExpLevel);
-
-            if (gamemode.Avatar.Gold >= cost && gamemode.Avatar.ExpLevel >= xpLvl)
+            if (gamemode.Avatar.ShipLevel == 0)
             {
-                gamemode.Avatar.Gold -= cost;
-                gamemode.Avatar.ShipUpgrade.Start();
+                gamemode.Avatar.ShipLevel = 1;
+            }
+            else
+            {
+                LogicDataTable globals = CSV.Tables.Get(Gamefile.Globals);
+
+                int cost  = ((LogicGlobalData)globals.GetDataByName("SHIP_UPGRADE_COST")).NumberArray.Find(value => value == gamemode.Avatar.ShipLevel);
+                int xpLvl = ((LogicGlobalData)globals.GetDataByName("SHIP_UPGRADE_REQUIRED_XP_LEVEL")).NumberArray.Find(value => value == gamemode.Avatar.ExpLevel);
+
+                if (gamemode.Avatar.Gold >= cost && gamemode.Avatar.ExpLevel >= xpLvl)
+                {
+                    gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, -cost);
+                    gamemode.Avatar.ShipUpgrade.Start();
+                }
             }
         }
     }

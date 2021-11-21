@@ -94,7 +94,7 @@
                             }
                             case "score":
                             {
-                                this.Connection.GameMode.Avatar.AddTrophies(LogicStringUtil.ConvertToInt(this.Parameters[2]));
+                                this.Connection.GameMode.Avatar.AddTrophyScoreHelper(LogicStringUtil.ConvertToInt(this.Parameters[2]));
                                 break;
                             }
                             default:

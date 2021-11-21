@@ -1,9 +1,9 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Server
 {
-    using Supercell.Life.Titan.Logic.Math;
+    using Supercell.Life.Titan.DataStream;
 
     using Supercell.Life.Server.Network;
-    using Supercell.Life.Titan.DataStream;
+    using Supercell.Life.Server.Protocol.Enums;
 
     internal class LogicServerCommand : LogicCommand
     {
@@ -14,14 +14,24 @@
         {
             // LogicServerCommand.
         }
-        
+
         /// <summary>
-        /// Writes the header.
+        /// Decodes this instance.
         /// </summary>
-        internal void WriteHeader(ChecksumEncoder encoder)
+        internal new virtual void Decode(ByteStream stream)
         {
-            encoder.WriteInt(this.Subtick);
-            encoder.WriteInt(this.Subtick);
+            this.Type           = (Command)stream.ReadInt();
+            this.ExecuteSubTick = stream.ReadInt();
+            this.ExecutorID     = stream.ReadLogicLong();
+        }
+
+        /// <summary>
+        /// Encodes this instance.
+        /// </summary>
+        internal new virtual void Encode(ChecksumEncoder encoder)
+        {
+            encoder.WriteInt((int)this.Type);
+            encoder.WriteInt(this.ExecuteSubTick);
             encoder.WriteLogicLong(this.Connection.GameMode.Avatar.Identifier);
         }
     }

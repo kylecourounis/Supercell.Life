@@ -41,14 +41,16 @@
             {
                 var enemy = battle.GetEnemy(gamemode.Avatar);
 
+                // int character = this.Connection.GameMode.Avatar.Team[GlobalID.GetID(this.Identifier)].ToObject<int>();
+
                 var cmd = new LogicSwapCharacterCommand(enemy.Connection)
                 {
-                    Identifier     = this.Identifier,
+                    // Identifier     = this.Identifier,
                     ExecuteSubTick = this.ExecuteSubTick,
                     ExecutorID     = this.ExecutorID
                 };
 
-                // battle.EnqueueCommand(this, cmd);
+                battle.EnqueueCommand(this, cmd);
             }
         }
 

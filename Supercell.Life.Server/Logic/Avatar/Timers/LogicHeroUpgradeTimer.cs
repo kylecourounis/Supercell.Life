@@ -6,7 +6,6 @@
     using Supercell.Life.Titan.Logic.Math;
 
     using Supercell.Life.Server.Files.CsvLogic;
-    using Supercell.Life.Server.Helpers;
 
     internal class LogicHeroUpgradeTimer
     {

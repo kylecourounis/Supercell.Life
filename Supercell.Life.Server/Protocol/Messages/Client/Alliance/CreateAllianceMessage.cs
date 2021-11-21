@@ -7,6 +7,7 @@
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Alliance;
     using Supercell.Life.Server.Logic.Collections;
+    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
     using Supercell.Life.Server.Protocol.Commands.Server;
@@ -52,7 +53,7 @@
         {
             if (!this.Connection.GameMode.Avatar.IsInAlliance && this.Connection.GameMode.Avatar.Gold >= 10000)
             {
-                this.Connection.GameMode.Avatar.Gold -= 10000;
+                this.Connection.GameMode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, -10000);
             }
 
             Alliance alliance = Alliances.Create();
@@ -74,13 +75,13 @@
 
                 new AvailableServerCommandMessage(this.Connection, new LogicChangeAllianceRoleCommand(this.Connection)
                 {
-                    Alliance = alliance,
                     Role = Alliance.Role.Leader
                 }).Send();
 
                 new AvailableServerCommandMessage(this.Connection, new LogicJoinAllianceCommand(this.Connection)
                 {
-                    Alliance = alliance
+                    Alliance    = alliance,
+                    JustCreated = true
                 }).Send();
             }
 

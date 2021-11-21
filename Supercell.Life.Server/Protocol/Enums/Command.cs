@@ -37,7 +37,7 @@
         SwapCharacter      = 606,
         Resign             = 609,
         SpeechBubbleReplay = 611,
-        AimCharacter       = 612,
+        AimArrowForReplay  = 612,
         UseSpell           = 613,
         ActionSeen         = 800,
 

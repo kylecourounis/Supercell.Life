@@ -53,15 +53,15 @@
 
             if (battle == null)
             {
-                if (gamemode.Avatar.OngoingQuestData.Data.QuestType != "Unlock" || gamemode.Avatar.OngoingQuestData.Data.QuestType != "PvP")
+                if (gamemode.Avatar.OngoingQuestData.Data.QuestType.Equals("Basic"))
                 {
-                    if (this.DirectionX + 256 >= 512)
+                    if (this.DirectionX + 256 > 512)
                     {
                         Debugger.Error("Invalid Dx");
                         return;
                     }
 
-                    if (this.DirectionY + 256 >= 512)
+                    if (this.DirectionY + 256 > 512)
                     {
                         Debugger.Error("Invalid Dy");
                         return;
@@ -88,11 +88,11 @@
 
                 LogicMoveCharacterCommand cmd = new LogicMoveCharacterCommand(opponent.Connection)
                 {
-                    DirectionX = -this.DirectionX,
-                    DirectionY = -this.DirectionY,
-                    Value = this.Value,
+                    DirectionX     = this.DirectionX,
+                    DirectionY     = this.DirectionY,
+                    Value          = this.Value,
                     ExecuteSubTick = this.ExecuteSubTick,
-                    ExecutorID = this.ExecutorID
+                    ExecutorID     = this.ExecutorID
                 };
 
                 battle.EnqueueCommand(this, cmd);

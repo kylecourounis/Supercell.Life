@@ -134,7 +134,9 @@
                 case "PvP":
                 {
                     this.Avatar.NpcProgress.AddItem(this.GlobalID, 1);
-                    this.Avatar.WinBattle(59);
+
+                    this.Avatar.AddTrophyScoreHelper(59);
+                    this.Avatar.WinBattle();
 
                     break;
                 }

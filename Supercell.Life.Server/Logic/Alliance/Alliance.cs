@@ -12,9 +12,7 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Enums;
-    using Supercell.Life.Server.Logic.Alliance;
     using Supercell.Life.Server.Logic.Avatar;
-    using Supercell.Life.Server.Logic.Avatar.Timers;
     using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Protocol.Messages;
     using Supercell.Life.Server.Protocol.Messages.Server;

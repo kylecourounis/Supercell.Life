@@ -36,11 +36,15 @@
             {
                 var enemy = battle.GetEnemy(gamemode.Avatar);
 
-                LogicResignCommand cmd = new LogicResignCommand(enemy.Connection);
+                var cmd = new LogicResignCommand(enemy.Connection)
+                {
+                    ExecuteSubTick = this.ExecuteSubTick,
+                    ExecutorID     = this.ExecutorID
+                };
 
                 battle.EnqueueCommand(this, cmd);
 
-                battle.Stop();
+                // battle.Stop();
             }
         }
     }

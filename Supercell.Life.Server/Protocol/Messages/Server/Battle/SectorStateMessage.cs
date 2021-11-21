@@ -10,21 +10,18 @@
     {
         internal LogicBattle Battle;
 
-        internal int Side;
-        
         /// <summary>
         /// Initializes a new instance of the <see cref="SectorStateMessage"/> class.
         /// </summary>
-        public SectorStateMessage(Connection connection, int side) : base(connection)
+        public SectorStateMessage(Connection connection) : base(connection)
         {
             this.Type             = Message.SectorState;
             this.Connection.State = State.Battle;
-            this.Side             = side;
         }
 
         internal override void Encode()
         {
-            this.Battle.Encode(this.Stream, this.Side);
+            this.Battle.Encode(this.Stream, this.Connection.GameMode);
         }
     }
 }

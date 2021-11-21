@@ -1,13 +1,11 @@
 ﻿namespace Supercell.Life.Server.Logic.Battle
 {
-    using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Timers;
 
     using Supercell.Life.Titan.DataStream;
-    using Supercell.Life.Titan.Logic;
     using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Math;
 
@@ -24,46 +22,48 @@
 
     internal class LogicBattle
     {
-        internal int HighID;
-        internal int LowID;
-
-        internal DateTime StartTime;
+        internal LogicLong Identifier;
 
         internal bool Started;
-        internal bool Stopped;
 
         internal LogicQuestData PvPTier;
         internal LogicEventsData Event;
 
         internal Timer BattleTick;
-        
+
         internal int StartingPlayer;
 
         internal LogicLong WhoseTurn;
 
+        internal LogicMultiplayerTurnTimer TurnTimer;
+        
         internal Dictionary<LogicGameMode, ConcurrentQueue<LogicCommand>> CommandQueues;
 
         internal LogicJSONArray ReplayCommands;
 
-        /// <summary>
-        /// Gets the identifier for this <see cref="LogicBattle"/>.
-        /// </summary>
-        internal LogicLong Identifier
-        {
-            get
-            {
-                return new LogicLong(this.HighID, this.LowID);
-            }
-        }
+        internal LogicBattleResult BattleResult;
+
+        internal bool IsFriendlyChallenge;
 
         /// <summary>
         /// Gets a list of the instances of <see cref="LogicGameMode"/>s in this <see cref="LogicBattle"/>.
         /// </summary>
-        internal LogicArrayList<LogicGameMode> GameModes
+        internal List<LogicGameMode> GameModes
         {
             get
             {
-                return (LogicArrayList<LogicGameMode>)this.CommandQueues.Keys.ToList();
+                return this.CommandQueues.Keys.ToList();
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of instances of <see cref="LogicGameMode"/> connected to the <see cref="LogicBattle"/>.
+        /// </summary>
+        internal List<LogicGameMode> Connected
+        {
+            get
+            {
+                return this.GameModes.Where(avatar => avatar.Connection != null).ToList();
             }
         }
 
@@ -79,17 +79,6 @@
         }
 
         /// <summary>
-        /// Gets a value indicating whether this instance is running.
-        /// </summary>
-        internal bool IsRunning
-        {
-            get
-            {
-                return this.Started && !this.Stopped;
-            }
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="LogicBattle"/> class.
         /// </summary>
         internal LogicBattle()
@@ -97,7 +86,7 @@
             this.BattleTick = new Timer
             {
                 AutoReset = true,
-                Interval  = 500
+                Interval  = 1000
             };
 
             this.BattleTick.Elapsed += this.Tick;
@@ -114,41 +103,26 @@
                 { gamemode2, new ConcurrentQueue<LogicCommand>() }
             };
 
+            this.TurnTimer = new LogicMultiplayerTurnTimer(this);
+
             this.ReplayCommands = new LogicJSONArray();
         }
 
         /// <summary>
         /// Encodes this <see cref="LogicBattle"/> using specified stream.
         /// </summary>
-        internal void Encode(ByteStream stream, int side)
+        internal void Encode(ByteStream stream, LogicGameMode gamemode)
         {
-            switch (side) 
-            {
-                case 0:
-                {
-                    this.GameModes[0].Avatar.Encode(stream);
-                    this.GameModes[1].Avatar.Encode(stream);
+            gamemode.Avatar.Encode(stream);
+            this.GetEnemy(gamemode.Avatar).Encode(stream);
 
-                    stream.WriteInt(this.StartingPlayer == 0 ? 1 : 0); // Coin toss to determine who goes first
-
-                    break;
-                }
-                case 1:
-                {
-                    this.GameModes[1].Avatar.Encode(stream);
-                    this.GameModes[0].Avatar.Encode(stream);
-
-                    stream.WriteInt(this.StartingPlayer == 1 ? 1 : 0);
-
-                    break;
-                }
-            }
-
+            stream.WriteInt(this.WhoseTurn == gamemode.Avatar.Identifier ? 1 : 0); // Coin toss to determine who goes first
+            
             stream.WriteInt(0);
             stream.WriteInt(0);
             stream.WriteInt(0);
 
-            stream.WriteBoolean(true);
+            stream.WriteBoolean(this.IsFriendlyChallenge);
 
             stream.WriteDataReference(this.PvPTier);
             stream.WriteDataReference(this.Event);
@@ -161,23 +135,7 @@
         {
             return this.GameModes.Find(gamemode => gamemode.Avatar.Identifier != avatar.Identifier).Avatar;
         }
-
-        /// <summary>
-        /// Gets the enemy's command queue.
-        /// </summary>
-        internal ConcurrentQueue<LogicCommand> GetOwnQueue(LogicClientAvatar avatar)
-        {
-            return this.CommandQueues[this.GameModes.Find(gamemode => gamemode.Avatar.Identifier == avatar.Identifier)];
-        }
-
-        /// <summary>
-        /// Gets the enemy's command queue.
-        /// </summary>
-        internal ConcurrentQueue<LogicCommand> GetEnemyQueue(LogicClientAvatar nonEnemy)
-        {
-            return this.CommandQueues[this.GameModes.Find(gamemode => gamemode.Avatar.Identifier != nonEnemy.Identifier)];
-        }
-
+        
         /// <summary>
         /// Starts this instance.
         /// </summary>
@@ -185,32 +143,22 @@
         {
             if (!this.Started)
             {
-                this.Started   = true;
-                this.StartTime = DateTime.UtcNow;
+                this.Started = true;
 
-                if (!this.Stopped)
+                this.StartingPlayer = Loader.Random.Next(0, 1);
+                this.WhoseTurn      = this.GameModes[this.StartingPlayer].Avatar.Identifier;
+
+                foreach (LogicGameMode gamemode in this.GameModes.Where(gamemode => gamemode.Connection != null))
                 {
-                    int side = 0;
-
-                    this.StartingPlayer = Loader.Random.Next(0, 1);
-
-                    foreach (LogicGameMode gamemode in this.GameModes.Where(gamemode => gamemode.Connection != null))
+                    new StopHomeLogicMessage(gamemode.Connection).Send();
+                    new SectorStateMessage(gamemode.Connection)
                     {
-                        new StopHomeLogicMessage(gamemode.Connection).Send();
-                        new SectorStateMessage(gamemode.Connection, side)
-                        {
-                            Battle = this
-                        }.Send();
-
-                        side++;
-                    }
-
-                    this.BattleTick.Start();
+                        Battle = this
+                    }.Send();
                 }
-                else
-                {
-                    Debugger.Error("Battle had already stopped when Start() was called.");
-                }
+
+                this.TurnTimer.Start();
+                this.BattleTick.Start();
             }
             else
             {
@@ -225,13 +173,13 @@
         {
             if (self != null)
             {
-                this.GetOwnQueue(self.Connection.GameMode.Avatar).Enqueue(self);
+                this.CommandQueues[this.GameModes.Find(gamemode => gamemode.Avatar.Identifier == self.Connection.GameMode.Avatar.Identifier)].Enqueue(self);
                 this.ReplayCommands.Add(self.SaveToJSON());
             }
 
             if (opponent != null)
             {
-                this.GetEnemyQueue(self.Connection.GameMode.Avatar).Enqueue(opponent);
+                this.CommandQueues[this.GameModes.Find(gamemode => gamemode.Avatar.Identifier != self.Connection.GameMode.Avatar.Identifier)].Enqueue(opponent);
             }
         }
 
@@ -240,33 +188,43 @@
         /// </summary>
         private void Tick(object sender, ElapsedEventArgs args)
         {
-            if (!this.Stopped)
+            if (this.Started)
             {
-                if (this.Started)
-                {
-                    Debugger.Info("Tick.");
+                this.TurnTimer.Tick();
 
-                    foreach (LogicGameMode gamemode in this.GameModes)
+                if (this.AllDisconnected)
+                {
+                    this.Stop();
+                }
+                else
+                {
+                    foreach (LogicGameMode gamemode in this.Connected)
                     {
                         new SectorHeartbeatMessage(gamemode.Connection)
                         {
                             Commands = this.CommandQueues[gamemode]
                         }.Send();
                     }
-                    
-                    if (this.AllDisconnected)
+
+                    if (this.GameModes.Where(gamemode => gamemode.Resigned).ToList().Count > 0)
                     {
                         this.Stop();
                     }
-                }
-                else
-                {
-                    Debugger.Error("Battle had not started when Tick() was called.");
+
+                    if (this.Connected.Count == 1)
+                    {
+                        this.TurnTimer.EnemyReconnectTurns++;
+
+                        if (this.TurnTimer.EnemyReconnectTurns == 3)
+                        {
+                            this.Stop();
+                        }
+                    }
                 }
             }
             else
             {
-                Debugger.Error("Battle had already stopped when Tick() was called.");
+                Debugger.Error("Battle had not started when Tick() was called.");
             }
         }
 
@@ -277,6 +235,8 @@
         {
             this.WhoseTurn = this.GetEnemy(turnFinished).Identifier;
 
+            this.TurnTimer.Reset();
+
             Debugger.Debug($"{this.WhoseTurn} turn.");
         }
 
@@ -285,29 +245,36 @@
         /// </summary>
         internal void Stop()
         {
-            if (!this.Stopped)
+            if (this.Started)
             {
-                this.Stopped = true;
+                this.TurnTimer.Finish();
+                this.BattleTick.Stop();
+                
+                this.BattleResult = new LogicBattleResult(this);
 
-                if (this.Started)
-                {
-                    this.BattleTick.Stop();
+                this.BattleResult.Determine();
+                this.BattleResult.Send();
 
-                    foreach (LogicGameMode gamemode in this.GameModes)
-                    {
-                        new BattleResultMessage(gamemode.Connection).Send();
-                    }
-
-                    Battles.Remove(this);
-                }
-                else
-                {
-                    Debugger.Error("Battle hadn't started when Stop() was called");
-                }
+                Battles.Remove(this);
             }
             else
             {
-                Debugger.Error("Battle already stopped when Stop() was called.");
+                Debugger.Error("Battle hadn't started when Stop() was called");
+            }
+        }
+
+        /// <summary>
+        /// Gets the <see cref="LogicJSONObject"/> for this <see cref="LogicBattle"/>.
+        /// </summary>
+        internal LogicJSONObject JSON
+        {
+            get
+            {
+                LogicJSONObject json = new LogicJSONObject();
+
+                // TODO
+
+                return json;
             }
         }
     }

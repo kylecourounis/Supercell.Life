@@ -1,11 +1,8 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
-    using System.Linq;
-
     using Supercell.Life.Titan.DataStream;
     using Supercell.Life.Titan.Logic.Json;
 
-    using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
@@ -13,7 +10,6 @@
     internal class LogicSpeechBubbleForReplayCommand : LogicCommand
     {
         internal int PlayerIndex;
-
         internal int TauntIndex;
 
         /// <summary>
@@ -34,17 +30,7 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            var battle = gamemode.Battle;
-
-            this.ShowValues();
-
-            if (battle != null)
-            {
-                var enemy = battle.GetEnemy(gamemode.Avatar);
-
-                LogicTauntData taunt = (LogicTauntData)battle.GameModes[this.PlayerIndex].Avatar.Extras.Values.ToList().FindAll(slot => slot.Id >= 24000000)[this.TauntIndex].Data;
-
-            }
+            gamemode.Battle?.ReplayCommands.Add(this.SaveToJSON());
         }
 
         internal override void LoadCommandFromJSON(LogicJSONObject json)

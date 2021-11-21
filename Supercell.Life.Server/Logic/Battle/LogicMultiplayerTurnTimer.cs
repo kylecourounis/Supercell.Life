@@ -1,4 +1,4 @@
-﻿namespace Supercell.Life.Server.Logic.Alliance
+﻿namespace Supercell.Life.Server.Logic.Battle
 {
     using Newtonsoft.Json;
 
@@ -6,16 +6,18 @@
 
     using Supercell.Life.Server.Logic.Game;
 
-    internal class LogicTeamGoalTimer
+    internal class LogicMultiplayerTurnTimer
     {
-        internal Alliance Alliance;
+        internal LogicBattle Battle;
+
+        internal int EnemyReconnectTurns;
 
         internal LogicTime Time;
 
         [JsonProperty("timer")] internal LogicTimer Timer;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="LogicTeamGoalTimer"/> has started.
+        /// Gets a value indicating whether this <see cref="LogicMultiplayerTurnTimer"/> has started.
         /// </summary>
         internal bool Started
         {
@@ -26,21 +28,21 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogicTeamGoalTimer"/> class.
+        /// Initializes a new instance of the <see cref="LogicMultiplayerTurnTimer"/> class.
         /// </summary>
-        public LogicTeamGoalTimer()
+        public LogicMultiplayerTurnTimer()
         {
             this.Timer = new LogicTimer();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogicTeamGoalTimer"/> class.
+        /// Initializes a new instance of the <see cref="LogicMultiplayerTurnTimer"/> class.
         /// </summary>
-        internal LogicTeamGoalTimer(Alliance alliance)
+        internal LogicMultiplayerTurnTimer(LogicBattle battle)
         {
-            this.Alliance   = alliance;
-            this.Time       = new LogicTime();
-            this.Timer      = new LogicTimer(this.Time);
+            this.Battle = battle;
+            this.Time   = new LogicTime();
+            this.Timer  = new LogicTimer(this.Time);
         }
 
         /// <summary>
@@ -48,7 +50,19 @@
         /// </summary>
         internal void Start()
         {
-            this.Timer.StartTimer(this.Time, 3600 * Globals.TeamGoalSeasonDurationHours);
+            this.Timer.StartTimer(this.Time, Globals.PVPFirstTurnTimeSeconds);
+        }
+
+        /// <summary>
+        /// Finishes this instance.
+        /// </summary>
+        internal void Reset()
+        {
+            if (this.Started)
+            {
+                this.Timer.StopTimer();
+                this.Timer.StartTimer(this.Time, Globals.PVPMaxTurnTimeSeconds);
+            }
         }
 
         /// <summary>
@@ -59,10 +73,6 @@
             if (this.Started)
             {
                 this.Timer.StopTimer();
-
-                // Set new objectives here
-
-                this.Start();
             }
         }
 
@@ -91,7 +101,7 @@
             {
                 if (this.Timer.RemainingSecs <= 0)
                 {
-                    this.Finish();
+                    this.Reset();
                 }
             }
         }

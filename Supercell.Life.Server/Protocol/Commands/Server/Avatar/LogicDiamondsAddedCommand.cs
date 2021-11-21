@@ -23,7 +23,7 @@
             encoder.WriteInt(this.Diamonds);
             encoder.WriteString("");
 
-            this.WriteHeader(encoder);
+            base.Encode(encoder);
         }
     }
 }

@@ -42,6 +42,8 @@
         EnemyDisconnected         = 21901,
         SectorHeartbeat           = 21902,
         SectorState               = 21903,
+        EnemyReconnected          = 21912,
+        ReconnectToSectorState    = 22921,
         BattleEvent               = 22952,
         PvpMatchmakeNotification  = 22957,
         OwnAvatarData             = 24101,
