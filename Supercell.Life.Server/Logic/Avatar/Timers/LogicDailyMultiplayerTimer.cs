@@ -1,23 +1,25 @@
-﻿namespace Supercell.Life.Server.Logic.Battle
+﻿namespace Supercell.Life.Server.Logic.Avatar.Timers
 {
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
+    using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Math;
 
-    using Supercell.Life.Server.Logic.Game;
+    using Supercell.Life.Server.Logic.Avatar;
 
-    internal class LogicMultiplayerTurnTimer
+    internal class LogicDailyMultiplayerTimer
     {
-        internal LogicBattle Battle;
-
-        internal (LogicLong Identifier, int Turns) EnemyReconnectTurns;
+        internal LogicClientAvatar Avatar;
 
         internal LogicTime Time;
+
+        [JsonProperty] internal JArray HeroUsedInDaily;
 
         [JsonProperty("timer")] internal LogicTimer Timer;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="LogicMultiplayerTurnTimer"/> has started.
+        /// Gets a value indicating whether this <see cref="LogicDailyMultiplayerTimer"/> has started.
         /// </summary>
         internal bool Started
         {
@@ -28,21 +30,22 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogicMultiplayerTurnTimer"/> class.
+        /// Initializes a new instance of the <see cref="LogicDailyMultiplayerTimer"/> class.
         /// </summary>
-        public LogicMultiplayerTurnTimer()
+        public LogicDailyMultiplayerTimer()
         {
             this.Timer = new LogicTimer();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogicMultiplayerTurnTimer"/> class.
+        /// Initializes a new instance of the <see cref="LogicDailyMultiplayerTimer"/> class.
         /// </summary>
-        internal LogicMultiplayerTurnTimer(LogicBattle battle)
+        internal LogicDailyMultiplayerTimer(LogicClientAvatar avatar)
         {
-            this.Battle = battle;
-            this.Time   = new LogicTime();
-            this.Timer  = new LogicTimer(this.Time);
+            this.Avatar          = avatar;
+            this.Time            = new LogicTime();
+            this.Timer           = new LogicTimer(this.Time);
+            this.HeroUsedInDaily = new JArray();
         }
 
         /// <summary>
@@ -50,19 +53,13 @@
         /// </summary>
         internal void Start()
         {
-            this.Timer.StartTimer(this.Time, Globals.PVPFirstTurnTimeSeconds);
-        }
-
-        /// <summary>
-        /// Finishes this instance.
-        /// </summary>
-        internal void Reset()
-        {
             if (this.Started)
             {
-                this.Timer.StopTimer();
-                this.Timer.StartTimer(this.Time, Globals.PVPMaxTurnTimeSeconds);
+                return;
             }
+
+            this.Timer.StartTimer(this.Time, 3600 * 24);
+            this.HeroUsedInDaily.Clear();
         }
 
         /// <summary>
@@ -101,7 +98,7 @@
             {
                 if (this.Timer.RemainingSecs <= 0)
                 {
-                    this.Reset();
+                    this.Finish();
                 }
             }
         }
@@ -115,6 +112,23 @@
             {
                 this.Timer.AdjustSubTick();
             }
+        }
+
+        /// <summary>
+        /// Saves this instance to the specified <see cref="LogicJSONObject"/>.
+        /// </summary>
+        internal void Save(LogicJSONObject json)
+        {
+            json.Put("freePvp", new LogicJSONNumber(this.Timer.RemainingSecs));
+
+            var heroUsedInDaily = new LogicJSONArray();
+
+            foreach (int hero in this.HeroUsedInDaily.ToObject<int[]>())
+            {
+                heroUsedInDaily.Add(new LogicJSONNumber(hero));
+            }
+
+            json.Put("heroUsedInDaily", heroUsedInDaily);
         }
     }
 }

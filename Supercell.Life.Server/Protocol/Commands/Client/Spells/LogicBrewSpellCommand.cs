@@ -39,7 +39,7 @@
             foreach (LogicSpellData spell in this.Spells)
             {
                 var count = gamemode.Avatar.SpellsReady.Values.Sum(item => item.Count);
-                
+
                 if (count < gamemode.Avatar.Variables.Get(LogicVariables.SpellSlotsUnlocked.GlobalID).Count + 2)
                 {
                     if (gamemode.Avatar.Gold >= spell.CreateCost)

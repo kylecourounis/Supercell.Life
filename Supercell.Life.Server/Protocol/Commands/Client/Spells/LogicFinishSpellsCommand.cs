@@ -28,7 +28,7 @@
 
             if (gamemode.Avatar.Diamonds >= speedUpCost)
             {
-                gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Diamonds, -speedUpCost);
+                gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -speedUpCost);
                 gamemode.Avatar.SpellTimer.Finish();
             }
         }

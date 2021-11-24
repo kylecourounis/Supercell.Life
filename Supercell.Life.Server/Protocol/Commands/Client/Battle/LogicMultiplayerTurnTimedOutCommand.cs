@@ -32,7 +32,15 @@
 
             if (battle != null)
             {
-                battle.ResetTurn(gamemode.Avatar);
+                if (battle.TurnTimer.EnemyReconnectTurns.Identifier != gamemode.Avatar.Identifier)
+                {
+                    battle.TurnTimer.EnemyReconnectTurns.Identifier = gamemode.Avatar.Identifier;
+                    battle.TurnTimer.EnemyReconnectTurns.Turns = 1;
+                }
+                else
+                {
+                    battle.TurnTimer.EnemyReconnectTurns.Turns += 1;
+                }
 
                 var enemy = battle.GetEnemy(gamemode.Avatar);
 

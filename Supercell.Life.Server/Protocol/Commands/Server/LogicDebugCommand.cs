@@ -119,7 +119,7 @@
                         Diamonds = v35
                     }).Send();
 
-                    gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Diamonds, v35);
+                    gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, v35);
                         
                     break;
                 }

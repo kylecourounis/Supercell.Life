@@ -17,8 +17,8 @@
         {
             LogicLeagueData league = (LogicLeagueData)CSV.Tables.Get(Gamefile.Leagues).GetDataWithID(avatar.League);
 
-            avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, league.PVPGoldReward);
-            avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, league.PVPXpReward);
+            avatar.CommodityChangeCountHelper(CommodityType.Gold, league.PVPGoldReward);
+            avatar.CommodityChangeCountHelper(CommodityType.Experience, league.PVPXpReward);
             
             avatar.Variables.UpdatePvPVariables(true);
 

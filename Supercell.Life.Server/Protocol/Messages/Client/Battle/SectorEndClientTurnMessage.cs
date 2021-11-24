@@ -49,6 +49,8 @@
                     commandManager.SectorCommands.RemoveAt(0);
                 }
             }
+
+            this.Connection.GameMode.Battle.Subtick = this.Subtick;
         }
     }
 }

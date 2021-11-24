@@ -3,7 +3,6 @@
     using Supercell.Life.Titan.DataStream;
 
     using Supercell.Life.Server.Network;
-    using Supercell.Life.Server.Protocol.Messages.Server;
 
     internal class HomeLogicStoppedMessage : PiranhaMessage
     {

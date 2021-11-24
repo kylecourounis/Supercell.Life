@@ -79,17 +79,17 @@
                         {
                             case "gold":
                             {
-                                this.Connection.GameMode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, LogicStringUtil.ConvertToInt(this.Parameters[2]));
+                                this.Connection.GameMode.Avatar.CommodityChangeCountHelper(CommodityType.Gold, LogicStringUtil.ConvertToInt(this.Parameters[2]));
                                 break;
                             }
                             case "diamonds":
                             {
-                                this.Connection.GameMode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Diamonds, LogicStringUtil.ConvertToInt(this.Parameters[2]));
+                                this.Connection.GameMode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, LogicStringUtil.ConvertToInt(this.Parameters[2]));
                                 break;
                             }
                             case "xp":
                             {
-                                this.Connection.GameMode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, LogicStringUtil.ConvertToInt(this.Parameters[2]));
+                                this.Connection.GameMode.Avatar.CommodityChangeCountHelper(CommodityType.Experience, LogicStringUtil.ConvertToInt(this.Parameters[2]));
                                 break;
                             }
                             case "score":

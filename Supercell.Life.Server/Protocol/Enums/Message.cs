@@ -43,6 +43,7 @@
         SectorHeartbeat           = 21902,
         SectorState               = 21903,
         EnemyReconnected          = 21912,
+        SectorEndTurnTimeout      = 21914,
         ReconnectToSectorState    = 22921,
         BattleEvent               = 22952,
         PvpMatchmakeNotification  = 22957,

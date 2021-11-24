@@ -1,22 +1,20 @@
 ﻿namespace Supercell.Life.Server.Protocol.Messages.Server
 {
-    using System.Collections.Concurrent;
-
+    using Supercell.Life.Server.Logic.Battle;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Commands;
     using Supercell.Life.Server.Protocol.Enums;
 
     internal class SectorHeartbeatMessage : PiranhaMessage
     {
-        internal ConcurrentQueue<LogicCommand> Commands;
+        internal LogicBattle Battle;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SectorHeartbeatMessage"/> class.
         /// </summary>
         public SectorHeartbeatMessage(Connection connection) : base(connection)
         {
-            this.Type     = Message.SectorHeartbeat;
-            this.Commands = new ConcurrentQueue<LogicCommand>();
+            this.Type = Message.SectorHeartbeat;
         }
 
         internal override void Encode()
@@ -24,13 +22,11 @@
             this.Stream.WriteInt(this.Connection.GameMode.Avatar.Time.ClientSubTick / 10);
             this.Stream.WriteInt(this.Connection.GameMode.Avatar.Checksum);
 
-            this.Stream.WriteInt(this.Commands.Count);
+            this.Stream.WriteInt(this.Battle.CommandQueues[this.Connection.GameMode].Count);
 
-            for (int i = 0; i < this.Commands.Count; i++)
+            for (int i = 0; i < this.Battle.CommandQueues[this.Connection.GameMode].Count; i++)
             {
-                var removed = this.Commands.TryDequeue(out LogicCommand command);
-
-                if (removed)
+                if (this.Battle.CommandQueues[this.Connection.GameMode].TryDequeue(out LogicCommand command))
                 {
                     this.Stream.WriteInt((int)command.Type);
                     command.Encode(this.Stream);

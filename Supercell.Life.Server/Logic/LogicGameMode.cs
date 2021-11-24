@@ -12,6 +12,7 @@
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol;
     using Supercell.Life.Server.Protocol.Commands;
+    using Supercell.Life.Titan.Logic.Math;
 
     internal class LogicGameMode
     {
@@ -21,6 +22,8 @@
         internal readonly LogicCommandManager CommandManager;
 
         internal LogicClientAvatar Avatar;
+
+        internal LogicRandom Random;
 
         internal LogicBattle Battle;
 
@@ -34,6 +37,7 @@
             this.Connection     = connection;
             this.MessageManager = new MessageManager(connection);
             this.CommandManager = new LogicCommandManager(connection);
+            this.Random         = new LogicRandom();
         }
 
         /// <summary>
@@ -75,8 +79,11 @@
             replayJSON.Put("avatar", this.Battle.GameModes[0].Avatar.GetAvatarJSON());
             replayJSON.Put("avatar2", this.Battle.GameModes[1].Avatar.GetAvatarJSON());
 
-            replayJSON.Put("end_tick", new LogicJSONNumber());
-            replayJSON.Put("cmd", this.Battle.ReplayCommands);
+            var replayCommands  = this.Battle.ReplayCommands;
+            var lastExecuteTick = replayCommands.GetJsonObject(replayCommands.Size - 1).GetJsonObject("c").GetJsonNumber("t").GetIntValue();
+
+            replayJSON.Put("end_tick", new LogicJSONNumber(lastExecuteTick));
+            replayJSON.Put("cmd", replayCommands);
 
             return replayJSON;
         }
@@ -93,15 +100,18 @@
             this.Avatar.Booster.AdjustSubTick();
             this.Avatar.SpellTimer.AdjustSubTick();
             this.Avatar.ItemUnavailableTimer.AdjustSubTick();
+            this.Avatar.BonusChestRespawnTimer.AdjustSubTick();
+            this.Avatar.DailyMultiplayerTimer.AdjustSubTick();
 
             if (this.Avatar.Alliance != null)
             {
-                this.Avatar.Alliance.TeamGoalTimer.AdjustSubTick();
-
                 if (!this.Avatar.Alliance.TeamGoalTimer.Started)
                 {
                     this.Avatar.Alliance.TeamGoalTimer.Start();
                 }
+
+                this.Avatar.Alliance.TeamGoalTimer.AdjustSubTick();
+                this.Avatar.TeamMailCooldownTimer.AdjustSubTick();
             }
         }
 
@@ -117,7 +127,14 @@
             this.Avatar.Booster.FastForward(seconds);
             this.Avatar.SpellTimer.FastForward(seconds);
             this.Avatar.ItemUnavailableTimer.FastForward(seconds);
-            this.Avatar.Alliance?.TeamGoalTimer.FastForward(seconds);
+            this.Avatar.BonusChestRespawnTimer.FastForward(seconds);
+            this.Avatar.DailyMultiplayerTimer.FastForward(seconds);
+
+            if (this.Avatar.Alliance != null)
+            {
+                this.Avatar.Alliance.TeamGoalTimer.FastForward(seconds);
+                this.Avatar.TeamMailCooldownTimer.FastForward(seconds);
+            }
 
             this.AdjustSubTick();
             this.Avatar.Save();
@@ -135,7 +152,8 @@
             this.Avatar.Booster.Tick();
             this.Avatar.SpellTimer.Tick();
             this.Avatar.ItemUnavailableTimer.Tick();
-            this.Avatar.Alliance?.TeamGoalTimer.Tick();
+            this.Avatar.BonusChestRespawnTimer.Tick();
+            this.Avatar.DailyMultiplayerTimer.Tick();
 
             Debugger.Debug($"Energy Timer           : Started: {this.Avatar.EnergyTimer.Timer.Started}  : RemainingSecs: {this.Avatar.EnergyTimer.Timer.RemainingSecs}.");
             Debugger.Debug($"Hero Upgrade Timer     : Started: {this.Avatar.HeroUpgrade.Timer.Started}  : RemainingSecs: {this.Avatar.HeroUpgrade.Timer.RemainingSecs}.");
@@ -144,7 +162,17 @@
             Debugger.Debug($"XP Booster Timer       : Started: {this.Avatar.Booster.Timer.Started}  : RemainingSecs: {this.Avatar.Booster.Timer.RemainingSecs}.");
             Debugger.Debug($"Spell Timer            : Started: {this.Avatar.SpellTimer.Started}  : RemainingSecs: {this.Avatar.SpellTimer.Timer.RemainingSecs}.");
             Debugger.Debug($"Item Unavailable Timer : Started: {this.Avatar.ItemUnavailableTimer.Started}  : RemainingSecs: {this.Avatar.ItemUnavailableTimer.Timer.RemainingSecs}.");
-            Debugger.Debug($"Team Goal Timer        : Started: {this.Avatar.Alliance?.TeamGoalTimer.Started}  : RemainingSecs: {this.Avatar.Alliance?.TeamGoalTimer.Timer.RemainingSecs}.");
+
+            if (this.Avatar.Alliance != null)
+            {
+                this.Avatar.Alliance.TeamGoalTimer.Tick();
+                this.Avatar.TeamMailCooldownTimer.Tick();
+
+                Debugger.Debug($"Team Goal Timer        : Started: {this.Avatar.Alliance.TeamGoalTimer.Started}  : RemainingSecs: {this.Avatar.Alliance.TeamGoalTimer.Timer.RemainingSecs}.");
+                Debugger.Debug($"Team Mail Cooldown     : Started: {this.Avatar.TeamMailCooldownTimer.Started}  : RemainingSecs: {this.Avatar.TeamMailCooldownTimer.Timer.RemainingSecs}.");
+            }
+
+            this.Connection.GameMode.Random.SetIteratedRandomSeed(LogicTime.GetSecondsInTicks(this.Avatar.Time.TotalSecs));
 
             this.Avatar.Update = DateTime.UtcNow;
         }

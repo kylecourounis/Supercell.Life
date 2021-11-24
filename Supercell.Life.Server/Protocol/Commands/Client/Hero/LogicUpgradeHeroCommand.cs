@@ -125,13 +125,13 @@
                             }
                         }
 
-                        gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Diamonds, -diamonds);
-                        gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, -gold);
-                        gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Energy, -energy);
-                        gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Orb1, -orb1);
-                        gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Orb2, -orb2);
-                        gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Orb3, -orb3);
-                        gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Orb4, -orb4);
+                        gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -diamonds);
+                        gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Gold, -gold);
+                        gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Energy, -energy);
+                        gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb1, -orb1);
+                        gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb2, -orb2);
+                        gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb3, -orb3);
+                        gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb4, -orb4);
                     }
 
                     gamemode.Avatar.HeroUpgrade.Start(this.Hero);

@@ -80,6 +80,8 @@ namespace Supercell.Life.Server.Logic.Avatar
         [JsonProperty] internal LogicDataSlots SpellsReady;
 
         [JsonProperty] internal LogicNpcProgress NpcProgress;
+        [JsonProperty] internal LogicArrayList<int> Crowns;
+
         [JsonProperty] internal LogicDataSlots QuestUnlockSeens;
         [JsonProperty] internal LogicQuestMoves QuestMoves;
 
@@ -101,6 +103,9 @@ namespace Supercell.Life.Server.Logic.Avatar
         [JsonProperty] internal LogicShipUpgradeTimer ShipUpgrade;
         [JsonProperty] internal LogicItemUnavailableTimer ItemUnavailableTimer;
         [JsonProperty] internal LogicSpellTimer SpellTimer;
+        [JsonProperty] internal LogicTeamMailCooldownTimer TeamMailCooldownTimer;
+        [JsonProperty] internal LogicBonusChestRespawnTimer BonusChestRespawnTimer;
+        [JsonProperty] internal LogicDailyMultiplayerTimer DailyMultiplayerTimer;
 
         [JsonProperty] internal LogicArrayList<AvatarStreamEntry> StreamEntries;
 
@@ -204,7 +209,7 @@ namespace Supercell.Life.Server.Logic.Avatar
         {
             get
             {
-                int count = 15;
+                int count = Globals.InitialMaxEnergy;
 
                 foreach (var slot in this.EnergyPackages.Values)
                 {
@@ -245,54 +250,58 @@ namespace Supercell.Life.Server.Logic.Avatar
         /// </summary>
         internal LogicClientAvatar()
         {
-            this.Time                 = new LogicTime();
-            this.Team                 = new JArray(Globals.StartingCharacter.GlobalID, 0, 0);
-
-            this.AchievementProgress  = new LogicDataSlots(this);
-            this.Resources            = new LogicResources(this);
-            this.Variables            = new LogicVariables(this);
-
-            this.Spells               = new LogicSpells(this);
-            this.SpellsReady          = new LogicDataSlots(this);
-
-            this.HeroLevels           = new LogicHeroLevels(this);
-            this.HeroQuests           = new LogicDataSlots(this);
-            this.HeroMatches          = new LogicDataSlots(this);
-            this.HeroKills            = new LogicDataSlots(this);
-            this.HeroTired            = new LogicDataSlots(this);
-
-            this.NpcProgress          = new LogicNpcProgress(this);
-            this.QuestUnlockSeens     = new LogicDataSlots(this);
-            this.QuestMoves           = new LogicQuestMoves(this);
-
-            this.EnergyPackages       = new LogicDataSlots(this, 2);
-            this.HeroUnlockSeens      = new LogicDataSlots(this);
-
-            this.ItemInventories      = new LogicDataSlots(this);
-            this.ItemLevels           = new LogicDataSlots(this);
-            this.ItemAttachedTo       = new LogicDataSlots(this);
-            this.ItemUnavailable      = new LogicDataSlots(this);
-
-            this.Extras               = new LogicExtras(this);
-
-            this.EnergyTimer          = new LogicEnergyTimer(this);
-            this.Booster              = new LogicBoosterTimer(this);
-            this.HeroUpgrade          = new LogicHeroUpgradeTimer(this);
-            this.Sailing              = new LogicSailingTimer(this);
-            this.ShipUpgrade          = new LogicShipUpgradeTimer(this);
-            this.ItemUnavailableTimer = new LogicItemUnavailableTimer(this);
-            this.SpellTimer           = new LogicSpellTimer(this);
+            this.Time                    = new LogicTime();
+            this.Team                    = new JArray(Globals.StartingCharacter.GlobalID, 0, 0);
             
-            this.Items                = new LogicItems(this);
+            this.AchievementProgress     = new LogicDataSlots(this);
+            this.Resources               = new LogicResources(this);
+            this.Variables               = new LogicVariables(this);
 
-            this.Facebook             = new Facebook(this);
+            this.Spells                  = new LogicSpells(this);
+            this.SpellsReady             = new LogicDataSlots(this);
 
-            this.Diamonds             = Globals.StartingDiamonds;
-            this.FreeDiamonds         = Globals.StartingDiamonds;
+            this.HeroLevels              = new LogicHeroLevels(this);
+            this.HeroQuests              = new LogicDataSlots(this);
+            this.HeroMatches             = new LogicDataSlots(this);
+            this.HeroKills               = new LogicDataSlots(this);
+            this.HeroTired               = new LogicDataSlots(this);
 
-            this.StreamEntries        = new LogicArrayList<AvatarStreamEntry>(50);
+            this.NpcProgress             = new LogicNpcProgress(this);
+            this.Crowns                  = new LogicArrayList<int>();
+            this.QuestUnlockSeens        = new LogicDataSlots(this);
+            this.QuestMoves              = new LogicQuestMoves(this);
 
-            this.Quests               = new Dictionary<int, LogicQuest>(Levels.Quests);
+            this.EnergyPackages          = new LogicDataSlots(this, 2);
+            this.HeroUnlockSeens         = new LogicDataSlots(this);
+
+            this.ItemInventories         = new LogicDataSlots(this);
+            this.ItemLevels              = new LogicDataSlots(this);
+            this.ItemAttachedTo          = new LogicDataSlots(this);
+            this.ItemUnavailable         = new LogicDataSlots(this);
+
+            this.Extras                  = new LogicExtras(this);
+
+            this.EnergyTimer             = new LogicEnergyTimer(this);
+            this.Booster                 = new LogicBoosterTimer(this);
+            this.HeroUpgrade             = new LogicHeroUpgradeTimer(this);
+            this.Sailing                 = new LogicSailingTimer(this);
+            this.ShipUpgrade             = new LogicShipUpgradeTimer(this);
+            this.ItemUnavailableTimer    = new LogicItemUnavailableTimer(this);
+            this.SpellTimer              = new LogicSpellTimer(this);
+            this.BonusChestRespawnTimer  = new LogicBonusChestRespawnTimer(this);
+            this.TeamMailCooldownTimer   = new LogicTeamMailCooldownTimer(this);
+            this.DailyMultiplayerTimer   = new LogicDailyMultiplayerTimer(this);
+
+            this.Items                   = new LogicItems(this);
+
+            this.Facebook                = new Facebook(this);
+
+            this.Diamonds                = Globals.StartingDiamonds;
+            this.FreeDiamonds            = Globals.StartingDiamonds;
+
+            this.StreamEntries           = new LogicArrayList<AvatarStreamEntry>(50);
+
+            this.Quests                  = new Dictionary<int, LogicQuest>(Levels.Quests);
 
             this.OngoingQuestData        = this.Quests[Globals.StartingQuest.GlobalID];
             this.OngoingQuestData.Avatar = this;
@@ -331,7 +340,7 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.NpcProgress.Save(json);
 
             json.Put("shareC", new LogicJSONNumber());
-            json.Put("mailC", new LogicJSONNumber());
+            json.Put("mailC", new LogicJSONNumber(this.TeamMailCooldownTimer.Timer.RemainingSecs));
             json.Put("challengeC", new LogicJSONNumber());
 
             json.Put("troop_req_t", new LogicJSONNumber());
@@ -351,13 +360,20 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.EnergyTimer.Save(json);
 
             json.Put("map_chest", new LogicJSONNumber());
-            json.Put("mapDailyBonusChestRespawnTimer", new LogicJSONNumber(86400));
 
-            // Json.Put("freePvp", new LogicJSONNumber());
-            // Json.Put("pvp_chest", new LogicJSONNumber());
+            this.BonusChestRespawnTimer.Save(json);
 
-            json.Put("seasick", new LogicJSONNumber(this.Seasick * 3600));
+            this.DailyMultiplayerTimer.Save(json);
 
+            var heroUsedInDaily = new LogicJSONArray();
+            heroUsedInDaily.Add(new LogicJSONNumber(1));
+
+            json.Put("heroUsedInDaily", heroUsedInDaily);
+
+            // json.Put("pvp_chest", new LogicJSONNumber());
+
+            json.Put("seasick", new LogicJSONNumber());
+            
             this.HeroUpgrade.Save(json);
 
             json.Put("tutorial_mask", new LogicJSONNumber(this.TutorialMask));

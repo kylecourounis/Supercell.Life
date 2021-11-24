@@ -3,6 +3,7 @@
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic.Enums;
+    using Supercell.Life.Server.Logic.Game;
 
     internal class LogicVariables : LogicDataSlots
     {
@@ -73,7 +74,7 @@
         /// </summary>
         internal bool IsPvPChestProgressComplete()
         {
-            return this.Get(LogicVariables.ChestProgress.GlobalID).Count == 5 && this.Get(LogicVariables.ChestProgressUpdated.GlobalID).Count == 5;
+            return this.Get(LogicVariables.ChestProgress.GlobalID).Count == Globals.MultiplayerChestWinCount && this.Get(LogicVariables.ChestProgressUpdated.GlobalID).Count == Globals.MultiplayerChestWinCount;
         }
     }
 }

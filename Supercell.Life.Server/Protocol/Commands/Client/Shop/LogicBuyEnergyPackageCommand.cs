@@ -49,8 +49,8 @@
                     gamemode.Avatar.EnergyPackages.AddItem(this.EnergyPackage.GlobalID, 1);
                     gamemode.Avatar.EnergyTimer.Stop();
 
-                    gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Diamonds, -cost);
-                    gamemode.Avatar.SetCommodityCount(LogicCommodityType.Energy, gamemode.Avatar.MaxEnergy);
+                    gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost);
+                    gamemode.Avatar.SetCommodityCount(CommodityType.Energy, gamemode.Avatar.MaxEnergy);
                 }
                 else Debugger.Error("Unable to buy the energy package. The player has already bought all of the packages.");
             }

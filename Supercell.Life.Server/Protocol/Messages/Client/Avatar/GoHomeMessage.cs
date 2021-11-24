@@ -3,6 +3,7 @@
     using Supercell.Life.Titan.DataStream;
 
     using Supercell.Life.Server.Helpers;
+    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
     using Supercell.Life.Server.Protocol.Messages.Server;
@@ -49,7 +50,10 @@
                 }
                 else
                 {
-                    // TODO
+                    if (this.Connection.GameMode.Avatar.DailyMultiplayerTimer.Started)
+                    {
+                        this.Connection.GameMode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Energy, -4);
+                    }
                 }
             }
             

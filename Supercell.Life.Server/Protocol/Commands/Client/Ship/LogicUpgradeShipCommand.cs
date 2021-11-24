@@ -39,7 +39,7 @@
 
                 if (gamemode.Avatar.Gold >= cost && gamemode.Avatar.ExpLevel >= xpLvl)
                 {
-                    gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, -cost);
+                    gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Gold, -cost);
                     gamemode.Avatar.ShipUpgrade.Start();
                 }
             }

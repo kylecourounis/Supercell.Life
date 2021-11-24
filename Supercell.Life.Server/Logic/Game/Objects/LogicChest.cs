@@ -3,15 +3,22 @@
     using Supercell.Life.Server.Core;
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
-    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Logic.Enums;
-    
+
     internal class LogicChest
     {
         private readonly LogicClientAvatar Avatar;
 
         internal byte[] byte_2B415A = { 2, 0, 0, 0, 0, 0, 1, 0, 5, 0, 0, 2, 0, 0, 1, 0, 1 };
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogicChest"/> class.
+        /// </summary>
+        internal LogicChest()
+        {
+            // LogicChest.
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicChest"/> class.
@@ -28,29 +35,67 @@
         {
             LogicExperienceLevelData expLevelData = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataWithID(this.Avatar.ExpLevel - 1);
 
-            var v40 = this.byte_2B415A[1 % 50 % 50];
+            var gold = this.Avatar.Connection.GameMode.Random.Rand(expLevelData.MapChestMaxGold - expLevelData.MapChestMinGold) + expLevelData.MapChestMinGold;
+            var xp   = this.Avatar.Connection.GameMode.Random.Rand(expLevelData.MapChestMaxXP - expLevelData.MapChestMinXP) + expLevelData.MapChestMinXP;
 
-            var gold = Loader.Random.Rand(expLevelData.MapChestMinGold, expLevelData.MapChestMaxGold);
-            var xp   = Loader.Random.Rand(expLevelData.MapChestMinXP, expLevelData.MapChestMaxXP);
-
-            this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, gold);
-            this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, xp);
+            this.Avatar.CommodityChangeCountHelper(CommodityType.Gold, gold);
+            this.Avatar.CommodityChangeCountHelper(CommodityType.Experience, xp);
         }
 
         /// <summary>
-        /// Creates a level chest.
+        /// Creates a small chest.
         /// </summary>
-        internal void CreateLevelChest()
+        internal void CreateSmallChest()
         {
-            // TODO
+            //int value = this.Avatar.Connection.GameMode.Random.Rand(Globals.SmallChestModifierMax - Globals.SmallChestModifierMin);
+            
+            int v101 = Loader.Random.Rand(Globals.SmallChestModifierMax - Globals.SmallChestModifierMin);
+
+            var (modGold, modXP) = this.Generate(v101, Globals.SmallChestModifierMin);
+
+            Debugger.Debug($"CHEST: mod range: [{Globals.SmallChestModifierMin} -> {Globals.SmallChestModifierMax}] -> MOD GOLD: = {modGold} MOD XP: = {modXP}");
         }
 
         /// <summary>
-        /// Creates a mega chest.
+        /// Creates a medium chest.
+        /// </summary>
+        internal void CreateMedChest()
+        {
+            int v101 = Loader.Random.Rand(Globals.MedChestModifierMax - Globals.MedChestModifierMin);
+
+            var (modGold, modXP) = this.Generate(v101, Globals.MedChestModifierMin);
+
+            Debugger.Debug($"CHEST: mod range: [{Globals.MedChestModifierMin} -> {Globals.MedChestModifierMax}] -> MOD GOLD: = {modGold} MOD XP: = {modXP}");
+        }
+
+        /// <summary>
+        /// Creates a big chest.
+        /// </summary>
+        internal void CreateBigChest()
+        {
+            int v101 = Loader.Random.Rand(Globals.BigChestModifierMax - Globals.BigChestModifierMin);
+
+            var (modGold, modXP) = this.Generate(v101, Globals.BigChestModifierMin);
+
+            Debugger.Debug($"CHEST: mod range: [{Globals.BigChestModifierMin} -> {Globals.BigChestModifierMax}] -> MOD GOLD: = {modGold} MOD XP: = {modXP}");
+        }
+
+        /// <summary>
+        /// Creates the mega chest.
         /// </summary>
         internal void CreateMegaChest()
         {
             // TODO
+        }
+
+        private (int, long) Generate(int rand, int modifier)
+        {
+            long v104 = (1717986919L * (rand + modifier)) >> 32;
+
+            int v322 = 10 * ((rand + modifier) / 10);
+            long v323 = 10 * (((int)v104 >> 2) + (v104 >> 31));
+
+            return (v322, v323);
         }
 
         // ------------------------------------------------
@@ -93,29 +138,6 @@
                 result = *(_DWORD*)(v6 + 8);
 
             return result;
-        } */
-
-        /* private int sub_197A18(int a1, int a2)
-        {
-            int v3;        // r2
-            int v4;        // r2
-            int v5;        // r2
-            int v6;        // r0
-
-            if (a2 < 1)
-                return 0;
-
-            v3 = a1;
-
-            v4 = v3 ^ (v3 << 13) ^ ((v3 ^ (v3 << 13)) >> 17);
-            v5 = v4 ^ 32 * v4;
-
-            if (v5 <= -1)
-                v6 = -v5;
-            else
-                v6 = v5;
-
-            return v6 % a2;
         } */
 
         /* private int sub_BE120(int a1, int a2)

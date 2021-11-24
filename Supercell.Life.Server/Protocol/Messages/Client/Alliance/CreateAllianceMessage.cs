@@ -53,7 +53,7 @@
         {
             if (!this.Connection.GameMode.Avatar.IsInAlliance && this.Connection.GameMode.Avatar.Gold >= 10000)
             {
-                this.Connection.GameMode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, -10000);
+                this.Connection.GameMode.Avatar.CommodityChangeCountHelper(CommodityType.Gold, -10000);
             }
 
             Alliance alliance = Alliances.Create();

@@ -35,6 +35,41 @@
             0xFD, 0xFE, 0xFE, 0xFF
         };
 
+        private static readonly byte[] AtanTable =
+        {
+            0x00, 0x00, 0x01, 0x01, 0x02, 0x02, 0x03, 0x03, 0x04,
+            0x04, 0x04, 0x05, 0x05, 0x06, 0x06, 0x07, 0x07, 0x08,
+            0x08, 0x08, 0x09, 0x09, 0x0A, 0x0A, 0x0B, 0x0B, 0x0B,
+            0x0C, 0x0C, 0x0D, 0x0D, 0x0E, 0x0E, 0x0E, 0x0F, 0x0F,
+            0x10, 0x10, 0x11, 0x11, 0x11, 0x12, 0x12, 0x13, 0x13,
+            0x13, 0x14, 0x14, 0x15, 0x15, 0x15, 0x16, 0x16, 0x16,
+            0x17, 0x17, 0x18, 0x18, 0x18, 0x19, 0x19, 0x19, 0x1A,
+            0x1A, 0x1B, 0x1B, 0x1B, 0x1C, 0x1C, 0x1C, 0x1D, 0x1D,
+            0x1D, 0x1E, 0x1E, 0x1E, 0x1F, 0x1F, 0x1F, 0x20, 0x20,
+            0x20, 0x21, 0x21, 0x21, 0x22, 0x22, 0x22, 0x23, 0x23,
+            0x23, 0x23, 0x24, 0x24, 0x24, 0x25, 0x25, 0x25, 0x25,
+            0x26, 0x26, 0x26, 0x27, 0x27, 0x27, 0x27, 0x28, 0x28,
+            0x28, 0x28, 0x29, 0x29, 0x29, 0x29, 0x2A, 0x2A, 0x2A,
+            0x2A, 0x2B, 0x2B, 0x2B, 0x2B, 0x2C, 0x2C, 0x2C, 0x2C,
+            0x2D, 0x2D, 0x2D
+        };
+
+        private static readonly int[] SinTable =
+        {
+            0x0000, 0x0012, 0x0024, 0x0036, 0x0047, 0x0059, 0x006B, 0x007D,
+            0x008F, 0x00A0, 0x00B2, 0x00C3, 0x00D5, 0x00E6, 0x00F8, 0x0109,
+            0x011A, 0x012B, 0x013C, 0x014D, 0x015E, 0x016F, 0x0180, 0x0190,
+            0x01A0, 0x01B1, 0x01C1, 0x01D1, 0x01E1, 0x01F0, 0x0200, 0x020F,
+            0x021F, 0x022E, 0x023D, 0x024B, 0x025A, 0x0268, 0x0276, 0x0284,
+            0x0292, 0x02A0, 0x02AD, 0x02BA, 0x02C7, 0x02D4, 0x02E1, 0x02ED,
+            0x02F9, 0x0305, 0x0310, 0x031C, 0x0327, 0x0332, 0x033C, 0x0347,
+            0x0351, 0x035B, 0x0364, 0x036E, 0x0377, 0x0380, 0x0388, 0x0390,
+            0x0398, 0x03A0, 0x03A7, 0x03AF, 0x03B5, 0x03BC, 0x03C2, 0x03C8,
+            0x03CE, 0x03D3, 0x03D8, 0x03DD, 0x03E2, 0x03E6, 0x03EA, 0x03ED,
+            0x03F0, 0x03F3, 0x03F6, 0x03F8, 0x03FA, 0x03FC, 0x03FE, 0x03FF,
+            0x03FF, 0x0400, 0x0400
+        };
+
         /// <summary>
         /// Returns the absolute value of the specified integer.
         /// </summary>
@@ -49,7 +84,172 @@
         }
 
         /// <summary>
-        /// Clamps the specified number.
+        /// Calculates the cosine of the specified angle.
+        /// </summary>
+        public static int Cos(int angle)
+        {
+            return LogicMath.Sin(angle + 90);
+        }
+
+        /// <summary>
+        /// Calculates the cosine using the specified angles.
+        /// </summary>
+        public static int Cos(int angleA, int angleB)
+        {
+            return LogicMath.Sin(angleA + 90, angleB);
+        }
+
+        /// <summary>
+        /// Calculates the sine of the specified angle.
+        /// </summary>
+        public static int Sin(int angle)
+        {
+            angle = LogicMath.NormalizeAngle360(angle);
+
+            if (angle < 180)
+            {
+                if (angle > 90)
+                {
+                    angle = 180 - angle;
+                }
+
+                return LogicMath.SinTable[angle];
+            }
+
+            angle -= 180;
+
+            if (angle > 90)
+            {
+                angle = 180 - angle;
+            }
+
+            return -LogicMath.SinTable[angle];
+        }
+
+        /// <summary>
+        /// Calculates the sine using the specified angles.
+        /// </summary>
+        public static int Sin(int angleA, int angleB)
+        {
+            return LogicMath.Sin(angleA) * angleB / 1024;
+        }
+
+        /// <summary>
+        /// Gets the angle.
+        /// </summary>
+        public static int GetAngle(int x, int y)
+        {
+            if (x == 0 && y == 0)
+            {
+                return 0;
+            }
+
+            if (x > 0 && y >= 0)
+            {
+                if (y >= x)
+                {
+                    return 90 - LogicMath.AtanTable[(x << 7) / y];
+                }
+
+                return LogicMath.AtanTable[(y << 7) / x];
+            }
+
+            int num = LogicMath.Abs(x);
+
+            if (x <= 0 && y > 0)
+            {
+                if (num < y)
+                {
+                    return 90 + LogicMath.AtanTable[(num << 7) / y];
+                }
+
+                return 180 - LogicMath.AtanTable[(y << 7) / num];
+            }
+
+            int num2 = LogicMath.Abs(y);
+
+            if (x < 0 && y <= 0)
+            {
+                if (num2 >= num)
+                {
+                    if (num2 == 0)
+                    {
+                        return 0;
+                    }
+
+                    return 270 - LogicMath.AtanTable[(num << 7) / num2];
+                }
+
+                return 180 + LogicMath.AtanTable[(num2 << 7) / num];
+            }
+
+            if (num < num2)
+            {
+                return 270 + LogicMath.AtanTable[(num << 7) / num2];
+            }
+
+            if (num == 0)
+            {
+                return 0;
+            }
+
+            return LogicMath.NormalizeAngle360(360 - LogicMath.AtanTable[(num2 << 7) / num]);
+        }
+
+        /// <summary>
+        /// Gets the angle between the two specified angles.
+        /// </summary>
+        public static int GetAngleBetween(int angle1, int angle2)
+        {
+            return LogicMath.Abs(LogicMath.NormalizeAngle180(angle1 - angle2));
+        }
+
+        /// <summary>
+        /// Normalizes the 180 degree angle.
+        /// </summary>
+        public static int NormalizeAngle180(int angle)
+        {
+            angle = LogicMath.NormalizeAngle360(angle);
+
+            if (angle >= 180)
+            {
+                return angle - 360;
+            }
+
+            return angle;
+        }
+
+        /// <summary>
+        /// Normalizes the 360 degree angle.
+        /// </summary>
+        public static int NormalizeAngle360(int angle)
+        {
+            angle %= 360;
+
+            if (angle < 0)
+            {
+                return angle + 360;
+            }
+
+            return angle;
+        }
+
+        /// <summary>
+        /// Gets the radius.
+        /// </summary>
+        public static int GetRadius(int x, int y)
+        {
+            x = LogicMath.Abs(x);
+            y = LogicMath.Abs(y);
+
+            int maxValue = LogicMath.Max(x, y);
+            int minValue = LogicMath.Min(x, y);
+
+            return maxValue + (53 * minValue >> 7);
+        }
+
+        /// <summary>
+        /// Clamps the specified numbers.
         /// </summary>
         public static int Clamp(int a1, int a2, int a3)
         {
@@ -166,6 +366,22 @@
 
                 return -1;
             }
+        }
+        
+        /// <summary>
+        /// Gets the rotated X value.
+        /// </summary>
+        public static int GetRotatedX(int x, int y, int angle)
+        {
+            return (x * LogicMath.Cos(angle) - y * LogicMath.Sin(angle)) / 1024;
+        }
+
+        /// <summary>
+        /// Gets the rotated Y value.
+        /// </summary>
+        public static int GetRotatedY(int x, int y, int angle)
+        {
+            return (x * LogicMath.Sin(angle) + y * LogicMath.Cos(angle)) / 1024;
         }
 
         /// <summary>

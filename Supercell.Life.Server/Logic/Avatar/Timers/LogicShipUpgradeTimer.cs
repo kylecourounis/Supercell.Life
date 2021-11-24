@@ -64,7 +64,7 @@
                 int cost = LogicGamePlayUtil.GetSpeedUpCost(this.Timer.RemainingSecs, LogicGamePlayUtil.GetSpeedUpCostMultiplier(1));
                 Debugger.Debug(cost);
 
-                this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Diamonds, -cost);
+                this.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost);
 
                 this.Avatar.ShipLevel++;
                 this.Avatar.Save();

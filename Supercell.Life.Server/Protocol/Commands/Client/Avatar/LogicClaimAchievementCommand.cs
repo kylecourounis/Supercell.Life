@@ -33,8 +33,8 @@
             {
                 gamemode.Avatar.AchievementProgress.AddItem(this.Achievement.GlobalID, this.Achievement.ActionCount);
 
-                gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, this.Achievement.ExpReward);
-                gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.FreeDiamonds, this.Achievement.DiamondReward);
+                gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Experience, this.Achievement.ExpReward);
+                gamemode.Avatar.CommodityChangeCountHelper(CommodityType.FreeDiamonds, this.Achievement.DiamondReward);
             }
             else
             {

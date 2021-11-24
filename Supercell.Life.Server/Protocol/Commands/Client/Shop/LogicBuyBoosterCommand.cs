@@ -42,7 +42,7 @@
                     }
                 }
 
-                gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Diamonds, -cost);
+                gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost);
 
                 gamemode.Avatar.Booster.BoostPackage = this.Booster;
                 gamemode.Avatar.Booster.Start();

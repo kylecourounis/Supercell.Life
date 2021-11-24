@@ -1,23 +1,22 @@
-﻿namespace Supercell.Life.Server.Logic.Battle
+﻿namespace Supercell.Life.Server.Logic.Avatar.Timers
 {
     using Newtonsoft.Json;
 
+    using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Titan.Logic.Math;
 
     using Supercell.Life.Server.Logic.Game;
 
-    internal class LogicMultiplayerTurnTimer
+    internal class LogicTeamMailCooldownTimer
     {
-        internal LogicBattle Battle;
-
-        internal (LogicLong Identifier, int Turns) EnemyReconnectTurns;
+        internal LogicClientAvatar Avatar;
 
         internal LogicTime Time;
 
         [JsonProperty("timer")] internal LogicTimer Timer;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="LogicMultiplayerTurnTimer"/> has started.
+        /// Gets a value indicating whether this <see cref="LogicTeamMailCooldownTimer"/> has started.
         /// </summary>
         internal bool Started
         {
@@ -28,19 +27,19 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogicMultiplayerTurnTimer"/> class.
+        /// Initializes a new instance of the <see cref="LogicTeamMailCooldownTimer"/> class.
         /// </summary>
-        public LogicMultiplayerTurnTimer()
+        public LogicTeamMailCooldownTimer()
         {
             this.Timer = new LogicTimer();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogicMultiplayerTurnTimer"/> class.
+        /// Initializes a new instance of the <see cref="LogicTeamMailCooldownTimer"/> class.
         /// </summary>
-        internal LogicMultiplayerTurnTimer(LogicBattle battle)
+        internal LogicTeamMailCooldownTimer(LogicClientAvatar avatar)
         {
-            this.Battle = battle;
+            this.Avatar = avatar;
             this.Time   = new LogicTime();
             this.Timer  = new LogicTimer(this.Time);
         }
@@ -50,19 +49,7 @@
         /// </summary>
         internal void Start()
         {
-            this.Timer.StartTimer(this.Time, Globals.PVPFirstTurnTimeSeconds);
-        }
-
-        /// <summary>
-        /// Finishes this instance.
-        /// </summary>
-        internal void Reset()
-        {
-            if (this.Started)
-            {
-                this.Timer.StopTimer();
-                this.Timer.StartTimer(this.Time, Globals.PVPMaxTurnTimeSeconds);
-            }
+            this.Timer.StartTimer(this.Time, Globals.TeamMailSendCooldownTime);
         }
 
         /// <summary>
@@ -101,7 +88,7 @@
             {
                 if (this.Timer.RemainingSecs <= 0)
                 {
-                    this.Reset();
+                    this.Finish();
                 }
             }
         }

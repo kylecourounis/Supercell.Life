@@ -49,6 +49,11 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
+            LogicVector2 vector = new LogicVector2(LogicMath.Cos(this.DirectionX), LogicMath.Sin(this.DirectionY));
+
+            Debugger.Debug($"DirectionX : {this.DirectionX}, DirectionY : {this.DirectionY}, S : {this.S}, F : {this.F}");
+            Debugger.Debug($"Coords : {vector}, Angle : {vector.GetAngle()}, Radius : {LogicMath.GetRadius(vector.X, vector.Y)}");
+
             var battle = gamemode.Battle;
 
             if (battle == null)
@@ -77,19 +82,19 @@
                     gamemode.Avatar.OngoingQuestData.SublevelMoveCount += 1;
 
                     var ongoingLevel = gamemode.Avatar.OngoingQuestData.Levels[gamemode.Avatar.OngoingQuestData.Level];
-                    ongoingLevel.Battles[ongoingLevel.CurrentBattle].CheckCollision(this.DirectionX, this.DirectionY);
+                    ongoingLevel?.Battles[ongoingLevel.CurrentBattle].CheckCollision(vector);
                 }
             }
             else
             {
-                battle.ResetTurn(gamemode.Avatar);
-
                 var opponent = battle.GetEnemy(gamemode.Avatar);
 
+                battle.SetCharacterPositions(gamemode, new LogicVector2(), vector, new LogicVector2());
+                
                 LogicMoveCharacterCommand cmd = new LogicMoveCharacterCommand(opponent.Connection)
                 {
-                    DirectionX     = this.DirectionX,
-                    DirectionY     = this.DirectionY,
+                    DirectionX     = -this.DirectionX,
+                    DirectionY     = -this.DirectionY,
                     Value          = this.Value,
                     ExecuteSubTick = this.ExecuteSubTick,
                     ExecutorID     = this.ExecutorID
@@ -97,8 +102,6 @@
 
                 battle.EnqueueCommand(this, cmd);
             }
-
-            Debugger.Debug($"DirectionX : {this.DirectionX}, DirectionY : {this.DirectionY}, S : {this.S}, F : {this.F}");
         }
 
         internal override void LoadCommandFromJSON(LogicJSONObject json)

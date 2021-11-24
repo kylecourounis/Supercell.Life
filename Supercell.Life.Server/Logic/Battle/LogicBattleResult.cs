@@ -39,7 +39,7 @@
         {
             get
             {
-                return this.Battle.TurnTimer.EnemyReconnectTurns == 3;
+                return this.Battle.TurnTimer.EnemyReconnectTurns.Turns == 3;
             }
         }
 
@@ -62,7 +62,11 @@
                 // TODO
             }
 
-            this.UpdateScores();
+            (this.WinnerScore, this.LoserScore) = LogicGamePlayUtil.CalculateScore(this.Winner.Avatar, this.Loser.Avatar);
+
+            Debugger.Debug($"{this.WinnerScore}, {this.LoserScore}");
+
+            // this.UpdateScores();
         }
 
         /// <summary>
@@ -86,6 +90,11 @@
         {
             this.Winner = winner;
             this.Loser  = loser;
+
+            foreach (var hero in this.Winner.Avatar.Team.ToObject<int[]>())
+            {
+                this.Winner.Avatar.DailyMultiplayerTimer.HeroUsedInDaily.Add(hero);
+            }
         }
 
         /// <summary>

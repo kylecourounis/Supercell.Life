@@ -1,21 +1,16 @@
 ﻿namespace Supercell.Life.Server.Logic.Avatar.Slots
 {
-    using Newtonsoft.Json;
-
     using Supercell.Life.Server.Logic.Game;
-    using Supercell.Life.Titan.Logic;
     using Supercell.Life.Titan.Logic.Json;
 
     internal class LogicNpcProgress : LogicDataSlots
     {
-        [JsonProperty] internal LogicArrayList<int> Crowns;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicNpcProgress"/> class.
         /// </summary>
         internal LogicNpcProgress(LogicClientAvatar avatar) : base(avatar, 512)
         {
-            this.Crowns = new LogicArrayList<int>();
+            // LogicNpcProgress
         }
 
         /// <summary>

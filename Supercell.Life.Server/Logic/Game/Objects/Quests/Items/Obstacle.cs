@@ -2,12 +2,16 @@
 {
     using Supercell.Life.Titan.Logic.Json;
 
+    using Supercell.Life.Server.Files;
+    using Supercell.Life.Server.Files.CsvLogic;
+    using Supercell.Life.Server.Logic.Enums;
+
     internal class Obstacle
     {
         /// <summary>
         /// Gets the data.
         /// </summary>
-        internal int Data
+        internal LogicObstacleData Data
         {
             get;
         }
@@ -33,7 +37,7 @@
         /// </summary>
         internal Obstacle(LogicJSONObject json)
         {
-            this.Data = json.GetJsonNumber("data").GetIntValue();
+            this.Data = (LogicObstacleData)CSV.Tables.Get(Gamefile.Obstacles).GetDataWithID(json.GetJsonNumber("data").GetIntValue());
             this.X    = json.GetJsonNumber("x").GetIntValue();
             this.Y    = json.GetJsonNumber("y").GetIntValue();
         }
@@ -43,7 +47,7 @@
         /// </summary>
         public override string ToString()
         {
-            return $"Data: {this.Data}, X-Y: ({this.X},{this.Y})";
+            return $"Data: {this.Data.GlobalID}, X-Y: ({this.X},{this.Y})";
         }
     }
 }

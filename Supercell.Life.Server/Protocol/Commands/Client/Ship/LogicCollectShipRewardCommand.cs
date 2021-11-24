@@ -51,8 +51,8 @@
                         xp   += shipXp.NumberArray[level];
                     }
 
-                    gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, gold);
-                    gamemode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, xp);
+                    gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Gold, gold);
+                    gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Experience, xp);
                 }
             }
         }

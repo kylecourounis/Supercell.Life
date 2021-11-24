@@ -2,12 +2,16 @@
 {
     using Supercell.Life.Titan.Logic.Json;
 
+    using Supercell.Life.Server.Files;
+    using Supercell.Life.Server.Files.CsvLogic;
+    using Supercell.Life.Server.Logic.Enums;
+
     internal class Enemy
     {
         /// <summary>
         /// Gets the data.
         /// </summary>
-        internal int Data
+        internal LogicEnemyCharacterData Data
         {
             get;
         }
@@ -49,7 +53,7 @@
         /// </summary>
         internal Enemy(LogicJSONObject json)
         {
-            this.Data  = json.GetJsonNumber("data").GetIntValue();
+            this.Data  = (LogicEnemyCharacterData)CSV.Tables.Get(Gamefile.EnemyCharacters).GetDataWithID(json.GetJsonNumber("data").GetIntValue());
             this.X     = json.GetJsonNumber("x").GetIntValue();
             this.Y     = json.GetJsonNumber("y").GetIntValue();
             this.Team  = json.GetJsonNumber("team").GetIntValue();
@@ -61,7 +65,7 @@
         /// </summary>
         public override string ToString()
         {
-            return $"Data: {this.Data}, X-Y: ({this.X},{this.Y}), Team: {this.Team}, Level: {this.Level}";
+            return $"Data: {this.Data.GlobalID}, X-Y: ({this.X},{this.Y}), Team: {this.Team}, Level: {this.Level}";
         }
     }
 }

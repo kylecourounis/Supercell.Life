@@ -1,6 +1,6 @@
 ﻿namespace Supercell.Life.Server.Logic.Enums
 {
-    internal enum LogicCommodityType
+    internal enum CommodityType
     {
         Gold,
         Diamonds,

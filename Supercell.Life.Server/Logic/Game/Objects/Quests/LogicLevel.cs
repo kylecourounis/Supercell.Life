@@ -2,6 +2,7 @@
 {
     using Supercell.Life.Titan.Logic;
     using Supercell.Life.Titan.Logic.Json;
+    using Supercell.Life.Titan.Logic.Math;
 
     using Supercell.Life.Server.Logic.Game.Objects.Quests.Items;
 
@@ -119,22 +120,22 @@
             /// <summary>
             /// Checks whether the character at the specified X and Y coordinates collided with an enemy in the battle.
             /// </summary>
-            internal void CheckCollision(int dX, int dY)
+            internal void CheckCollision(LogicVector2 vector)
             {
                 if (this.Enemies.Size > 0)
                 {
                     for (int i = 0; i < this.Enemies.Size; i++)
                     {
-                        int enemyX = this.Enemies[i].X;
-                        int enemyY = this.Enemies[i].Y;
-                        
-                        if (dX == enemyX && dY == enemyY)
+                        LogicVector2 enemyVector = new LogicVector2(LogicMath.Cos(this.Enemies[i].X), LogicMath.Sin(this.Enemies[i].Y));
+                        Debugger.Debug($"Enemy Coords : {enemyVector}, Enemy Angle : {enemyVector.GetAngle()}, Enemy Radius : {LogicMath.GetRadius(enemyVector.X, enemyVector.Y)}, Distance Between : {enemyVector.GetDistance(vector)}");
+
+                        /* if (vector.X == enemyVector.X && vector.Y == enemyVector.Y)
                         {
-                            Debugger.Debug(this.Enemies[i].Data);
+                            Debugger.Debug(this.Enemies[i].Data.GlobalID);
 
                             this.Enemies.RemoveAt(i);
                             this.EnemiesKilled++;
-                        }
+                        } */
                     }
                 }
 

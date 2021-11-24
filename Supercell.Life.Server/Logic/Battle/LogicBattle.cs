@@ -15,8 +15,10 @@
     using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Protocol.Commands;
+    using Supercell.Life.Server.Protocol.Commands.Client;
     using Supercell.Life.Server.Protocol.Messages;
     using Supercell.Life.Server.Protocol.Messages.Server;
+    using Supercell.Life.Titan.Logic;
 
     using Timer = System.Timers.Timer;
 
@@ -39,11 +41,17 @@
         
         internal Dictionary<LogicGameMode, ConcurrentQueue<LogicCommand>> CommandQueues;
 
+        internal Dictionary<LogicGameMode, LogicVector2[]> CharacterPositions;
+
         internal LogicJSONArray ReplayCommands;
 
         internal LogicBattleResult BattleResult;
 
+        internal int TotalTurns;
+
         internal bool IsFriendlyChallenge;
+
+        internal int Subtick;
 
         /// <summary>
         /// Gets a list of the instances of <see cref="LogicGameMode"/>s in this <see cref="LogicBattle"/>.
@@ -63,7 +71,7 @@
         {
             get
             {
-                return this.GameModes.Where(avatar => avatar.Connection != null).ToList();
+                return this.GameModes.Where(avatar => avatar.Connection.IsConnected).ToList();
             }
         }
 
@@ -105,6 +113,8 @@
 
             this.TurnTimer = new LogicMultiplayerTurnTimer(this);
 
+            this.CharacterPositions = new Dictionary<LogicGameMode, LogicVector2[]>();
+
             this.ReplayCommands = new LogicJSONArray();
         }
 
@@ -145,7 +155,7 @@
             {
                 this.Started = true;
 
-                this.StartingPlayer = Loader.Random.Next(0, 1);
+                this.StartingPlayer = Loader.Random.Rand(2);
                 this.WhoseTurn      = this.GameModes[this.StartingPlayer].Avatar.Identifier;
 
                 foreach (LogicGameMode gamemode in this.GameModes.Where(gamemode => gamemode.Connection != null))
@@ -175,12 +185,27 @@
             {
                 this.CommandQueues[this.GameModes.Find(gamemode => gamemode.Avatar.Identifier == self.Connection.GameMode.Avatar.Identifier)].Enqueue(self);
                 this.ReplayCommands.Add(self.SaveToJSON());
+
+                if (self.GetType() == typeof(LogicMoveCharacterCommand) || self.GetType() == typeof(LogicMultiplayerTurnTimedOutCommand))
+                {
+                    this.ResetTurn(self.Connection.GameMode.Avatar);
+                }
             }
 
             if (opponent != null)
             {
                 this.CommandQueues[this.GameModes.Find(gamemode => gamemode.Avatar.Identifier != self.Connection.GameMode.Avatar.Identifier)].Enqueue(opponent);
             }
+        }
+
+        /// <summary>
+        /// Sets the character positions on the battlefield. 
+        /// </summary>
+        internal void SetCharacterPositions(LogicGameMode gamemode, LogicVector2 char1, LogicVector2 char2, LogicVector2 char3)
+        {
+            this.CharacterPositions[gamemode][0] = char1;
+            this.CharacterPositions[gamemode][1] = char2;
+            this.CharacterPositions[gamemode][2] = char3;
         }
 
         /// <summary>
@@ -202,7 +227,7 @@
                     {
                         new SectorHeartbeatMessage(gamemode.Connection)
                         {
-                            Commands = this.CommandQueues[gamemode]
+                            Battle = this
                         }.Send();
                     }
 
@@ -211,14 +236,9 @@
                         this.Stop();
                     }
 
-                    if (this.Connected.Count == 1)
+                    if (this.TurnTimer.EnemyReconnectTurns.Turns == 3)
                     {
-                        this.TurnTimer.EnemyReconnectTurns++;
-
-                        if (this.TurnTimer.EnemyReconnectTurns == 3)
-                        {
-                            this.Stop();
-                        }
+                        this.Stop();
                     }
                 }
             }
@@ -234,6 +254,8 @@
         internal void ResetTurn(LogicClientAvatar turnFinished)
         {
             this.WhoseTurn = this.GetEnemy(turnFinished).Identifier;
+
+            this.TotalTurns++;
 
             this.TurnTimer.Reset();
 

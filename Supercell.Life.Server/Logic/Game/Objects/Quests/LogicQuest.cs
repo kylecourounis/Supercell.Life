@@ -60,7 +60,8 @@
             }
         }
 
-        [JsonProperty] internal int MovesRecord;
+        [JsonProperty] internal int ReplayProgress;
+        [JsonProperty] internal int ReplayMoves;
 
         /// <summary>
         /// Gets the number of moves in this <see cref="LogicQuest"/>.
@@ -96,21 +97,21 @@
                 requiredQuest = ((LogicQuestData)CSV.Tables.Get(Gamefile.Quests).GetDataByName(this.Data.RequiredQuest)).GlobalID;
             }
 
+            if (this.Avatar.NpcProgress.ContainsKey(this.GlobalID) && this.Level == this.Levels.Size)
+            {
+                this.IsReplaying = true;
+            }
+
             if (this.Avatar.NpcProgress.ContainsKey(requiredQuest) && this.Avatar.ExpLevel >= this.Data.RequiredXpLevel && this.Avatar.Energy >= this.Data.Energy)
             {
+                if (!this.IsReplaying)
+                {
+                    this.ReplayMoves = 0;
+                }
+
                 this.Avatar.OngoingQuestData = this;
                 this.Avatar.Connection.State = State.Battle;
                 this.Avatar.Energy          -= this.Data.Energy;
-
-                if (this.Level == this.Levels.Size)
-                {
-                    this.IsReplaying = true;
-
-                    if (!this.Avatar.NpcProgress.Crowns.Contains(this.GlobalID))
-                    {
-                        this.Avatar.QuestMoves.Set(this.GlobalID, 0);
-                    }
-                }
 
                 foreach (var hero in this.Avatar.Team.ToObject<int[]>())
                 {
@@ -142,40 +143,72 @@
                 }
                 default:
                 {
-                    if (this.IsReplaying)
-                    {
-                        this.GoldReward = this.ReplayGoldReward;
-                        this.XPReward   = this.ReplayXPReward;
-                    }
-                    else
-                    {
-                        int id = Files.CsvHelpers.GlobalID.GetID(this.GlobalID) - 1;
-                        LogicExperienceLevelData expLevelData = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataByName(id >= 35 ? "35" : LogicStringUtil.IntToString(id));
-
-                        this.GoldReward = expLevelData.DefaultQuestRewardGoldPerEnergy * this.Data.Energy;
-                        this.XPReward   = expLevelData.DefaultQuestRewardXpPerEnergy * this.Data.Energy;
-                    }
-
-                    if (!this.Avatar.NpcProgress.Crowns.Contains(this.GlobalID))
-                    {
-                        this.Avatar.QuestMoves.AddItem(this.GlobalID, this.SublevelMoveCount);
-                    }
-
                     if (this.SublevelMoveCount > 0)
                     {
+                        if (this.IsReplaying)
+                        {
+                            this.GoldReward = this.ReplayGoldReward;
+                            this.XPReward   = this.ReplayXPReward;
+
+                            this.ReplayProgress++;
+
+                            if (this.Avatar.BonusChestRespawnTimer.ReplayQuest == this.GlobalID)
+                            {
+                                this.Avatar.BonusChestRespawnTimer.ReplayChestTimes++;
+                            }
+                        }
+                        else
+                        {
+                            int id = Files.CsvHelpers.GlobalID.GetID(this.GlobalID) - 1;
+
+                            if (id < 1)
+                            {
+                                id = 1;
+                            }
+
+                            LogicExperienceLevelData expLevelData = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataByName(id >= 35 ? "35" : LogicStringUtil.IntToString(id));
+
+                            this.GoldReward = expLevelData.DefaultQuestRewardGoldPerEnergy * this.Data.Energy;
+                            this.XPReward   = expLevelData.DefaultQuestRewardXpPerEnergy * this.Data.Energy;
+                        }
+
+                        this.Avatar.QuestMoves.AddItem(this.GlobalID, this.SublevelMoveCount);
+
+                        if (this.IsReplaying)
+                        {
+                            this.ReplayMoves += this.SublevelMoveCount;
+                            this.SublevelMoveCount = 0;
+                        }
+
                         if (this.Avatar.NpcProgress.GetCount(this.GlobalID) < this.Levels.Size)
                         {
                             this.Avatar.NpcProgress.AddItem(this.GlobalID, 1);
                             this.SublevelMoveCount = 0;
                         }
 
+                        if (this.Level == this.Levels.Size || this.ReplayProgress == this.Levels.Size)
+                        {
+                            if (this.ReplayMoves > this.Moves)
+                            {
+                                this.Avatar.QuestMoves.Set(this.GlobalID, this.ReplayMoves);
+                            }
+
+                            if (this.Moves <= this.Data.GoalMoveCount)
+                            {
+                                if (!this.Avatar.Crowns.Contains(this.GlobalID))
+                                {
+                                    this.Avatar.Crowns.Add(this.GlobalID);
+                                }
+                            }
+                        }
+
                         int goldDrop = Loader.Random.Rand(this.Data.MinGoldDrop, this.Data.MaxGoldDrop); // Best I can do until object collision works
-                        
+
                         this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, this.GoldReward + goldDrop);
 
                         if (this.Avatar.Items.IsAttached(LogicItems.EnergyRecycler))
                         {
-                            this.Avatar.Energy += 1;
+                            this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Energy, 1);
                         }
 
                         if (this.Avatar.Items.IsAttached(LogicItems.PlunderThunder))
@@ -186,19 +219,9 @@
                         {
                             this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, this.XPReward);
                         }
+
+                        this.CalculateChestLoot();
                     }
-
-                    if (this.Level == this.Levels.Size)
-                    {
-                        this.MovesRecord = this.Moves;
-
-                        if (this.Moves <= this.Data.GoalMoveCount)
-                        {
-                            this.Avatar.NpcProgress.Crowns.Add(this.GlobalID);
-                        }
-                    }
-
-                    this.CalculateChestLoot();
 
                     break;
                 }

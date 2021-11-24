@@ -53,6 +53,8 @@
                     new AvatarStreamEntryMessage(avatar.Connection, mail).Send();
                 }
             }
+
+            gamemode.Avatar.TeamMailCooldownTimer.Start();
         }
     }
 }

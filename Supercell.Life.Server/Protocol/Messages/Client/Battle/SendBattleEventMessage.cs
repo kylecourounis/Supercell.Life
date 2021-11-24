@@ -1,5 +1,6 @@
 ﻿namespace Supercell.Life.Server.Protocol.Messages.Client
 {
+    using Supercell.Life.Server.Logic.Battle;
     using Supercell.Life.Titan.DataStream;
 
     using Supercell.Life.Server.Logic.Enums;
@@ -32,31 +33,10 @@
         {
             if (this.Connection.GameMode.Battle != null)
             {
-                switch (this.EventType)
+                new BattleEventMessage(this.Connection.GameMode.Battle.GetEnemy(this.Connection.GameMode.Avatar).Connection)
                 {
-                    case BattleEvent.Taunt:
-                    {
-                        new BattleEventMessage(this.Connection.GameMode.Battle.GetEnemy(this.Connection.GameMode.Avatar).Connection)
-                        {
-                            EventType   = this.EventType,
-                            PlayerIndex = this.Value1,
-                            TauntIndex  = this.Value2
-                        }.Send(); 
-                        
-                        break;
-                    }
-                    case BattleEvent.Aim:
-                    {
-                        new BattleEventMessage(this.Connection.GameMode.Battle.GetEnemy(this.Connection.GameMode.Avatar).Connection)
-                        {
-                            EventType  = this.EventType,
-                            DirectionX = -this.Value1,
-                            DirectionY = -this.Value2
-                        }.Send();
-                        
-                        break;
-                    }
-                }
+                    BattleEvent = new LogicBattleEvent(this.Connection.GameMode.Battle, this.EventType, this.Value1, this.Value2)
+                }.Send();
             }
         }
     }

@@ -17,6 +17,8 @@
         {
             this.Type             = Message.SectorState;
             this.Connection.State = State.Battle;
+
+            this.Connection.GameMode.Avatar.DailyMultiplayerTimer.Start();
         }
 
         internal override void Encode()

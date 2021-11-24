@@ -49,7 +49,7 @@
                 for (int i = 1; i <= this.Avatar.ItemLevels.GetCount(item.GlobalID); i++)
                 {
                     percentage += increment;
-                    increment += 0.01;
+                    increment  += 0.01;
                 }
             }
 
@@ -61,7 +61,7 @@
         /// </summary>
         internal bool IsAttached(LogicItemsData itemData)
         {
-            return this.Avatar.ItemAttachedTo.Values.Any(item => item.Id.Equals(this.Avatar.ItemLevels.Get(itemData.GlobalID).Id) && this.Avatar.Team.Any(hero => hero.ToObject<int>().Equals(item.Count)));
+            return this.Avatar.ItemAttachedTo.Values.Any(item => item.Id.Equals(itemData.GlobalID) && this.Avatar.Team.Any(hero => hero.ToObject<int>().Equals(item.Count)));
         }
 
         /// <summary>

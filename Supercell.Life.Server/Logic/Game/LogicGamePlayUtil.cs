@@ -111,7 +111,7 @@
 
             int v8 = 2;
 
-            int v10 = 60 * (LogicGamePlayUtil.dword_2B4104[v8] - LogicGamePlayUtil.dword_2B21C0[v7]);
+            int v10        = 60 * (LogicGamePlayUtil.dword_2B4104[v8] - LogicGamePlayUtil.dword_2B21C0[v7]);
             int winnerGain = v10 / 10000;
 
             int v12 = winnerScore - loserScore + 1000;
@@ -130,14 +130,14 @@
 
             int v9 = 1;
 
-            int v13 = 60 * (LogicGamePlayUtil.dword_2B4104[v9] - LogicGamePlayUtil.dword_2B21C0[v12]);
+            int v13       = 60 * (LogicGamePlayUtil.dword_2B4104[v9] - LogicGamePlayUtil.dword_2B21C0[v12]);
             int loserGain = v13 / 10000;
 
             if (v13 <= -10000 && loserScore < 1000)
                 loserGain = loserGain * loserScore / 1000;
 
             // I don't think this is the logic for this if statement, but it should yield the correct result most of the time - I will correct this at some other time.
-            if (winnerScore - loserScore >= 1000) 
+            if (winnerScore - loserScore >= 1000)
             {
                 if (loserGain > -1)
                     loserGain = -1;
@@ -147,7 +147,7 @@
             }
 
             int newWinnerScore = LogicMath.Max(winnerGain + winnerScore, 0);
-            int newLoserScore = LogicMath.Max(loserGain + loserScore, 0);
+            int newLoserScore  = LogicMath.Max(loserGain + loserScore, 0);
 
             return (newWinnerScore - winnerScore, newLoserScore - loserScore);
         }
