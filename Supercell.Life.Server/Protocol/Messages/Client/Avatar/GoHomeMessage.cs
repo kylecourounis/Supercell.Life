@@ -52,7 +52,7 @@
                 {
                     if (this.Connection.GameMode.Avatar.DailyMultiplayerTimer.Started)
                     {
-                        this.Connection.GameMode.Avatar.CommodityChangeCountHelper(LogicCommodityType.Energy, -4);
+                        this.Connection.GameMode.Avatar.CommodityChangeCountHelper(CommodityType.Energy, -4);
                     }
                 }
             }

@@ -204,20 +204,20 @@
 
                         int goldDrop = Loader.Random.Rand(this.Data.MinGoldDrop, this.Data.MaxGoldDrop); // Best I can do until object collision works
 
-                        this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Gold, this.GoldReward + goldDrop);
+                        this.Avatar.CommodityChangeCountHelper(CommodityType.Gold, this.GoldReward + goldDrop);
 
                         if (this.Avatar.Items.IsAttached(LogicItems.EnergyRecycler))
                         {
-                            this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Energy, 1);
+                            this.Avatar.CommodityChangeCountHelper(CommodityType.Energy, 1);
                         }
 
                         if (this.Avatar.Items.IsAttached(LogicItems.PlunderThunder))
                         {
-                            this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, (int)Math.Round(this.XPReward * this.Avatar.Items.PercentageMultiplier(LogicItems.PlunderThunder, 1.02, 0.02)));
+                            this.Avatar.CommodityChangeCountHelper(CommodityType.Experience, (int)Math.Round(this.XPReward * this.Avatar.Items.PercentageMultiplier(LogicItems.PlunderThunder, 1.02, 0.02)));
                         }
                         else
                         {
-                            this.Avatar.CommodityChangeCountHelper(LogicCommodityType.Experience, this.XPReward);
+                            this.Avatar.CommodityChangeCountHelper(CommodityType.Experience, this.XPReward);
                         }
 
                         this.CalculateChestLoot();
