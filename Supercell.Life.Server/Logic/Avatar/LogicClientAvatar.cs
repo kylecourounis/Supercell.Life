@@ -365,11 +365,6 @@ namespace Supercell.Life.Server.Logic.Avatar
 
             this.DailyMultiplayerTimer.Save(json);
 
-            var heroUsedInDaily = new LogicJSONArray();
-            heroUsedInDaily.Add(new LogicJSONNumber(1));
-
-            json.Put("heroUsedInDaily", heroUsedInDaily);
-
             // json.Put("pvp_chest", new LogicJSONNumber());
 
             json.Put("seasick", new LogicJSONNumber());
@@ -478,33 +473,33 @@ namespace Supercell.Life.Server.Logic.Avatar
         /// <summary>
         /// Sets the commodity count.
         /// </summary>
-        internal void SetCommodityCount(LogicCommodityType commodity, int amount)
+        internal void SetCommodityCount(CommodityType commodity, int amount)
         {
             if (amount > 0)
             {
                 switch (commodity)
                 {
-                    case LogicCommodityType.Gold:
+                    case CommodityType.Gold:
                     {
                         this.Gold = amount;
                         break;
                     }
-                    case LogicCommodityType.Diamonds:
+                    case CommodityType.Diamonds:
                     {
                         this.Diamonds = amount;
                         break;
                     }
-                    case LogicCommodityType.FreeDiamonds:
+                    case CommodityType.FreeDiamonds:
                     {
                         this.FreeDiamonds = amount;
                         break;
                     }
-                    case LogicCommodityType.Energy:
+                    case CommodityType.Energy:
                     {
                         this.Energy = amount;
                         break;
                     }
-                    case LogicCommodityType.Experience:
+                    case CommodityType.Experience:
                     {
                         if (this.ExpLevel == 35 && this.ExpPoints >= 2500000)
                         {
@@ -530,22 +525,22 @@ namespace Supercell.Life.Server.Logic.Avatar
 
                         break;
                     }
-                    case LogicCommodityType.Orb1:
+                    case CommodityType.Orb1:
                     {
                         this.Orb1 = amount;
                         break;
                     }
-                    case LogicCommodityType.Orb2:
+                    case CommodityType.Orb2:
                     {
                         this.Orb2 = amount;
                         break;
                     }
-                    case LogicCommodityType.Orb3:
+                    case CommodityType.Orb3:
                     {
                         this.Orb3 = amount;
                         break;
                     }
-                    case LogicCommodityType.Orb4:
+                    case CommodityType.Orb4:
                     {
                         this.Orb4 = amount;
                         break;
@@ -557,34 +552,34 @@ namespace Supercell.Life.Server.Logic.Avatar
         /// <summary>
         /// Changes the specified commodity by the specified amount. 
         /// </summary>
-        internal void CommodityChangeCountHelper(LogicCommodityType commodity, int amount)
+        internal void CommodityChangeCountHelper(CommodityType commodity, int amount)
         {
             if (amount > 0)
             {
                 switch (commodity)
                 {
-                    case LogicCommodityType.Gold:
+                    case CommodityType.Gold:
                     {
-                        this.SetCommodityCount(LogicCommodityType.Gold, this.Gold + amount);
+                        this.SetCommodityCount(CommodityType.Gold, this.Gold + amount);
                         break;
                     }
-                    case LogicCommodityType.Diamonds:
+                    case CommodityType.Diamonds:
                     {
-                        this.SetCommodityCount(LogicCommodityType.Diamonds, this.Diamonds + amount);
+                        this.SetCommodityCount(CommodityType.Diamonds, this.Diamonds + amount);
                         break;
                     }
-                    case LogicCommodityType.FreeDiamonds:
+                    case CommodityType.FreeDiamonds:
                     {
-                        this.SetCommodityCount(LogicCommodityType.FreeDiamonds, this.FreeDiamonds + amount);
-                        this.SetCommodityCount(LogicCommodityType.Diamonds, this.Diamonds + amount);
+                        this.SetCommodityCount(CommodityType.FreeDiamonds, this.FreeDiamonds + amount);
+                        this.SetCommodityCount(CommodityType.Diamonds, this.Diamonds + amount);
                         break;
                     }
-                    case LogicCommodityType.Energy:
+                    case CommodityType.Energy:
                     {
-                        this.SetCommodityCount(LogicCommodityType.Energy, this.Energy + amount);
+                        this.SetCommodityCount(CommodityType.Energy, this.Energy + amount);
                         break;
                     }
-                    case LogicCommodityType.Experience:
+                    case CommodityType.Experience:
                     {
                         if (this.ExpLevel == 35 && this.ExpPoints >= 2500000)
                         {
@@ -610,24 +605,24 @@ namespace Supercell.Life.Server.Logic.Avatar
                         
                         break;
                     }
-                    case LogicCommodityType.Orb1:
+                    case CommodityType.Orb1:
                     {
-                        this.SetCommodityCount(LogicCommodityType.Orb1, this.Orb1 + amount);
+                        this.SetCommodityCount(CommodityType.Orb1, this.Orb1 + amount);
                         break;
                     }
-                    case LogicCommodityType.Orb2:
+                    case CommodityType.Orb2:
                     {
-                        this.SetCommodityCount(LogicCommodityType.Orb2, this.Orb2 + amount);
+                        this.SetCommodityCount(CommodityType.Orb2, this.Orb2 + amount);
                         break;
                     }
-                    case LogicCommodityType.Orb3:
+                    case CommodityType.Orb3:
                     {
-                        this.SetCommodityCount(LogicCommodityType.Orb3, this.Orb3 + amount);
+                        this.SetCommodityCount(CommodityType.Orb3, this.Orb3 + amount);
                         break;
                     }
-                    case LogicCommodityType.Orb4:
+                    case CommodityType.Orb4:
                     {
-                        this.SetCommodityCount(LogicCommodityType.Orb4, this.Orb4 + amount);
+                        this.SetCommodityCount(CommodityType.Orb4, this.Orb4 + amount);
                         break;
                     }
                 }
