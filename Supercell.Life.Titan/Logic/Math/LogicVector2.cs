@@ -25,6 +25,71 @@
         }
 
         /// <summary>
+        /// Gets the angle.
+        /// </summary>
+        public int Angle
+        {
+            get
+            {
+                return LogicMath.GetAngle(this.X, this.Y);
+            }
+        }
+
+        /// <summary>
+        /// Gets the length.
+        /// </summary>
+        public int Length
+        {
+            get
+            {
+                int length = 0x7FFFFFFF;
+
+                if ((uint)(46340 - this.X) <= 92680)
+                {
+                    if ((uint)(46340 - this.Y) <= 92680)
+                    {
+                        int lengthX = this.X * this.X;
+                        int lengthY = this.Y * this.Y;
+
+                        if ((uint)lengthY < (lengthX ^ 0x7FFFFFFFu))
+                        {
+                            length = lengthX + lengthY;
+                        }
+                    }
+                }
+
+                return LogicMath.Sqrt(length);
+            }
+        }
+
+        /// <summary>
+        /// Gets the length squared.
+        /// </summary>
+        public int LengthSquared
+        {
+            get
+            {
+                int length = 0x7FFFFFFF;
+
+                if ((uint)(46340 - this.X) <= 92680)
+                {
+                    if ((uint)(46340 - this.Y) <= 92680)
+                    {
+                        int lengthX = this.X * this.X;
+                        int lengthY = this.Y * this.Y;
+
+                        if ((uint)lengthY < (lengthX ^ 0x7FFFFFFFu))
+                        {
+                            length = lengthX + lengthY;
+                        }
+                    }
+                }
+
+                return length;
+            }
+        }
+
+        /// <summary>
         /// Adds the X and Y from the specified <see cref="LogicVector2"/> to this instance's X and Y.
         /// </summary>
         public void Add(LogicVector2 vector2)
@@ -65,14 +130,6 @@
         public int Dot(LogicVector2 vector2)
         {
             return this.X * vector2.X + this.Y * vector2.Y;
-        }
-
-        /// <summary>
-        /// Gets the angle.
-        /// </summary>
-        public int GetAngle()
-        {
-            return LogicMath.GetAngle(this.X, this.Y);
         }
 
         /// <summary>
@@ -166,54 +223,6 @@
         }
 
         /// <summary>
-        /// Gets the length.
-        /// </summary>
-        public int GetLength()
-        {
-            int length = 0x7FFFFFFF;
-
-            if ((uint)(46340 - this.X) <= 92680)
-            {
-                if ((uint)(46340 - this.Y) <= 92680)
-                {
-                    int lengthX = this.X * this.X;
-                    int lengthY = this.Y * this.Y;
-
-                    if ((uint)lengthY < (lengthX ^ 0x7FFFFFFFu))
-                    {
-                        length = lengthX + lengthY;
-                    }
-                }
-            }
-
-            return LogicMath.Sqrt(length);
-        }
-
-        /// <summary>
-        /// Gets the length squared.
-        /// </summary>
-        public int GetLengthSquared()
-        {
-            int length = 0x7FFFFFFF;
-
-            if ((uint)(46340 - this.X) <= 92680)
-            {
-                if ((uint)(46340 - this.Y) <= 92680)
-                {
-                    int lengthX = this.X * this.X;
-                    int lengthY = this.Y * this.Y;
-
-                    if ((uint)lengthY < (lengthX ^ 0x7FFFFFFFu))
-                    {
-                        length = lengthX + lengthY;
-                    }
-                }
-            }
-
-            return length;
-        }
-
-        /// <summary>
         /// Determines whether the specified <see cref="LogicVector2"/>'s X and Y are equal to the X and Y in this instance.
         /// </summary>
         public bool IsEqual(LogicVector2 vector2)
@@ -239,7 +248,7 @@
         /// </summary>
         public int Normalize(int value)
         {
-            int length = this.GetLength();
+            int length = this.Length;
 
             if (length != 0)
             {

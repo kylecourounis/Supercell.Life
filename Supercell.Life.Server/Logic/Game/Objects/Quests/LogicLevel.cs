@@ -126,8 +126,8 @@
                 {
                     for (int i = 0; i < this.Enemies.Size; i++)
                     {
-                        LogicVector2 enemyVector = new LogicVector2(LogicMath.Cos(this.Enemies[i].X), LogicMath.Sin(this.Enemies[i].Y));
-                        Debugger.Debug($"Enemy Coords : {enemyVector}, Enemy Angle : {enemyVector.GetAngle()}, Enemy Radius : {LogicMath.GetRadius(enemyVector.X, enemyVector.Y)}, Distance Between : {enemyVector.GetDistance(vector)}");
+                        LogicVector2 enemyVector = new LogicVector2(LogicMath.Cos(this.Enemies[i].X, 255), LogicMath.Sin(this.Enemies[i].Y, 255));
+                        Debugger.Debug($"Enemy Coords : {enemyVector}, Enemy Angle : {enemyVector.Angle}, Enemy Radius : {LogicMath.GetRadius(enemyVector.X, enemyVector.Y)}, Distance Between : {enemyVector.GetDistance(vector)}");
 
                         /* if (vector.X == enemyVector.X && vector.Y == enemyVector.Y)
                         {
@@ -139,7 +139,7 @@
                     }
                 }
 
-                Debugger.Debug(this.Level.CurrentBattle);
+                Debugger.Debug($"Current Battle: {this.Level.CurrentBattle}");
 
                 if (this.IsCompleted)
                 {

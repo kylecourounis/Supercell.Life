@@ -18,7 +18,6 @@
     using Supercell.Life.Server.Protocol.Commands.Client;
     using Supercell.Life.Server.Protocol.Messages;
     using Supercell.Life.Server.Protocol.Messages.Server;
-    using Supercell.Life.Titan.Logic;
 
     using Timer = System.Timers.Timer;
 
@@ -35,19 +34,13 @@
 
         internal int StartingPlayer;
 
-        internal LogicLong WhoseTurn;
+        internal LogicTurnHandler Turn;
 
-        internal LogicMultiplayerTurnTimer TurnTimer;
-        
         internal Dictionary<LogicGameMode, ConcurrentQueue<LogicCommand>> CommandQueues;
-
-        internal Dictionary<LogicGameMode, LogicVector2[]> CharacterPositions;
 
         internal LogicJSONArray ReplayCommands;
 
         internal LogicBattleResult BattleResult;
-
-        internal int TotalTurns;
 
         internal bool IsFriendlyChallenge;
 
@@ -111,9 +104,7 @@
                 { gamemode2, new ConcurrentQueue<LogicCommand>() }
             };
 
-            this.TurnTimer = new LogicMultiplayerTurnTimer(this);
-
-            this.CharacterPositions = new Dictionary<LogicGameMode, LogicVector2[]>();
+            this.Turn = new LogicTurnHandler(this);
 
             this.ReplayCommands = new LogicJSONArray();
         }
@@ -124,9 +115,9 @@
         internal void Encode(ByteStream stream, LogicGameMode gamemode)
         {
             gamemode.Avatar.Encode(stream);
-            this.GetEnemy(gamemode.Avatar).Encode(stream);
+            this.GetEnemy(gamemode.Avatar).Avatar.Encode(stream);
 
-            stream.WriteInt(this.WhoseTurn == gamemode.Avatar.Identifier ? 1 : 0); // Coin toss to determine who goes first
+            stream.WriteInt(this.Turn.WhoseTurn.Avatar.Identifier == gamemode.Avatar.Identifier ? 1 : 0); // Coin toss to determine who goes first
             
             stream.WriteInt(0);
             stream.WriteInt(0);
@@ -141,9 +132,9 @@
         /// <summary>
         /// Gets the enemy of the specified <see cref="LogicClientAvatar"/>.
         /// </summary>
-        internal LogicClientAvatar GetEnemy(LogicClientAvatar avatar)
+        internal LogicGameMode GetEnemy(LogicClientAvatar avatar)
         {
-            return this.GameModes.Find(gamemode => gamemode.Avatar.Identifier != avatar.Identifier).Avatar;
+            return this.GameModes.Find(gamemode => gamemode.Avatar.Identifier != avatar.Identifier);
         }
         
         /// <summary>
@@ -156,7 +147,7 @@
                 this.Started = true;
 
                 this.StartingPlayer = Loader.Random.Rand(2);
-                this.WhoseTurn      = this.GameModes[this.StartingPlayer].Avatar.Identifier;
+                this.Turn.WhoseTurn = this.GameModes[this.StartingPlayer];
 
                 foreach (LogicGameMode gamemode in this.GameModes.Where(gamemode => gamemode.Connection != null))
                 {
@@ -167,7 +158,7 @@
                     }.Send();
                 }
 
-                this.TurnTimer.Start();
+                this.Turn.Timer.Start();
                 this.BattleTick.Start();
             }
             else
@@ -188,7 +179,7 @@
 
                 if (self.GetType() == typeof(LogicMoveCharacterCommand) || self.GetType() == typeof(LogicMultiplayerTurnTimedOutCommand))
                 {
-                    this.ResetTurn(self.Connection.GameMode.Avatar);
+                    this.Turn.ResetTurn(self.Connection.GameMode.Avatar);
                 }
             }
 
@@ -199,23 +190,13 @@
         }
 
         /// <summary>
-        /// Sets the character positions on the battlefield. 
-        /// </summary>
-        internal void SetCharacterPositions(LogicGameMode gamemode, LogicVector2 char1, LogicVector2 char2, LogicVector2 char3)
-        {
-            this.CharacterPositions[gamemode][0] = char1;
-            this.CharacterPositions[gamemode][1] = char2;
-            this.CharacterPositions[gamemode][2] = char3;
-        }
-
-        /// <summary>
         /// Ticks this instance.
         /// </summary>
         private void Tick(object sender, ElapsedEventArgs args)
         {
             if (this.Started)
             {
-                this.TurnTimer.Tick();
+                this.Turn.Timer.Tick();
 
                 if (this.AllDisconnected)
                 {
@@ -236,7 +217,7 @@
                         this.Stop();
                     }
 
-                    if (this.TurnTimer.EnemyReconnectTurns.Turns == 3)
+                    if (this.Turn.Timer.EnemyReconnectTurns.Turns == 3)
                     {
                         this.Stop();
                     }
@@ -249,27 +230,13 @@
         }
 
         /// <summary>
-        /// Resets this the turn timer.
-        /// </summary>
-        internal void ResetTurn(LogicClientAvatar turnFinished)
-        {
-            this.WhoseTurn = this.GetEnemy(turnFinished).Identifier;
-
-            this.TotalTurns++;
-
-            this.TurnTimer.Reset();
-
-            Debugger.Debug($"{this.WhoseTurn} turn.");
-        }
-
-        /// <summary>
         /// Stops this instance.
         /// </summary>
         internal void Stop()
         {
             if (this.Started)
             {
-                this.TurnTimer.Finish();
+                this.Turn.Timer.Finish();
                 this.BattleTick.Stop();
                 
                 this.BattleResult = new LogicBattleResult(this);

@@ -49,10 +49,10 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            LogicVector2 vector = new LogicVector2(LogicMath.Cos(this.DirectionX), LogicMath.Sin(this.DirectionY));
+            LogicVector2 vector = new LogicVector2(LogicMath.Cos(this.DirectionX, 255), LogicMath.Sin(this.DirectionY, 255));
 
-            Debugger.Debug($"DirectionX : {this.DirectionX}, DirectionY : {this.DirectionY}, S : {this.S}, F : {this.F}");
-            Debugger.Debug($"Coords : {vector}, Angle : {vector.GetAngle()}, Radius : {LogicMath.GetRadius(vector.X, vector.Y)}");
+            Debugger.Debug($"DirectionX : {this.DirectionX}, DirectionY : {this.DirectionY}, Value : {this.Value} (S : {this.S}, F : {this.F})");
+            Debugger.Debug($"Coords : {vector}, Angle : {vector.Angle}, Radius : {LogicMath.GetRadius(vector.X, vector.Y)}");
 
             var battle = gamemode.Battle;
 
@@ -89,7 +89,7 @@
             {
                 var opponent = battle.GetEnemy(gamemode.Avatar);
 
-                battle.SetCharacterPositions(gamemode, new LogicVector2(), vector, new LogicVector2());
+                battle.Turn.SetCharacterPosition(vector);
                 
                 LogicMoveCharacterCommand cmd = new LogicMoveCharacterCommand(opponent.Connection)
                 {

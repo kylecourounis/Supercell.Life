@@ -39,7 +39,7 @@
         {
             get
             {
-                return this.Battle.TurnTimer.EnemyReconnectTurns.Turns == 3;
+                return this.Battle.Turn.Timer.EnemyReconnectTurns.Turns == 3;
             }
         }
 

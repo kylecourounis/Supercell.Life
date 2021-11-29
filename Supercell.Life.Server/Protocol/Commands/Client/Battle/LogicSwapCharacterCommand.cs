@@ -3,6 +3,7 @@
     using Supercell.Life.Titan.DataStream;
     using Supercell.Life.Titan.Logic.Json;
 
+    using Supercell.Life.Server.Files.CsvHelpers;
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
@@ -42,6 +43,8 @@
                 var enemy = battle.GetEnemy(gamemode.Avatar);
 
                 // int character = this.Connection.GameMode.Avatar.Team[GlobalID.GetID(this.Identifier)].ToObject<int>();
+
+                battle.Turn.CharacterIndex = GlobalID.GetID(this.Identifier);
 
                 var cmd = new LogicSwapCharacterCommand(enemy.Connection)
                 {

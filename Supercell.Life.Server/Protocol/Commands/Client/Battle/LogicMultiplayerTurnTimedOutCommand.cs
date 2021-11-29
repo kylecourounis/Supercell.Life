@@ -32,14 +32,14 @@
 
             if (battle != null)
             {
-                if (battle.TurnTimer.EnemyReconnectTurns.Identifier != gamemode.Avatar.Identifier)
+                if (battle.Turn.Timer.EnemyReconnectTurns.Identifier != gamemode.Avatar.Identifier)
                 {
-                    battle.TurnTimer.EnemyReconnectTurns.Identifier = gamemode.Avatar.Identifier;
-                    battle.TurnTimer.EnemyReconnectTurns.Turns = 1;
+                    battle.Turn.Timer.EnemyReconnectTurns.Identifier = gamemode.Avatar.Identifier;
+                    battle.Turn.Timer.EnemyReconnectTurns.Turns = 1;
                 }
                 else
                 {
-                    battle.TurnTimer.EnemyReconnectTurns.Turns += 1;
+                    battle.Turn.Timer.EnemyReconnectTurns.Turns += 1;
                 }
 
                 var enemy = battle.GetEnemy(gamemode.Avatar);
