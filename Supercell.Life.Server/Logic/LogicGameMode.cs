@@ -3,6 +3,7 @@
     using System;
 
     using Supercell.Life.Titan.Logic.Json;
+    using Supercell.Life.Titan.Logic.Math;
 
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
@@ -12,7 +13,6 @@
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol;
     using Supercell.Life.Server.Protocol.Commands;
-    using Supercell.Life.Titan.Logic.Math;
 
     internal class LogicGameMode
     {
@@ -96,6 +96,7 @@
             this.Avatar.EnergyTimer.AdjustSubTick();
             this.Avatar.HeroUpgrade.AdjustSubTick();
             this.Avatar.Sailing.AdjustSubTick();
+            this.Avatar.HeroTiredTimer.AdjustSubTick();
             this.Avatar.ShipUpgrade.AdjustSubTick();
             this.Avatar.Booster.AdjustSubTick();
             this.Avatar.SpellTimer.AdjustSubTick();
@@ -123,6 +124,7 @@
             this.Avatar.EnergyTimer.FastForward(seconds);
             this.Avatar.HeroUpgrade.FastForward(seconds);
             this.Avatar.Sailing.FastForward(seconds);
+            this.Avatar.HeroTiredTimer.FastForward(seconds);
             this.Avatar.ShipUpgrade.FastForward(seconds);
             this.Avatar.Booster.FastForward(seconds);
             this.Avatar.SpellTimer.FastForward(seconds);
@@ -148,6 +150,7 @@
             this.Avatar.EnergyTimer.Tick();
             this.Avatar.HeroUpgrade.Tick();
             this.Avatar.Sailing.Tick();
+            this.Avatar.HeroTiredTimer.Tick();
             this.Avatar.ShipUpgrade.Tick();
             this.Avatar.Booster.Tick();
             this.Avatar.SpellTimer.Tick();
@@ -156,20 +159,11 @@
             this.Avatar.DailyMultiplayerTimer.Tick();
 
             Debugger.Debug($"Energy Timer           : Started: {this.Avatar.EnergyTimer.Timer.Started}  : RemainingSecs: {this.Avatar.EnergyTimer.Timer.RemainingSecs}.");
-            Debugger.Debug($"Hero Upgrade Timer     : Started: {this.Avatar.HeroUpgrade.Timer.Started}  : RemainingSecs: {this.Avatar.HeroUpgrade.Timer.RemainingSecs}.");
-            Debugger.Debug($"Sailing Timer          : Started: {this.Avatar.Sailing.Timer.Started}  : RemainingSecs: {this.Avatar.Sailing.Timer.RemainingSecs}.");
-            Debugger.Debug($"Ship Upgrade Timer     : Started: {this.Avatar.ShipUpgrade.Timer.Started}  : RemainingSecs: {this.Avatar.ShipUpgrade.Timer.RemainingSecs}.");
-            Debugger.Debug($"XP Booster Timer       : Started: {this.Avatar.Booster.Timer.Started}  : RemainingSecs: {this.Avatar.Booster.Timer.RemainingSecs}.");
-            Debugger.Debug($"Spell Timer            : Started: {this.Avatar.SpellTimer.Started}  : RemainingSecs: {this.Avatar.SpellTimer.Timer.RemainingSecs}.");
-            Debugger.Debug($"Item Unavailable Timer : Started: {this.Avatar.ItemUnavailableTimer.Started}  : RemainingSecs: {this.Avatar.ItemUnavailableTimer.Timer.RemainingSecs}.");
-
+            
             if (this.Avatar.Alliance != null)
             {
                 this.Avatar.Alliance.TeamGoalTimer.Tick();
                 this.Avatar.TeamMailCooldownTimer.Tick();
-
-                Debugger.Debug($"Team Goal Timer        : Started: {this.Avatar.Alliance.TeamGoalTimer.Started}  : RemainingSecs: {this.Avatar.Alliance.TeamGoalTimer.Timer.RemainingSecs}.");
-                Debugger.Debug($"Team Mail Cooldown     : Started: {this.Avatar.TeamMailCooldownTimer.Started}  : RemainingSecs: {this.Avatar.TeamMailCooldownTimer.Timer.RemainingSecs}.");
             }
 
             this.Connection.GameMode.Random.SetIteratedRandomSeed(LogicTime.GetSecondsInTicks(this.Avatar.Time.TotalSecs));

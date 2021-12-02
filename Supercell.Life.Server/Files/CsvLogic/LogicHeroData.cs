@@ -203,17 +203,17 @@ namespace Supercell.Life.Server.Files.CsvLogic
             get; set;
         }
 
-        public int Damage
+        public LogicArrayList<int> Damage
         {
             get; set;
         }
 
-        public int SpecialAttackDamage
+        public LogicArrayList<int> SpecialAttackDamage
         {
             get; set;
         }
 
-        public int Hitpoints
+        public LogicArrayList<int> Hitpoints
         {
             get; set;
         }
@@ -412,7 +412,7 @@ namespace Supercell.Life.Server.Files.CsvLogic
         {
             get
             {
-                return string.IsNullOrEmpty(this.RequiredQuest) ? null : (LogicQuestData) CSV.Tables.Get(Gamefile.Quests).GetDataByName(this.RequiredQuest);
+                return string.IsNullOrEmpty(this.RequiredQuest) ? null : (LogicQuestData)CSV.Tables.Get(Gamefile.Quests).GetDataByName(this.RequiredQuest);
             }
         }
     }

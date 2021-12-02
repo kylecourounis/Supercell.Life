@@ -1,6 +1,7 @@
 namespace Supercell.Life.Server.Files.CsvLogic
 {
     using Supercell.Life.Titan.Files.CsvReader;
+    using Supercell.Life.Titan.Logic;
 
     using Supercell.Life.Server.Files.CsvHelpers;
 
@@ -59,12 +60,12 @@ namespace Supercell.Life.Server.Files.CsvLogic
             get; set;
         }
 
-        public int Hitpoints
+        public LogicArrayList<int> Hitpoints
         {
             get; set;
         }
 
-        public int Damage
+        public LogicArrayList<int> Damage
         {
             get; set;
         }

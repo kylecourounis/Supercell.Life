@@ -55,6 +55,10 @@
 
                 battle.EnqueueCommand(this, cmd);
             }
+            else
+            {
+                gamemode.Avatar.OngoingQuestData.CharacterIndex = GlobalID.GetID(this.Identifier);
+            }
         }
 
         internal override void LoadCommandFromJSON(LogicJSONObject json)

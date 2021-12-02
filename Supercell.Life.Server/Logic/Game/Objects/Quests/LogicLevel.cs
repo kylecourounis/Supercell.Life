@@ -122,12 +122,28 @@
             /// </summary>
             internal void CheckCollision(LogicVector2 vector)
             {
+                this.UpdateCharacterPosition(vector);
+
                 if (this.Enemies.Size > 0)
                 {
                     for (int i = 0; i < this.Enemies.Size; i++)
                     {
-                        LogicVector2 enemyVector = new LogicVector2(LogicMath.Cos(this.Enemies[i].X, 255), LogicMath.Sin(this.Enemies[i].Y, 255));
+                        Enemy enemy = this.Enemies[i];
+
+                        LogicVector2 enemyVector = new LogicVector2(LogicMath.Cos(enemy.X, 255), LogicMath.Sin(enemy.Y, 255));
                         Debugger.Debug($"Enemy Coords : {enemyVector}, Enemy Angle : {enemyVector.Angle}, Enemy Radius : {LogicMath.GetRadius(enemyVector.X, enemyVector.Y)}, Distance Between : {enemyVector.GetDistance(vector)}");
+
+                        if (this.Level.Quest.SublevelMoveCount == enemy.FirstAttackOnTurn)
+                        {
+                            this.DamageCharacter(enemy, vector, enemyVector);
+                        }
+                        else if (this.Level.Quest.SublevelMoveCount > enemy.FirstAttackOnTurn)
+                        {
+                            if (this.Level.Quest.SublevelMoveCount % enemy.AttackTurnSeq == 0)
+                            {
+                                this.DamageCharacter(enemy, vector, enemyVector);
+                            }
+                        }
 
                         /* if (vector.X == enemyVector.X && vector.Y == enemyVector.Y)
                         {
@@ -144,6 +160,35 @@
                 if (this.IsCompleted)
                 {
                     this.Level.CurrentBattle++;
+                }
+            }
+
+            /// <summary>
+            /// Updates the character position.
+            /// </summary>
+            internal void UpdateCharacterPosition(LogicVector2 position)
+            {
+                this.Level.Quest.Characters[this.Level.Quest.CharacterIndex].Position = position;
+            }
+            
+            /// <summary>
+            /// Damages the character.
+            /// </summary>
+            internal void DamageCharacter(Enemy enemy, LogicVector2 heroVector, LogicVector2 enemyVector)
+            {
+                if (this.Level.Quest.Characters.Count > 1)
+                {
+                    int distance = enemyVector.GetDistance(heroVector);
+
+                    if (distance <= enemy.Data.Radius)
+                    {
+                        LogicCharacter character = this.Level.Quest.Characters.Find(c => c.Position.IsEqual(heroVector));
+                        character?.HitCharacter(enemy.Damage);
+                    }
+                }
+                else
+                {
+                    this.Level.Quest.Characters[0].HitCharacter(enemy.Damage);
                 }
             }
         }

@@ -75,7 +75,7 @@
                 
                 foreach (var hero in this.Heroes.Values)
                 {
-                    this.Avatar.HeroTired.AddItem(hero.Id, hero.Count);
+                    this.Avatar.HeroTiredTimer.Start((LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataWithID(hero.Id));
                 }
                 
                 this.Avatar.Save();

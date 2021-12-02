@@ -100,6 +100,7 @@ namespace Supercell.Life.Server.Logic.Avatar
         [JsonProperty] internal LogicBoosterTimer Booster;
         [JsonProperty] internal LogicHeroUpgradeTimer HeroUpgrade;
         [JsonProperty] internal LogicSailingTimer Sailing;
+        [JsonProperty] internal LogicHeroTiredTimer HeroTiredTimer;
         [JsonProperty] internal LogicShipUpgradeTimer ShipUpgrade;
         [JsonProperty] internal LogicItemUnavailableTimer ItemUnavailableTimer;
         [JsonProperty] internal LogicSpellTimer SpellTimer;
@@ -285,6 +286,7 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.Booster                 = new LogicBoosterTimer(this);
             this.HeroUpgrade             = new LogicHeroUpgradeTimer(this);
             this.Sailing                 = new LogicSailingTimer(this);
+            this.HeroTiredTimer          = new LogicHeroTiredTimer(this);
             this.ShipUpgrade             = new LogicShipUpgradeTimer(this);
             this.ItemUnavailableTimer    = new LogicItemUnavailableTimer(this);
             this.SpellTimer              = new LogicSpellTimer(this);

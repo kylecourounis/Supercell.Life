@@ -34,6 +34,9 @@
 
         internal bool IsReplaying;
 
+        internal LogicArrayList<LogicCharacter> Characters;
+        internal int CharacterIndex;
+
         [JsonProperty] internal string Name;
         
         /// <summary>
@@ -79,7 +82,8 @@
         /// </summary>
         internal LogicQuest()
         {
-            this.Levels = new LogicArrayList<LogicLevel>();
+            this.Levels     = new LogicArrayList<LogicLevel>();
+            this.Characters = new LogicArrayList<LogicCharacter>();
         }
 
         /// <summary>
@@ -89,7 +93,7 @@
         {
             this.Avatar = avatar;
             this.Data   = data;
-            
+
             int requiredQuest = 6000000; // This default value is the GlobalID of the first quest of the game
 
             if (!this.Data.RequiredQuest.IsNullOrEmptyOrWhitespace())
@@ -113,9 +117,12 @@
                 this.Avatar.Connection.State = State.Battle;
                 this.Avatar.Energy          -= this.Data.Energy;
 
+                this.Characters.Clear();
+
                 foreach (var hero in this.Avatar.Team.ToObject<int[]>())
                 {
                     this.Avatar.HeroQuests.AddItem(hero, 1);
+                    this.Characters.Add(new LogicCharacter(this.Avatar, hero));
                 }
             }
         }

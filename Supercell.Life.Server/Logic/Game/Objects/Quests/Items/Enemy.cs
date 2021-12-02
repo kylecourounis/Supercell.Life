@@ -48,6 +48,11 @@
             get;
         }
 
+        internal int Hitpoints;
+        internal int Damage;
+        internal int FirstAttackOnTurn;
+        internal int AttackTurnSeq;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Enemy"/> class.
         /// </summary>
@@ -58,8 +63,21 @@
             this.Y     = json.GetJsonNumber("y").GetIntValue();
             this.Team  = json.GetJsonNumber("team").GetIntValue();
             this.Level = json.GetJsonNumber("lvl").GetIntValue();
+
+            this.Initialize();
         }
 
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
+        private void Initialize()
+        {
+            this.Hitpoints         = this.Data.Hitpoints[this.Level];
+            this.Damage            = this.Data.Damage[this.Level];
+            this.FirstAttackOnTurn = this.Data.FirstAttackOnTurn;
+            this.AttackTurnSeq     = this.Data.AttackTurnSeq;
+        }
+        
         /// <summary>
         /// Returns a <see cref="string"/> that represents this instance.
         /// </summary>

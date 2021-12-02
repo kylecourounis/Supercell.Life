@@ -7,51 +7,53 @@
 
     using Supercell.Life.Titan.Logic.Math;
 
-    internal class LogicItemUnavailableTimer
+    using Supercell.Life.Server.Files.CsvLogic;
+
+    internal class LogicHeroTiredTimer
     {
         internal LogicClientAvatar Avatar;
 
-        [JsonProperty("timers")] internal Dictionary<int, LogicTimer> Items;
+        [JsonProperty("timers")] internal Dictionary<int, LogicTimer> Heroes;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="LogicItemUnavailableTimer"/> has started.
+        /// Gets a value indicating whether this <see cref="LogicHeroTiredTimer"/> has started.
         /// </summary>
         internal bool Started
         {
             get
             {
-                return this.Items.Values.Any(timer => timer.Started);
+                return this.Heroes.Values.Any(timer => timer.Started);
             }
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogicItemUnavailableTimer"/> class.
+        /// Initializes a new instance of the <see cref="LogicHeroTiredTimer"/> class.
         /// </summary>
-        public LogicItemUnavailableTimer()
+        public LogicHeroTiredTimer()
         {
-            this.Items = new Dictionary<int, LogicTimer>();
+            this.Heroes = new Dictionary<int, LogicTimer>();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicItemUnavailableTimer"/> class.
         /// </summary>
-        public LogicItemUnavailableTimer(LogicClientAvatar avatar)
+        public LogicHeroTiredTimer(LogicClientAvatar avatar)
         {
             this.Avatar = avatar;
-            this.Items  = new Dictionary<int, LogicTimer>();
+            this.Heroes = new Dictionary<int, LogicTimer>();
         }
 
         /// <summary>
         /// Starts this instance.
         /// </summary>
-        internal void Start(int item)
+        internal void Start(LogicHeroData hero)
         {
-            this.Items.Add(item, new LogicTimer(this.Avatar.Time));
+            this.Heroes.Add(hero.GlobalID, new LogicTimer(this.Avatar.Time));
 
-            var added = this.Items.Last();
-            added.Value.StartTimer(this.Avatar.Time, 60 * 60);
+            var added = this.Heroes.Last();
+            added.Value.StartTimer(this.Avatar.Time, hero.TiredTimer * 60);
 
-            this.Avatar.ItemUnavailable.AddItem(item, added.Value.RemainingSecs * 15);
+            this.Avatar.HeroTired.AddItem(hero.GlobalID, added.Value.RemainingSecs);
         }
 
         /// <summary>
@@ -61,14 +63,14 @@
         {
             if (this.Started)
             {
-                foreach (var (item, timer) in this.Items)
+                foreach (var (hero, timer) in this.Heroes)
                 {
                     if (timer.RemainingSecs <= 0)
                     {
                         timer.StopTimer();
 
-                        this.Avatar.ItemUnavailable.Remove(item);
-                        this.Items.Remove(item);
+                        this.Avatar.HeroTired.Remove(hero);
+                        this.Heroes.Remove(hero);
 
                         this.Avatar.Save();
                     }
@@ -83,7 +85,7 @@
         {
             if (this.Started)
             {
-                foreach (var timer in this.Items.Values.Where(timer => timer.RemainingSecs <= 0))
+                foreach (var timer in this.Heroes.Values.Where(timer => timer.RemainingSecs <= 0))
                 {
                     timer.FastForward(seconds);
                 }
@@ -112,7 +114,7 @@
         {
             if (this.Started)
             {
-                foreach (var timer in this.Items.Values)
+                foreach (var timer in this.Heroes.Values)
                 {
                     timer.AdjustSubTick();
                 }
@@ -124,9 +126,9 @@
         /// </summary>
         internal void Update()
         {
-            foreach (var (item, timer) in this.Items)
+            foreach (var (hero, timer) in this.Heroes)
             {
-                this.Avatar.ItemUnavailable.Set(item, timer.RemainingSecs * 15);
+                this.Avatar.HeroTired.Set(hero, timer.RemainingSecs);
             }
         }
     }
