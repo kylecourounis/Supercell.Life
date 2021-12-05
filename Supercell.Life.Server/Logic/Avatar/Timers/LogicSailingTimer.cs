@@ -73,11 +73,6 @@
 
                 this.Avatar.Variables.Set(LogicVariables.SailRewardUnclaimed.GlobalID, 0);
                 
-                foreach (var hero in this.Heroes.Values)
-                {
-                    this.Avatar.HeroTiredTimer.Start((LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataWithID(hero.Id));
-                }
-                
                 this.Avatar.Save();
             }
         }

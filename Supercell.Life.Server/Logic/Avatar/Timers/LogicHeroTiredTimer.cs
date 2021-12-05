@@ -5,9 +5,11 @@
 
     using Newtonsoft.Json;
 
+    using Supercell.Life.Server.Files;
     using Supercell.Life.Titan.Logic.Math;
 
     using Supercell.Life.Server.Files.CsvLogic;
+    using Supercell.Life.Server.Logic.Enums;
 
     internal class LogicHeroTiredTimer
     {
@@ -46,14 +48,16 @@
         /// <summary>
         /// Starts this instance.
         /// </summary>
-        internal void Start(LogicHeroData hero)
+        internal void Start(int hero)
         {
-            this.Heroes.Add(hero.GlobalID, new LogicTimer(this.Avatar.Time));
+            this.Heroes.Add(hero, new LogicTimer(this.Avatar.Time));
+
+            LogicHeroData data = (LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataWithID(hero);
 
             var added = this.Heroes.Last();
-            added.Value.StartTimer(this.Avatar.Time, hero.TiredTimer * 60);
+            added.Value.StartTimer(this.Avatar.Time, data.TiredTimer * 60);
 
-            this.Avatar.HeroTired.AddItem(hero.GlobalID, added.Value.RemainingSecs);
+            this.Avatar.HeroTired.AddItem(hero, added.Value.RemainingSecs);
         }
 
         /// <summary>

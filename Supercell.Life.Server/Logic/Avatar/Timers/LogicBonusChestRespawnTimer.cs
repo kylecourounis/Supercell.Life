@@ -127,12 +127,15 @@
         /// </summary>
         private void SetReplayQuest()
         {
-            this.PreviousReplayQuest = this.ReplayQuest;
-            this.ReplayQuest         = this.Avatar.NpcProgress.Values.Take(this.Avatar.NpcProgress.Count - 1).ToList()[this.Avatar.Connection.GameMode.Random.Rand(this.Avatar.NpcProgress.Count - 1)].Data.GlobalID;
-
-            if (this.PreviousReplayQuest == 0)
+            if (this.Avatar.NpcProgress.Count > 1)
             {
                 this.PreviousReplayQuest = this.ReplayQuest;
+                this.ReplayQuest = this.Avatar.NpcProgress.Values.Take(this.Avatar.NpcProgress.Count - 1).ToList()[this.Avatar.Connection.GameMode.Random.Rand(this.Avatar.NpcProgress.Count - 1)].Data.GlobalID;
+
+                if (this.PreviousReplayQuest == 0)
+                {
+                    this.PreviousReplayQuest = this.ReplayQuest;
+                }
             }
         }
 

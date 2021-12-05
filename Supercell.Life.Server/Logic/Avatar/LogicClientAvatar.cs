@@ -556,77 +556,74 @@ namespace Supercell.Life.Server.Logic.Avatar
         /// </summary>
         internal void CommodityChangeCountHelper(CommodityType commodity, int amount)
         {
-            if (amount > 0)
+            switch (commodity)
             {
-                switch (commodity)
+                case CommodityType.Gold:
                 {
-                    case CommodityType.Gold:
+                    this.SetCommodityCount(CommodityType.Gold, this.Gold + amount);
+                    break;
+                }
+                case CommodityType.Diamonds:
+                {
+                    this.SetCommodityCount(CommodityType.Diamonds, this.Diamonds + amount);
+                    break;
+                }
+                case CommodityType.FreeDiamonds:
+                {
+                    this.SetCommodityCount(CommodityType.FreeDiamonds, this.FreeDiamonds + amount);
+                    this.SetCommodityCount(CommodityType.Diamonds, this.Diamonds + amount);
+                    break;
+                }
+                case CommodityType.Energy:
+                {
+                    this.SetCommodityCount(CommodityType.Energy, this.Energy + amount);
+                    break;
+                }
+                case CommodityType.Experience:
+                {
+                    if (this.ExpLevel == 35 && this.ExpPoints >= 2500000)
                     {
-                        this.SetCommodityCount(CommodityType.Gold, this.Gold + amount);
-                        break;
+                        return;
                     }
-                    case CommodityType.Diamonds:
+
+                    double finalValue = amount;
+
+                    if (this.Booster.BoostActive)
                     {
-                        this.SetCommodityCount(CommodityType.Diamonds, this.Diamonds + amount);
-                        break;
+                        finalValue *= this.Booster.BoostPackage.Boost;
                     }
-                    case CommodityType.FreeDiamonds:
+
+                    this.ExpPoints += (int)finalValue;
+
+                    LogicExperienceLevelData experienceLevels = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataWithID(this.ExpLevel - 1);
+
+                    if (experienceLevels.ExpPoints <= this.ExpPoints)
                     {
-                        this.SetCommodityCount(CommodityType.FreeDiamonds, this.FreeDiamonds + amount);
-                        this.SetCommodityCount(CommodityType.Diamonds, this.Diamonds + amount);
-                        break;
+                        this.ExpPoints -= experienceLevels.ExpPoints;
+                        this.ExpLevel++;
                     }
-                    case CommodityType.Energy:
-                    {
-                        this.SetCommodityCount(CommodityType.Energy, this.Energy + amount);
-                        break;
-                    }
-                    case CommodityType.Experience:
-                    {
-                        if (this.ExpLevel == 35 && this.ExpPoints >= 2500000)
-                        {
-                            return;
-                        }
-
-                        double finalValue = amount;
-
-                        if (this.Booster.BoostActive)
-                        {
-                            finalValue *= this.Booster.BoostPackage.Boost;
-                        }
-
-                        this.ExpPoints += (int)finalValue;
-
-                        LogicExperienceLevelData experienceLevels = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataWithID(this.ExpLevel - 1);
-
-                        if (experienceLevels.ExpPoints <= this.ExpPoints)
-                        {
-                            this.ExpPoints -= experienceLevels.ExpPoints;
-                            this.ExpLevel++;
-                        }
                         
-                        break;
-                    }
-                    case CommodityType.Orb1:
-                    {
-                        this.SetCommodityCount(CommodityType.Orb1, this.Orb1 + amount);
-                        break;
-                    }
-                    case CommodityType.Orb2:
-                    {
-                        this.SetCommodityCount(CommodityType.Orb2, this.Orb2 + amount);
-                        break;
-                    }
-                    case CommodityType.Orb3:
-                    {
-                        this.SetCommodityCount(CommodityType.Orb3, this.Orb3 + amount);
-                        break;
-                    }
-                    case CommodityType.Orb4:
-                    {
-                        this.SetCommodityCount(CommodityType.Orb4, this.Orb4 + amount);
-                        break;
-                    }
+                    break;
+                }
+                case CommodityType.Orb1:
+                {
+                    this.SetCommodityCount(CommodityType.Orb1, this.Orb1 + amount);
+                    break;
+                }
+                case CommodityType.Orb2:
+                {
+                    this.SetCommodityCount(CommodityType.Orb2, this.Orb2 + amount);
+                    break;
+                }
+                case CommodityType.Orb3:
+                {
+                    this.SetCommodityCount(CommodityType.Orb3, this.Orb3 + amount);
+                    break;
+                }
+                case CommodityType.Orb4:
+                {
+                    this.SetCommodityCount(CommodityType.Orb4, this.Orb4 + amount);
+                    break;
                 }
             }
         }

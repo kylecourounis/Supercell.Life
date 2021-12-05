@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
@@ -9,7 +10,7 @@
 
     internal static class LogicCharacters
     {
-        private static readonly Dictionary<LogicHeroData, int> MaxLevels = new Dictionary<LogicHeroData, int>();
+        internal static readonly Dictionary<LogicHeroData, int> Characters = new Dictionary<LogicHeroData, int>();
 
         internal static readonly LogicHeroData AdventureBoy = (LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataByName("AdvBoy");
         internal static readonly LogicHeroData Wizard       = (LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataByName("Wizard");
@@ -41,18 +42,26 @@
                 return;
             }
 
-            LogicCharacters.MaxLevels.Add(LogicCharacters.AdventureBoy, 14);
-            LogicCharacters.MaxLevels.Add(LogicCharacters.Wizard,       14);
-            LogicCharacters.MaxLevels.Add(LogicCharacters.Princess,     12);
-            LogicCharacters.MaxLevels.Add(LogicCharacters.Pirate,       11);
-            LogicCharacters.MaxLevels.Add(LogicCharacters.Fairy,        7);
-            LogicCharacters.MaxLevels.Add(LogicCharacters.Mummy,        9);
-            LogicCharacters.MaxLevels.Add(LogicCharacters.Barrel,       6);
-            LogicCharacters.MaxLevels.Add(LogicCharacters.SpaceGirl,    5);
-            LogicCharacters.MaxLevels.Add(LogicCharacters.Genie,        4);
-            LogicCharacters.MaxLevels.Add(LogicCharacters.Yeti,         4);
+            LogicCharacters.Characters.Add(LogicCharacters.AdventureBoy, 14);
+            LogicCharacters.Characters.Add(LogicCharacters.Wizard,       14);
+            LogicCharacters.Characters.Add(LogicCharacters.Princess,     12);
+            LogicCharacters.Characters.Add(LogicCharacters.Pirate,       11);
+            LogicCharacters.Characters.Add(LogicCharacters.Fairy,        7);
+            LogicCharacters.Characters.Add(LogicCharacters.Mummy,        9);
+            LogicCharacters.Characters.Add(LogicCharacters.Barrel,       6);
+            LogicCharacters.Characters.Add(LogicCharacters.SpaceGirl,    5);
+            LogicCharacters.Characters.Add(LogicCharacters.Genie,        4);
+            LogicCharacters.Characters.Add(LogicCharacters.Yeti,         4);
 
             LogicCharacters.Initialized = true;
+        }
+
+        /// <summary>
+        /// Gets the loading index of a hero.
+        /// </summary>
+        internal static int GetIndex(LogicHeroData hero)
+        {
+            return LogicCharacters.Characters.Keys.ToList().FindIndex(h => h.GlobalID == hero.GlobalID);
         }
 
         /// <summary>
@@ -60,7 +69,7 @@
         /// </summary>
         internal static void ForEach(Action<LogicHeroData, int> action)
         {
-            foreach (var (key, value) in LogicCharacters.MaxLevels)
+            foreach (var (key, value) in LogicCharacters.Characters)
             {
                 action.Invoke(key, value);
             }

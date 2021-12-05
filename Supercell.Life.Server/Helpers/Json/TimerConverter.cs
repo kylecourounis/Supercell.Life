@@ -1,12 +1,13 @@
 ﻿namespace Supercell.Life.Server.Helpers.Json
 {
     using System;
+    using System.Collections.Generic;
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
     using Supercell.Life.Titan.Logic.Math;
-    
+
     internal class TimerConverter : JsonConverter
     {
         /// <summary>
@@ -14,7 +15,7 @@
         /// </summary>
         public override bool CanConvert(Type type)
         {
-            return type == typeof(LogicTimer);
+            return type == typeof(LogicTimer) || type == typeof(Dictionary<int, LogicTimer>);
         }
 
         /// <summary>
@@ -46,8 +47,30 @@
         {
             JObject jTimer = JObject.Load(reader);
 
-            int remainingTime = (int) (jTimer["t"] ?? -1);
-            
+            if (objectType == typeof(Dictionary<int, LogicTimer>))
+            {
+                if (jTimer.HasValues)
+                {
+                    var timers = (Dictionary<int, LogicTimer>)existingValue;
+
+                    foreach (var timer in jTimer.ToObject<Dictionary<int, LogicTimer>>())
+                    {
+                        var t = (LogicTimer)this.ReadTimer((int)(jTimer[$"{timer.Key}"]["t"] ?? -1), new LogicTimer(new LogicTime()));
+                        timers.Add(timer.Key, t);
+                    }
+
+                    return timers;
+                }
+            }
+
+            return this.ReadTimer((int)(jTimer["t"] ?? -1), existingValue);
+        }
+
+        /// <summary>
+        /// Reads the timer from the JSON.
+        /// </summary>
+        private object ReadTimer(int remainingTime, object existingValue)
+        {
             if (remainingTime >= 0)
             {
                 LogicTimer timer = (LogicTimer)existingValue;
@@ -71,22 +94,48 @@
         /// </summary>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            int remaining = -1;
-
-            if (value != null)
+            if (writer.Path.Split(".")[1].Equals("timers"))
             {
-                LogicTimer timer = (LogicTimer)value;
+                writer.WriteStartObject();
 
-                if (timer.Started)
+                if (value != null)
                 {
-                    remaining = timer.RemainingSecs;
-                }
-            }
+                    Dictionary<int, LogicTimer> timers = (Dictionary<int, LogicTimer>)value;
 
-            writer.WriteStartObject();
-            writer.WritePropertyName("t");
-            writer.WriteValue(remaining);
-            writer.WriteEndObject();
+                    foreach (var (id, timer) in timers)
+                    {
+                        if (timer.Started)
+                        {
+                            writer.WritePropertyName($"{id}");
+                            writer.WriteStartObject();
+                            writer.WritePropertyName("t");
+                            writer.WriteValue(timer.RemainingSecs);
+                            writer.WriteEndObject();
+                        }
+                    }
+                }
+
+                writer.WriteEndObject();
+            }
+            else
+            {
+                int remaining = -1;
+
+                if (value != null)
+                {
+                    LogicTimer timer = (LogicTimer)value;
+
+                    if (timer.Started)
+                    {
+                        remaining = timer.RemainingSecs;
+                    }
+                }
+
+                writer.WriteStartObject();
+                writer.WritePropertyName("t");
+                writer.WriteValue(remaining);
+                writer.WriteEndObject();
+            }
         }
     }
 }

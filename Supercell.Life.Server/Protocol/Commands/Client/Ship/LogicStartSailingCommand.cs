@@ -1,13 +1,15 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
     using Supercell.Life.Titan.DataStream;
+    using Supercell.Life.Titan.Logic;
 
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Avatar.Slots;
+    using Supercell.Life.Server.Logic.Game;
+    using Supercell.Life.Server.Logic.Game.Objects;
     using Supercell.Life.Server.Network;
-    using Supercell.Life.Titan.Logic;
 
     internal class LogicStartSailingCommand : LogicCommand
     {
@@ -41,7 +43,26 @@
             foreach (var hero in this.Heroes)
             {
                 gamemode.Avatar.Sailing.Heroes.AddItem(hero.GlobalID, 1);
-                gamemode.Avatar.Sailing.HeroLevels.AddItem(hero.GlobalID, gamemode.Avatar.HeroLevels.GetCount(hero.GlobalID));
+
+                int characterIdx = LogicCharacters.GetIndex(hero);
+
+                int level = gamemode.Avatar.HeroLevels.GetCount(hero.GlobalID);
+
+                if (level == 0)
+                {
+                    level = characterIdx;
+                }
+                else
+                {
+                    level += characterIdx;
+
+                    if (level > Globals.ShipGoldPerHeroLevel.Count)
+                    {
+                        level = Globals.ShipGoldPerHeroLevel.Count;
+                    }
+                }
+                
+                gamemode.Avatar.Sailing.HeroLevels.AddItem(hero.GlobalID, level);
             }
 
             gamemode.Avatar.Sailing.Start();

@@ -3,6 +3,8 @@
     using Supercell.Life.Titan.DataStream;
 
     using Supercell.Life.Server.Logic;
+    using Supercell.Life.Server.Logic.Enums;
+    using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Server.Network;
 
     internal class LogicFinishShipUpgradeCommand : LogicCommand
@@ -22,7 +24,13 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            gamemode.Avatar.ShipUpgrade.Finish();
+            int cost = LogicGamePlayUtil.GetSpeedUpCost(gamemode.Avatar.ShipUpgrade.Timer.RemainingSecs, 1); // Still not perfectly accurate. Will figure out soon.
+            
+            if (gamemode.Avatar.Diamonds >= cost)
+            {
+                gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost);
+                gamemode.Avatar.ShipUpgrade.Finish();
+            }
         }
     }
 }

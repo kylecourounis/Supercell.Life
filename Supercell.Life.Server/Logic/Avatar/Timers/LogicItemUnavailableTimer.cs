@@ -57,22 +57,18 @@
         /// <summary>
         /// Finishes this instance.
         /// </summary>
-        internal void Finish()
+        internal void Finish(int item)
         {
-            if (this.Started)
+            var timer = this.Items[item];
+
+            if (timer.Started)
             {
-                foreach (var (item, timer) in this.Items)
-                {
-                    if (timer.RemainingSecs <= 0)
-                    {
-                        timer.StopTimer();
+                timer.StopTimer();
 
-                        this.Avatar.ItemUnavailable.Remove(item);
-                        this.Items.Remove(item);
+                this.Avatar.ItemUnavailable.Remove(item);
+                this.Items.Remove(item);
 
-                        this.Avatar.Save();
-                    }
-                }
+                this.Avatar.Save();
             }
         }
 
@@ -83,13 +79,17 @@
         {
             if (this.Started)
             {
-                foreach (var timer in this.Items.Values.Where(timer => timer.RemainingSecs <= 0))
+                foreach (var (item, timer) in this.Items)
                 {
                     timer.FastForward(seconds);
+
+                    if (timer.RemainingSecs <= 0)
+                    {
+                        this.Finish(item);
+                    }
                 }
 
                 this.Update();
-                this.Finish();
             }
         }
 
@@ -101,7 +101,14 @@
             if (this.Started)
             {
                 this.Update();
-                this.Finish();
+
+                foreach (var (item, timer) in this.Items)
+                {
+                    if (timer.RemainingSecs <= 0)
+                    {
+                        this.Finish(item);
+                    }
+                }
             }
         }
 

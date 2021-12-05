@@ -24,11 +24,11 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            int speedUpCost = LogicGamePlayUtil.GetSpeedUpCost(gamemode.Avatar.SpellTimer.Timer.RemainingSecs, LogicGamePlayUtil.GetSpeedUpCostMultiplier(2));
+            int cost = LogicGamePlayUtil.GetSpeedUpCost(gamemode.Avatar.SpellTimer.Timer.RemainingSecs, 2);
 
-            if (gamemode.Avatar.Diamonds >= speedUpCost)
+            if (gamemode.Avatar.Diamonds >= cost)
             {
-                gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -speedUpCost);
+                gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost);
                 gamemode.Avatar.SpellTimer.Finish();
             }
         }

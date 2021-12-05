@@ -27,7 +27,7 @@
         /// </summary>
         public int Rand(int max)
         {
-            int result;
+            int result = 0;
             
             if (max >= 1)
             {
@@ -45,10 +45,6 @@
                 }
 
                 result = v6 % max;
-            }
-            else
-            {
-                result = 0;
             }
 
             return result;

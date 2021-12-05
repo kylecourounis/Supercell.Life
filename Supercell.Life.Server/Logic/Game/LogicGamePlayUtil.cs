@@ -153,9 +153,9 @@
         }
 
         /// <summary>
-        /// Gets the speed up cost.
+        /// Calculates the speed up cost.
         /// </summary>
-        internal static int GetSpeedUpCost(int seconds, int multiplier)
+        internal static int CalculateSpeedUpCost(int seconds, int multiplier)
         {
             if (seconds > 0)
             {
@@ -195,33 +195,43 @@
         }
 
         /// <summary>
-        /// Gets the the speed up cost multiplier.
+        /// Gets the the speed up cost.
         /// </summary>
-        internal static int GetSpeedUpCostMultiplier(int type)
+        internal static int GetSpeedUpCost(int time, int type)
         {
+            int multiplier;
+
             switch (type)
             {
                 case 0:
                 {
-                    return 100;
+                    multiplier = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SPEED_UP_MODIFIER_GENERIC")).NumberValue;
+                    break;
                 }
                 case 1:
                 {
-                    return ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SPEED_UP_MODIFIER_SHIP_CONSTRUCTION")).NumberValue;
+                    multiplier = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SPEED_UP_MODIFIER_SHIP_CONSTRUCTION")).NumberValue;
+                    break;
                 }
                 case 2:
                 {
-                    return ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SPEED_UP_MODIFIER_SPELL_CONSTRUCTION")).NumberValue;
+                    multiplier = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SPEED_UP_MODIFIER_SPELL_CONSTRUCTION")).NumberValue;
+                    break;
                 }
                 case 3:
                 {
-                    return ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SPEED_UP_MODIFIER_ITEM_AVAILABILITY")).NumberValue;
+                    multiplier = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SPEED_UP_MODIFIER_ITEM_AVAILABILITY")).NumberValue;
+                    break;
                 }
                 default:
                 {
-                    return 100;
+                    Debugger.Error("Invalid speedup type!");
+                    multiplier = 100;
+                    break;
                 }
             }
+
+            return LogicGamePlayUtil.CalculateSpeedUpCost(time, multiplier);
         }
     }
 }

@@ -5,6 +5,8 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
+    using Supercell.Life.Server.Logic.Enums;
+    using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Server.Network;
 
     internal class LogicSpeedUpItemCommand : LogicCommand
@@ -28,7 +30,13 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            gamemode.Avatar.ItemUnavailableTimer.Finish();
+            int cost = LogicGamePlayUtil.GetSpeedUpCost(gamemode.Avatar.ItemUnavailableTimer.Items[this.ItemData.GlobalID].RemainingSecs * 15, 3);
+
+            if (gamemode.Avatar.Diamonds >= cost)
+            {
+                gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost);
+                gamemode.Avatar.ItemUnavailableTimer.Finish(this.ItemData.GlobalID);
+            }
         }
     }
 }

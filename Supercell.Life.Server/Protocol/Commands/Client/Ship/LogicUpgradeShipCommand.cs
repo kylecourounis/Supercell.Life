@@ -2,11 +2,9 @@
 {
     using Supercell.Life.Titan.DataStream;
 
-    using Supercell.Life.Server.Files;
-    using Supercell.Life.Server.Files.CsvHelpers;
-    using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Enums;
+    using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Server.Network;
 
     internal class LogicUpgradeShipCommand : LogicCommand
@@ -32,10 +30,8 @@
             }
             else
             {
-                LogicDataTable globals = CSV.Tables.Get(Gamefile.Globals);
-
-                int cost  = ((LogicGlobalData)globals.GetDataByName("SHIP_UPGRADE_COST")).NumberArray.Find(value => value == gamemode.Avatar.ShipLevel);
-                int xpLvl = ((LogicGlobalData)globals.GetDataByName("SHIP_UPGRADE_REQUIRED_XP_LEVEL")).NumberArray.Find(value => value == gamemode.Avatar.ExpLevel);
+                int cost  = Globals.ShipUpgradeCost[gamemode.Avatar.ShipLevel];
+                int xpLvl = Globals.ShipUpgradeRequiredXPLevel[gamemode.Avatar.ShipLevel];
 
                 if (gamemode.Avatar.Gold >= cost && gamemode.Avatar.ExpLevel >= xpLvl)
                 {

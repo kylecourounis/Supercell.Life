@@ -1,5 +1,7 @@
 ﻿namespace Supercell.Life.Server.Logic.Game
 {
+    using Supercell.Life.Titan.Logic;
+
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic.Enums;
@@ -15,8 +17,16 @@
         internal static LogicHeroData StartingCharacter;
         internal static LogicQuestData StartingQuest;
 
+        internal static LogicArrayList<int> ShipUpgradeRequiredXPLevel;
+        internal static LogicArrayList<int> ShipUpgradeCost;
+        internal static LogicArrayList<int> ShipUpgradeDurationHours;
         internal static int ShipSailDurationHours;
-        
+
+        internal static LogicArrayList<int> ShipGoldPerHeroLevel;
+        internal static LogicArrayList<int> ShipXPPerHeroLevel;
+        internal static int ShipGoldVariation;
+        internal static int ShipXPVariation;
+
         internal static int TeamMailSendCooldownTime;
         internal static int TeamGoalSeasonDurationHours;
 
@@ -77,8 +87,16 @@
 
             Globals.StartingCharacter           = (LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataByName(((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("STARTING_CHARACTER")).TextValue);
             Globals.StartingQuest               = (LogicQuestData)CSV.Tables.Get(Gamefile.Quests).GetDataByName(((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("STARTING_QUEST")).TextValue);
-
+            
+            Globals.ShipUpgradeRequiredXPLevel  = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SHIP_UPGRADE_REQUIRED_XP_LEVEL")).NumberArray;
+            Globals.ShipUpgradeCost             = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SHIP_UPGRADE_COST")).NumberArray;
+            Globals.ShipUpgradeDurationHours    = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SHIP_UPGRADE_DURATION_HOURS")).NumberArray;
             Globals.ShipSailDurationHours       = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SHIP_SAIL_DURATION_HOURS")).NumberValue;
+            
+            Globals.ShipGoldPerHeroLevel        = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SHIP_GOLD_PER_HERO_LVL")).NumberArray;
+            Globals.ShipXPPerHeroLevel          = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SHIP_XP_PER_HERO_LVL")).NumberArray;
+            Globals.ShipGoldVariation           = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SHIP_GOLD_VARIATION")).NumberValue;
+            Globals.ShipXPVariation             = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SHIP_XP_VARIATION")).NumberValue;
 
             Globals.TeamMailSendCooldownTime    = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("TEAM_MAIL_SEND_COOLDOWN_TIME_SECONDS")).NumberValue;
             Globals.TeamGoalSeasonDurationHours = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("TEAM_GOAL_SEASON_DURATION_HOURS")).NumberValue;

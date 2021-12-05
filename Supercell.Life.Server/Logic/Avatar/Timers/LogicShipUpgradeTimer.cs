@@ -5,9 +5,6 @@
     using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Math;
 
-    using Supercell.Life.Server.Files;
-    using Supercell.Life.Server.Files.CsvLogic;
-    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Logic.Game;
 
     internal class LogicShipUpgradeTimer
@@ -49,7 +46,7 @@
         /// </summary>
         internal void Start()
         {
-            this.Timer.StartTimer(this.Avatar.Time, 3600 * ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SHIP_UPGRADE_DURATION_HOURS")).NumberArray[this.Avatar.ShipLevel]);
+            this.Timer.StartTimer(this.Avatar.Time, 3600 * Globals.ShipUpgradeDurationHours[this.Avatar.ShipLevel]);
         }
 
         /// <summary>
@@ -60,11 +57,6 @@
             if (this.Upgrading)
             {
                 this.Timer.StopTimer();
-
-                int cost = LogicGamePlayUtil.GetSpeedUpCost(this.Timer.RemainingSecs, LogicGamePlayUtil.GetSpeedUpCostMultiplier(1));
-                Debugger.Debug(cost);
-
-                this.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost);
 
                 this.Avatar.ShipLevel++;
                 this.Avatar.Save();
