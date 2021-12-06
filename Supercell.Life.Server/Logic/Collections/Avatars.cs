@@ -21,7 +21,6 @@ namespace Supercell.Life.Server.Logic.Collections
     using Supercell.Life.Server.Core;
     using Supercell.Life.Server.Database;
     using Supercell.Life.Server.Database.Models;
-    using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Network;
 
@@ -311,6 +310,8 @@ namespace Supercell.Life.Server.Logic.Collections
         /// </summary>
         internal static async void Save(LogicClientAvatar avatar, DBMS database = Settings.Database)
         {
+            avatar.Update = DateTime.UtcNow;
+
             switch (database)
             {
                 case DBMS.Mongo:
@@ -448,7 +449,7 @@ namespace Supercell.Life.Server.Logic.Collections
                 });
             }
 
-            Debugger.Debug($"Executed an action on {count} avatars.");
+            // Debugger.Debug($"Executed an action on {count} avatars.");
         }
     }
 }

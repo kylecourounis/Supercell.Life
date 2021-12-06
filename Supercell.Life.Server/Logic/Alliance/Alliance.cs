@@ -1,5 +1,6 @@
 ﻿namespace Supercell.Life.Server.Logic.Alliance
 {
+    using System;
     using System.Linq;
 
     using Newtonsoft.Json;
@@ -41,6 +42,8 @@
 
         [JsonProperty] internal int TotalStarsCollected;
         [JsonProperty] internal int StarsLastSeason;
+
+        [JsonProperty] internal DateTime Update = DateTime.UtcNow;
 
         [JsonProperty] internal LogicTeamGoalTimer TeamGoalTimer;
 

@@ -1,5 +1,6 @@
 ﻿namespace Supercell.Life.Server.Core.Events
 {
+    using System;
     using System.Collections.Generic;
     using System.Reflection;
     using System.Timers;
@@ -30,6 +31,7 @@
                 return;
             }
 
+            ServerTimers.TeamGoalTimers.Start();
             ServerTimers.ReleaseSockets.Start();
             ServerTimers.SaveAll.Start();
 
@@ -84,6 +86,32 @@
                 {
                     Avatars.Save();
                     Alliances.Save();
+                };
+
+                return timer;
+            }
+        }
+
+        /// <summary>
+        /// An instance of <see cref="Timer"/> that periodically updates the Team Goal timers.
+        /// </summary>
+        private static Timer TeamGoalTimers
+        {
+            get
+            {
+                Timer timer = new Timer
+                {
+                    Interval = 10000,
+                    AutoReset = true
+                };
+
+                timer.Elapsed += delegate
+                {
+                    Alliances.ForEach(alliance =>
+                    {
+                        alliance.TeamGoalTimer.Tick((int)timer.Interval);
+                        alliance.Update = DateTime.UtcNow;
+                    });
                 };
 
                 return timer;

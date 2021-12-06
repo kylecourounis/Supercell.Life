@@ -106,12 +106,6 @@
 
             if (this.Avatar.Alliance != null)
             {
-                if (!this.Avatar.Alliance.TeamGoalTimer.Started)
-                {
-                    this.Avatar.Alliance.TeamGoalTimer.Start();
-                }
-
-                this.Avatar.Alliance.TeamGoalTimer.AdjustSubTick();
                 this.Avatar.TeamMailCooldownTimer.AdjustSubTick();
             }
         }
@@ -134,7 +128,6 @@
 
             if (this.Avatar.Alliance != null)
             {
-                this.Avatar.Alliance.TeamGoalTimer.FastForward(seconds);
                 this.Avatar.TeamMailCooldownTimer.FastForward(seconds);
             }
 
@@ -162,7 +155,6 @@
             
             if (this.Avatar.Alliance != null)
             {
-                this.Avatar.Alliance.TeamGoalTimer.Tick();
                 this.Avatar.TeamMailCooldownTimer.Tick();
             }
 

@@ -1,5 +1,6 @@
 ﻿namespace Supercell.Life.Server.Database.Models
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using MongoDB.Bson;
@@ -8,6 +9,7 @@
 
     using Newtonsoft.Json;
 
+    using Supercell.Life.Server.Helpers.Json;
     using Supercell.Life.Server.Logic.Alliance;
 
     internal class AllianceDb
@@ -20,7 +22,7 @@
         {
             TypeNameHandling            = TypeNameHandling.None,            MissingMemberHandling   = MissingMemberHandling.Ignore,
             DefaultValueHandling        = DefaultValueHandling.Include,     NullValueHandling       = NullValueHandling.Ignore,
-            ReferenceLoopHandling       = ReferenceLoopHandling.Ignore,
+            ReferenceLoopHandling       = ReferenceLoopHandling.Ignore,     Converters              = new List<JsonConverter> { new TimerConverter() },
             Formatting                  = Formatting.Indented
         };
 

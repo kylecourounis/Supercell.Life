@@ -122,6 +122,14 @@
                 {
                     Debugger.Error("Unsuccessfully added the specified alliance to the dictionary.");
                 }
+
+                if (!alliance.TeamGoalTimer.Started)
+                {
+                    alliance.TeamGoalTimer.Start();
+                }
+
+                alliance.TeamGoalTimer.AdjustSubTick();
+                alliance.TeamGoalTimer.FastForward((int)DateTime.UtcNow.Subtract(alliance.Update).TotalSeconds);
             }
         }
 
@@ -296,6 +304,8 @@
         {
             if (alliance != null)
             {
+                alliance.Update = DateTime.UtcNow;
+
                 switch (database)
                 {
                     case DBMS.Mongo:
@@ -356,7 +366,7 @@
                 count++;
             });
 
-            Debugger.Debug($"Executed an action on {count} alliances.");
+            // Debugger.Debug($"Executed an action on {count} alliances.");
         }
     }
 }

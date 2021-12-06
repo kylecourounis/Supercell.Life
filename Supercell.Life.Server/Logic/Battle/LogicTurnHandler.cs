@@ -2,8 +2,10 @@
 {
     using System.Collections.Generic;
 
-    using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Titan.Logic.Math;
+
+    using Supercell.Life.Server.Logic.Avatar;
+    using Supercell.Life.Server.Logic.Game.Objects;
 
     internal class LogicTurnHandler
     {
@@ -13,7 +15,7 @@
 
         internal int CharacterIndex;
 
-        internal Dictionary<LogicGameMode, LogicVector2[]> CharacterPositions;
+        internal Dictionary<LogicGameMode, LogicCharacter[]> Heroes;
 
         internal LogicMultiplayerTurnTimer Timer;
 
@@ -24,9 +26,9 @@
         /// </summary>
         internal LogicTurnHandler(LogicBattle battle)
         {
-            this.Battle             = battle;
-            this.Timer              = new LogicMultiplayerTurnTimer(this.Battle);
-            this.CharacterPositions = new Dictionary<LogicGameMode, LogicVector2[]>();
+            this.Battle = battle;
+            this.Timer  = new LogicMultiplayerTurnTimer(this.Battle);
+            this.Heroes = new Dictionary<LogicGameMode, LogicCharacter[]>();
         }
 
         /// <summary>
@@ -34,7 +36,7 @@
         /// </summary>
         internal void SetCharacterPosition(LogicVector2 position)
         {
-            this.CharacterPositions[this.WhoseTurn][this.CharacterIndex] = position;
+            this.Heroes[this.WhoseTurn][this.CharacterIndex].Position = position;
         }
 
         /// <summary>
@@ -43,9 +45,9 @@
         /// </summary>
         internal void SetCharacterPositions(LogicGameMode gamemode, LogicVector2 char1, LogicVector2 char2, LogicVector2 char3)
         {
-            this.CharacterPositions[gamemode][0] = char1;
-            this.CharacterPositions[gamemode][1] = char2;
-            this.CharacterPositions[gamemode][2] = char3;
+            this.Heroes[gamemode][0].Position = char1;
+            this.Heroes[gamemode][1].Position = char2;
+            this.Heroes[gamemode][2].Position = char3;
         }
 
         /// <summary>
