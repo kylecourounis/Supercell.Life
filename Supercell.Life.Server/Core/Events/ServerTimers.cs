@@ -109,7 +109,7 @@
                 {
                     Alliances.ForEach(alliance =>
                     {
-                        alliance.TeamGoalTimer.Tick((int)timer.Interval);
+                        alliance.TeamGoalTimer.Tick((int)(timer.Interval / 1000));
                         alliance.Update = DateTime.UtcNow;
                     });
                 };
