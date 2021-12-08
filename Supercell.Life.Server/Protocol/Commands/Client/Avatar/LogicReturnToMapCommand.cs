@@ -1,6 +1,7 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Client
 {
     using Supercell.Life.Titan.DataStream;
+    using Supercell.Life.Titan.Logic.Enums;
 
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
@@ -12,7 +13,7 @@
         /// </summary>
         public LogicReturnToMapCommand(Connection connection) : base(connection)
         {
-            // LogicReturnToMapCommand.
+            this.Connection.State = State.Home;
         }
 
         internal override void Decode(ByteStream stream)
@@ -22,12 +23,11 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            // We need to figure out the quest completion system at some point.
-
             if (gamemode.Avatar.OngoingQuestData != null)
             {
                 if (gamemode.Avatar.ExpLevel >= gamemode.Avatar.OngoingQuestData.Data.RequiredXpLevel)
                 {
+                    gamemode.Connection.State = State.Home;
                     gamemode.Avatar.OngoingQuestData.Save();
                 }
                 else

@@ -81,7 +81,6 @@
                         {
                             LogicQuest quest = new LogicQuest
                             {
-                                Name = name,
                                 Data = (LogicQuestData)questCsv.GetDataByName(name)
                             };
 

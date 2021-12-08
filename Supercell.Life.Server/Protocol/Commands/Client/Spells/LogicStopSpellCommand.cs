@@ -5,6 +5,7 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
+    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Network;
 
     internal class LogicStopSpellCommand : LogicCommand
@@ -30,7 +31,8 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            gamemode.Avatar.SpellTimer.Reset(this.Spell);
+            gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Gold, this.Spell.CreateCost);
+            gamemode.Avatar.SpellTimer.RemoveSpell(this.Spell, this.Slot);
         }
     }
 }

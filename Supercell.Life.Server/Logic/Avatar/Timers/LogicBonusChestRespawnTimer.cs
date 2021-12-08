@@ -71,7 +71,8 @@
             {
                 this.Timer.StopTimer();
 
-                this.SetReplayQuest();
+                this.ReplayQuest      = 0;
+                this.ReplayChestTimes = 0;
 
                 this.Start();
             }
@@ -127,14 +128,24 @@
         /// </summary>
         private void SetReplayQuest()
         {
-            if (this.Avatar.NpcProgress.Count > 1)
+            if (this.ReplayQuest == 0)
             {
-                this.PreviousReplayQuest = this.ReplayQuest;
-                this.ReplayQuest = this.Avatar.NpcProgress.Values.Take(this.Avatar.NpcProgress.Count - 1).ToList()[this.Avatar.Connection.GameMode.Random.Rand(this.Avatar.NpcProgress.Count - 1)].Data.GlobalID;
-
-                if (this.PreviousReplayQuest == 0)
+                if (this.Avatar.NpcProgress != null)
                 {
-                    this.PreviousReplayQuest = this.ReplayQuest;
+                    var basicQuests = this.Avatar.QuestMoves.Values.ToList();
+
+                    if (basicQuests.Count > 1)
+                    {
+                        this.PreviousReplayQuest = this.ReplayQuest;
+
+                        var completedQuests = basicQuests.Take(basicQuests.Count - 1).ToList();
+                        this.ReplayQuest = completedQuests[this.Avatar.Connection.GameMode.Random.Rand(completedQuests.Count - 1)].Data.GlobalID;
+
+                        if (this.PreviousReplayQuest == 0)
+                        {
+                            this.PreviousReplayQuest = this.ReplayQuest;
+                        }
+                    }
                 }
             }
         }
@@ -144,13 +155,12 @@
         /// </summary>
         internal void Save(LogicJSONObject json)
         {
-            json.Put("replayChestQuest", new LogicJSONNumber(this.ReplayQuest));
-            json.Put("replayChestTimes", new LogicJSONNumber(this.ReplayChestTimes));
-
             json.Put("m_replayChestAutomaticRespawnTimer", new LogicJSONNumber(this.Timer.RemainingSecs));
             json.Put("m_replayChestRespawnTimer", new LogicJSONNumber(this.Timer.RemainingSecs));
             json.Put("mapDailyBonusChestRespawnTimer", new LogicJSONNumber(this.Timer.RemainingSecs));
 
+            json.Put("replayChestQuest", new LogicJSONNumber(this.ReplayQuest));
+            json.Put("replayChestTimes", new LogicJSONNumber(this.ReplayChestTimes));
             json.Put("last_replay_level", new LogicJSONNumber(this.PreviousReplayQuest));
         }
     }

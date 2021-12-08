@@ -5,6 +5,7 @@
 
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Alliance;
+    using Supercell.Life.Server.Logic.Alliance.Entries;
     using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Logic.Avatar.Entries;
     using Supercell.Life.Server.Logic.Collections;
@@ -68,7 +69,7 @@
                 avatar.StreamEntries.Add(kickedMsg);
                 new AvatarStreamEntryMessage(avatar.Connection, kickedMsg).Send();
 
-                alliance.AddEntry(new AllianceStreamEntry(allianceMember, executor, AllianceStreamEntry.AllianceStreamEvent.Kick));
+                alliance.AddEntry(new AllianceEventStreamEntry(allianceMember, executor, AllianceStreamEntry.AllianceStreamEvent.Kick));
 
                 Alliances.Save(alliance);
             }

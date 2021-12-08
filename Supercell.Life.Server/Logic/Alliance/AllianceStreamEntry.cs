@@ -6,7 +6,9 @@
 
     using Supercell.Life.Titan.DataStream;
     using Supercell.Life.Titan.Logic.Math;
-    
+
+    using Supercell.Life.Server.Helpers;
+
     internal class AllianceStreamEntry
     {
         [JsonProperty] internal int HighID;
@@ -23,22 +25,7 @@
 
         [JsonProperty] internal DateTime Created = DateTime.UtcNow;
 
-        [JsonProperty]
-        internal AllianceStreamType StreamType
-        {
-            get
-            {
-                return this.Message != null ? AllianceStreamType.Chat : AllianceStreamType.Event;
-            }
-        }
-
-        [JsonProperty] internal int ExecutorHighID;
-        [JsonProperty] internal int ExecutorLowID;
-
-        [JsonProperty] internal AllianceStreamEvent Event;
-        [JsonProperty] internal string ExecutorName;
-
-        [JsonProperty] internal string Message;
+        [JsonProperty] internal AllianceStreamType StreamType;
 
         /// <summary>
         /// Gets the age of this <see cref="AllianceStreamEntry"/>.
@@ -63,7 +50,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="AllianceStreamEntry"/> class.
         /// </summary>
-        internal AllianceStreamEntry(AllianceMember member)
+        internal AllianceStreamEntry(AllianceMember member, AllianceStreamType type)
         {
             this.SenderHighID = member.HighID;
             this.SenderLowID  = member.LowID;
@@ -72,53 +59,18 @@
             this.SenderLeague = member.League;
 
             this.SenderRole   = (Alliance.Role)member.Role;
-        }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AllianceStreamEntry"/> class.
-        /// </summary>
-        internal AllianceStreamEntry(AllianceMember member, string message) : this(member)
-        {
-            this.Message = message;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AllianceStreamEntry"/> class.
-        /// </summary>
-        internal AllianceStreamEntry(AllianceMember member, AllianceMember executor, AllianceStreamEvent streamEvent) : this(member)
-        {
-            this.ExecutorHighID = executor.HighID;
-            this.ExecutorLowID  = executor.LowID;
-            this.ExecutorName   = executor.Name;
-            this.Event          = streamEvent;
-        }
-
-        internal void Encode(ChecksumEncoder encoder)
-        {
-            if (this.StreamType == AllianceStreamType.Chat)
-            {
-                this.EncodeHeader(encoder);
-
-                encoder.WriteString(this.Message);
-            }
-            else
-            {
-                this.EncodeHeader(encoder);
-
-                encoder.WriteInt((int)this.Event);
-                encoder.WriteLogicLong(new LogicLong(this.ExecutorHighID, this.ExecutorLowID));
-                encoder.WriteString(this.ExecutorName);
-            }
+            this.StreamType   = type;
         }
 
         /// <summary>
         /// Encodes this instance.
         /// </summary>
-        internal void EncodeHeader(ChecksumEncoder encoder)
+        internal virtual void Encode(ChecksumEncoder encoder)
         {
             encoder.WriteLogicLong(new LogicLong(this.HighID, this.LowID));
-            encoder.WriteLogicLong(new LogicLong(this.HighID, this.LowID));
 
+            encoder.WriteLogicLong(new LogicLong(this.SenderHighID, this.SenderLowID));
             encoder.WriteString(this.SenderName);
 
             encoder.WriteInt(this.SenderLevel);
@@ -128,35 +80,68 @@
             encoder.WriteInt(this.Age);
 
             encoder.WriteBoolean(false); // ?
-        }
 
-        #region ShouldSerialize
-        public bool ShouldSerializeMessage()
-        {
-            return this.StreamType == AllianceStreamType.Chat;
-        }
+            switch (this.StreamType)
+            {
+                case AllianceStreamType.Unknown_1:
+                {
+                    encoder.WriteDataReference(null);
+                    encoder.WriteInt(0);
 
-        public bool ShouldSerializeEvent()
-        {
-            return this.StreamType == AllianceStreamType.Event;
-        }
+                    encoder.WriteBoolean(true);
+                    encoder.WriteString("");
 
-        public bool ShouldSerializeExecutorHighID()
-        {
-            return this.StreamType == AllianceStreamType.Event;
-        }
+                    break;
+                }
+                case AllianceStreamType.Unknown_5:
+                {
+                    encoder.WriteInt(0);
+                    encoder.WriteLogicLong(0);
 
-        public bool ShouldSerializeExecutorLowID()
-        {
-            return this.StreamType == AllianceStreamType.Event;
-        }
+                    encoder.WriteString("");
+                    encoder.WriteString("");
+                    encoder.WriteString("");
 
-        public bool ShouldSerializeExecutorName()
-        {
-            return this.StreamType == AllianceStreamType.Event;
-        }
-        #endregion
+                    encoder.WriteInt(0);
+                    encoder.WriteInt(0);
+                    encoder.WriteInt(0);
 
+                    break;
+                }
+                case AllianceStreamType.Unknown_7:
+                {
+                    encoder.WriteDataReference(null);
+                    break;
+                }
+                case AllianceStreamType.Unknown_10:
+                {
+                    encoder.WriteString("");
+
+                    encoder.WriteByte(0);
+                    encoder.WriteBoolean(true);
+
+                    encoder.WriteString("");
+
+                    break;
+                }
+                case AllianceStreamType.Unknown_11:
+                {
+                    encoder.WriteString("");
+
+                    encoder.WriteInt(0);
+                    encoder.WriteInt(0);
+                    encoder.WriteInt(0);
+
+                    encoder.WriteBoolean(true);
+                        
+                    encoder.WriteInt(0);
+                    encoder.WriteLogicLong(0);
+
+                    break;
+                }
+            }
+        }
+        
         internal enum AllianceStreamEvent
         {
             Kick = 1,
@@ -169,8 +154,14 @@
 
         internal enum AllianceStreamType
         {
-            Chat  = 2,
-            Event = 4
+            Unknown_1  = 1,
+            Chat       = 2,
+            Rejected   = 3,
+            Event      = 4,
+            Unknown_5  = 5,
+            Unknown_7  = 7,
+            Unknown_10 = 10,
+            Unknown_11 = 11
         }
     }
 }

@@ -19,7 +19,7 @@
         internal override void Initialize()
         {
             this.Set(Resource.Gold, Globals.StartingGold);
-            this.Set(Resource.Energy, 15);
+            this.Set(Resource.Energy, Globals.InitialMaxEnergy);
 
             this.Set(Resource.Orb1, 1000000);
             this.Set(Resource.Orb2, 1000000);

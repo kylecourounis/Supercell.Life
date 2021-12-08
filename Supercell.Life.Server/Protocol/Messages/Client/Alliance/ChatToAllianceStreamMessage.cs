@@ -4,6 +4,7 @@
     using Supercell.Life.Titan.Logic.Utils;
 
     using Supercell.Life.Server.Logic.Alliance;
+    using Supercell.Life.Server.Logic.Alliance.Entries;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
 
@@ -51,7 +52,7 @@
                         if (this.Message.Length > 0)
                         {
                             AllianceMember sender = this.Connection.GameMode.Avatar.Alliance.Members.Find(member => member.Identifier == this.Connection.GameMode.Avatar.Identifier);
-                            this.Connection.GameMode.Avatar.Alliance.AddEntry(new AllianceStreamEntry(sender, this.Message));
+                            this.Connection.GameMode.Avatar.Alliance.AddEntry(new AllianceChatStreamEntry(sender, this.Message));
                         }
                     }
                 }

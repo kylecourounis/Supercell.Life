@@ -43,7 +43,8 @@
                     AllianceName   = gamemode.Avatar.Alliance.Name,
                     AllianceBadge  = gamemode.Avatar.Alliance.Badge,
                     Title          = this.Title,
-                    Message        = this.Message
+                    Message        = this.Message,
+                    IsNew          = true
                 };
 
                 avatar.StreamEntries.Add(mail);

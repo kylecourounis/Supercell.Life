@@ -8,6 +8,7 @@
     using Supercell.Life.Server.Logic.Alliance;
     using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Logic.Enums;
+    using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
     using Supercell.Life.Server.Protocol.Commands.Server;
@@ -51,41 +52,39 @@
 
         internal override void Handle()
         {
-            if (!this.Connection.GameMode.Avatar.IsInAlliance && this.Connection.GameMode.Avatar.Gold >= 10000)
+            if (!this.Connection.GameMode.Avatar.IsInAlliance && this.Connection.GameMode.Avatar.CommodityChangeCountHelper(CommodityType.Gold, -Globals.AllianceCreateCost))
             {
-                this.Connection.GameMode.Avatar.CommodityChangeCountHelper(CommodityType.Gold, -10000);
-            }
+                Alliance alliance = Alliances.Create();
 
-            Alliance alliance = Alliances.Create();
-
-            if (alliance != null)
-            {
-                alliance.Name             = this.AllianceName;
-                alliance.Description      = this.AllianceDescription;
-                alliance.Badge            = this.BadgeData.GlobalID;
-                alliance.Type             = (Hiring)this.Type;
-                alliance.RequiredTrophies = this.TrophyLimit;
-
-                alliance.Members.Add(new AllianceMember(this.Connection.GameMode.Avatar, Alliance.Role.Leader));
-
-                Alliances.Save(alliance);
-
-                this.Connection.GameMode.Avatar.ClanHighID = alliance.HighID;
-                this.Connection.GameMode.Avatar.ClanLowID  = alliance.LowID;
-
-                new AvailableServerCommandMessage(this.Connection, new LogicChangeAllianceRoleCommand(this.Connection)
+                if (alliance != null)
                 {
-                    Role = Alliance.Role.Leader
-                }).Send();
+                    alliance.Name = this.AllianceName;
+                    alliance.Description = this.AllianceDescription;
+                    alliance.Badge = this.BadgeData.GlobalID;
+                    alliance.Type = (Hiring)this.Type;
+                    alliance.RequiredTrophies = this.TrophyLimit;
 
-                new AvailableServerCommandMessage(this.Connection, new LogicJoinAllianceCommand(this.Connection)
-                {
-                    Alliance    = alliance,
-                    JustCreated = true
-                }).Send();
+                    alliance.Members.Add(new AllianceMember(this.Connection.GameMode.Avatar, Alliance.Role.Leader));
+
+                    Alliances.Save(alliance);
+
+                    this.Connection.GameMode.Avatar.ClanHighID = alliance.HighID;
+                    this.Connection.GameMode.Avatar.ClanLowID = alliance.LowID;
+
+                    new AvailableServerCommandMessage(this.Connection, new LogicChangeAllianceRoleCommand(this.Connection)
+                    {
+                        Role = Alliance.Role.Leader
+                    }).Send();
+
+                    new AvailableServerCommandMessage(this.Connection, new LogicJoinAllianceCommand(this.Connection)
+                    {
+                        Alliance = alliance,
+                        JustCreated = true
+                    }).Send();
+                }
+
+                this.Connection.GameMode.Avatar.Save();
             }
-
-            this.Connection.GameMode.Avatar.Save();
         }
     }
 }

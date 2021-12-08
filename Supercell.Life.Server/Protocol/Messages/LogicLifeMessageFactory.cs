@@ -61,13 +61,17 @@
                 {
                     return new HomeLogicStoppedMessage(connection, stream);
                 }
+                case Message.CancelMatchmake:
+                {
+                    return new CancelMatchmakeMessage(connection, stream);
+                }
                 case Message.SectorEndClientTurn:
                 {
                     return new SectorEndClientTurnMessage(connection, stream);
                 }
-                case Message.CancelMatchmake:
+                case Message.CancelFriendlyChallenge:
                 {
-                    return new CancelMatchmakeMessage(connection, stream);
+                    return new CancelFriendlyChallengeMessage(connection, stream);
                 }
                 case Message.BindFacebook:
                 {

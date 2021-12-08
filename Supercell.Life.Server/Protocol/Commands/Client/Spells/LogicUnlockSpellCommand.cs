@@ -5,6 +5,7 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
+    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Network;
 
     internal class LogicUnlockSpellCommand : LogicCommand
@@ -30,10 +31,8 @@
         {
             if (!gamemode.Avatar.Spells.ContainsKey(this.Spell.GlobalID))
             {
-                if (gamemode.Avatar.Gold >= this.Spell.UnlockCost)
+                if (gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Gold, -this.Spell.UnlockCost))
                 {
-                    gamemode.Avatar.Gold -= this.Spell.UnlockCost;
-
                     gamemode.Avatar.Spells.AddItem(this.Spell.GlobalID, 0);
                     gamemode.Avatar.SpellsReady.AddItem(this.Spell.GlobalID, 1);
                 }

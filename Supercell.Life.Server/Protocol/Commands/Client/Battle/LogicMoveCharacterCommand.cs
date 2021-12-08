@@ -5,6 +5,7 @@
     using Supercell.Life.Titan.Logic.Math;
 
     using Supercell.Life.Server.Logic;
+    using Supercell.Life.Server.Logic.Game.Objects.Quests;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
 
@@ -79,9 +80,15 @@
                         return;
                     }
 
-                    gamemode.Avatar.OngoingQuestData.SublevelMoveCount += 1;
+                    gamemode.Avatar.OngoingQuestData.SublevelMoveCount++;
+                    
+                    LogicLevel ongoingLevel = gamemode.Avatar.OngoingQuestData.Levels[gamemode.Avatar.OngoingQuestData.ReplayProgress];
 
-                    var ongoingLevel = gamemode.Avatar.OngoingQuestData.Levels[gamemode.Avatar.OngoingQuestData.Level];
+                    if (!gamemode.Avatar.OngoingQuestData.IsReplaying)
+                    {
+                        ongoingLevel = gamemode.Avatar.OngoingQuestData.Levels[gamemode.Avatar.OngoingQuestData.Level];
+                    }
+
                     ongoingLevel?.Battles[ongoingLevel.CurrentBattle].CheckCollision(vector);
                 }
             }

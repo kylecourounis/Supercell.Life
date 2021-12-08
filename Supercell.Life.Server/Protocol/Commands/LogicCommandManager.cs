@@ -260,6 +260,10 @@
                 {
                     return new LogicSendAllianceMailCommand(connection);
                 }
+                case Command.FriendlyChallenge:
+                {
+                    return new LogicSendFriendlyChallengeCommand(connection);
+                }
                 case Command.UnlockSpellSlot:
                 {
                     return new LogicUnlockSpellSlotCommand(connection);

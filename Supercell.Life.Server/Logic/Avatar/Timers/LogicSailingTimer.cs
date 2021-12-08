@@ -5,10 +5,7 @@
     using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Math;
 
-    using Supercell.Life.Server.Files;
-    using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic.Avatar.Slots;
-    using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Logic.Game;
 
     internal class LogicSailingTimer
@@ -67,9 +64,6 @@
             if (this.Sailing)
             {
                 this.Timer.StopTimer();
-
-                LogicGlobalData globals = (LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SHIP_SEASICK_DURATION_HOURS");
-                this.Avatar.Seasick = globals.NumberValue;
 
                 this.Avatar.Variables.Set(LogicVariables.SailRewardUnclaimed.GlobalID, 0);
                 

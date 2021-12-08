@@ -1,5 +1,7 @@
 ﻿namespace Supercell.Life.Server.Logic.Avatar.Slots
 {
+    using Newtonsoft.Json.Linq;
+
     using Supercell.Life.Titan.Logic.Json;
 
     internal class LogicSpells : LogicDataSlots
@@ -20,30 +22,28 @@
         }
 
         /// <summary>
+        /// Adds a spell used in the previous battle.
+        /// </summary>
+        internal void AddPreviousSpell(int id, int count)
+        {
+            this.Avatar.PreviousSpells.Add(new JObject
+            {
+                { "id",  id    },
+                { "cnt", count }
+            });
+
+            this.Avatar.Save();
+        }
+
+        /// <summary>
         /// Saves the spell arrays to the specified <see cref="LogicJSONObject"/>.
         /// </summary>
         internal void Save(LogicJSONObject json)
         {
-            json.Put("prev_spells", this.PreviousSpells);
+            json.Put("prev_spells", LogicJSONParser.ParseArray(this.Avatar.PreviousSpells.ToString()));
             json.Put("spells_lvls", this.SpellLevels);
-        }
 
-        /// <summary>
-        /// Gets the previous spells as a <see cref="LogicJSONArray"/>.
-        /// </summary>
-        internal LogicJSONArray PreviousSpells
-        {
-            get
-            {
-                LogicJSONArray array = new LogicJSONArray();
-
-                foreach (var spell in this.Avatar.SpellsReady.Values)
-                {
-                    array.Add(spell.Save());
-                }
-
-                return array;
-            }
+            this.Avatar.SpellTimer.Save(json);
         }
 
         /// <summary>

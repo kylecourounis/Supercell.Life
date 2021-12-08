@@ -33,9 +33,8 @@
                 int cost  = Globals.ShipUpgradeCost[gamemode.Avatar.ShipLevel];
                 int xpLvl = Globals.ShipUpgradeRequiredXPLevel[gamemode.Avatar.ShipLevel];
 
-                if (gamemode.Avatar.Gold >= cost && gamemode.Avatar.ExpLevel >= xpLvl)
+                if (gamemode.Avatar.ExpLevel >= xpLvl && gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Gold, -cost))
                 {
-                    gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Gold, -cost);
                     gamemode.Avatar.ShipUpgrade.Start();
                 }
             }

@@ -16,6 +16,7 @@
         HomeLogicStopped          = 14105,
         CancelMatchmake           = 14107,
         SectorEndClientTurn       = 14113,
+        CancelFriendlyChallenge   = 14123,
         BindFacebook              = 14201,
         BindGamecenter            = 14212,
         CreateAlliance            = 14301,

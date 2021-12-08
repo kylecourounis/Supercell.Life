@@ -3,8 +3,6 @@
     using Supercell.Life.Titan.DataStream;
     using Supercell.Life.Titan.Logic.Math;
 
-    using Supercell.Life.Server.Files;
-    using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Enums;
     using Supercell.Life.Server.Logic.Game;
@@ -41,7 +39,7 @@
          * This has a slightly different calculation for the speed up cost.
          * A lot of it is inaccurate.
          */
-        /* private int CalculateSpeedUpCost(LogicGameMode gamemode) //sub_123974
+        private int CalculateSpeedUpCost(LogicGameMode gamemode) //sub_123974
         {
             var v12 = this.sub_B0C64(gamemode) / 100;
             var v14 = 0;
@@ -58,7 +56,7 @@
                 v15 = 0;
             }
 
-            var v16 = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SHIP_SPEEDUP_RESOURCE_COST_100")).NumberValue;
+            var v16 = Globals.ShipSpeedUpResourceCost100;
             var v17 = v16 * LogicMath.Max(v12, 1);
             var v18 = (ulong)(1374389535L * LogicMath.Clamp(v15 / (3600 * Globals.ShipSailDurationHours), 1, 100) * v17) >> 32;
             
@@ -78,8 +76,8 @@
             int v8;
             int v9;
             int v10;
-            
-            int seasickDuration = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SHIP_SEASICK_DURATION_HOURS")).NumberValue;
+
+            int seasickDuration = Globals.ShipSeasickDurationHours;
 
             v4 = gamemode.Avatar.Sailing.Heroes.Count;
             if (v4 < 1)
@@ -106,6 +104,6 @@
             while (v7 < v4);
 
             return v6;
-        } */
+        }
     }
 }

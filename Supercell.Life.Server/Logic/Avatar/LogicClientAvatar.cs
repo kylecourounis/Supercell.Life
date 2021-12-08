@@ -78,6 +78,7 @@ namespace Supercell.Life.Server.Logic.Avatar
 
         [JsonProperty] internal LogicSpells Spells;
         [JsonProperty] internal LogicDataSlots SpellsReady;
+        [JsonProperty] internal JArray PreviousSpells;
 
         [JsonProperty] internal LogicNpcProgress NpcProgress;
         [JsonProperty] internal LogicArrayList<int> Crowns;
@@ -260,6 +261,7 @@ namespace Supercell.Life.Server.Logic.Avatar
 
             this.Spells                  = new LogicSpells(this);
             this.SpellsReady             = new LogicDataSlots(this);
+            this.PreviousSpells          = new JArray();
 
             this.HeroLevels              = new LogicHeroLevels(this);
             this.HeroQuests              = new LogicDataSlots(this);
@@ -554,17 +556,33 @@ namespace Supercell.Life.Server.Logic.Avatar
         /// <summary>
         /// Changes the specified commodity by the specified amount. 
         /// </summary>
-        internal void CommodityChangeCountHelper(CommodityType commodity, int amount)
+        internal bool CommodityChangeCountHelper(CommodityType commodity, int amount)
         {
             switch (commodity)
             {
                 case CommodityType.Gold:
                 {
+                    if (amount < 0)
+                    {
+                        if (this.Gold < amount)
+                        {
+                            return false;
+                        }
+                    }
+
                     this.SetCommodityCount(CommodityType.Gold, this.Gold + amount);
                     break;
                 }
                 case CommodityType.Diamonds:
                 {
+                    if (amount < 0)
+                    {
+                        if (this.Diamonds < amount)
+                        {
+                            return false;
+                        }
+                    }
+
                     this.SetCommodityCount(CommodityType.Diamonds, this.Diamonds + amount);
                     break;
                 }
@@ -576,6 +594,14 @@ namespace Supercell.Life.Server.Logic.Avatar
                 }
                 case CommodityType.Energy:
                 {
+                    if (amount < 0)
+                    {
+                        if (this.Energy < amount)
+                        {
+                            return false;
+                        }
+                    }
+
                     this.SetCommodityCount(CommodityType.Energy, this.Energy + amount);
                     break;
                 }
@@ -583,7 +609,7 @@ namespace Supercell.Life.Server.Logic.Avatar
                 {
                     if (this.ExpPoints >= 2500000)
                     {
-                        return;
+                        return false;
                     }
 
                     double finalValue = amount;
@@ -607,25 +633,59 @@ namespace Supercell.Life.Server.Logic.Avatar
                 }
                 case CommodityType.Orb1:
                 {
+                    if (amount < 0)
+                    {
+                        if (this.Orb1 < amount)
+                        {
+                            return false;
+                        }
+                    }
+
                     this.SetCommodityCount(CommodityType.Orb1, this.Orb1 + amount);
                     break;
                 }
                 case CommodityType.Orb2:
                 {
+                    if (amount < 0)
+                    {
+                        if (this.Orb2 < amount)
+                        {
+                            return false;
+                        }
+                    }
+
                     this.SetCommodityCount(CommodityType.Orb2, this.Orb2 + amount);
                     break;
                 }
                 case CommodityType.Orb3:
                 {
+                    if (amount < 0)
+                    {
+                        if (this.Orb3 < amount)
+                        {
+                            return false;
+                        }
+                    }
+
                     this.SetCommodityCount(CommodityType.Orb3, this.Orb3 + amount);
                     break;
                 }
                 case CommodityType.Orb4:
                 {
+                    if (amount < 0)
+                    {
+                        if (this.Orb4 < amount)
+                        {
+                            return false;
+                        }
+                    }
+
                     this.SetCommodityCount(CommodityType.Orb4, this.Orb4 + amount);
                     break;
                 }
             }
+
+            return true;
         }
 
         /// <summary>

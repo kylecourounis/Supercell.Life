@@ -5,7 +5,6 @@
 
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Enums;
-    using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Messages;
     using Supercell.Life.Server.Protocol.Messages.Server;
@@ -48,17 +47,17 @@
                         {
                             case "gold":
                             {
-                                this.Connection.GameMode.Avatar.Gold = LogicStringUtil.ConvertToInt(this.Parameters[2]);
+                                this.Connection.GameMode.Avatar.SetCommodityCount(CommodityType.Gold, LogicStringUtil.ConvertToInt(this.Parameters[2]));
                                 break;
                             }
                             case "diamonds":
                             {
-                                this.Connection.GameMode.Avatar.Diamonds = LogicStringUtil.ConvertToInt(this.Parameters[2]);
+                                this.Connection.GameMode.Avatar.SetCommodityCount(CommodityType.Diamonds, LogicStringUtil.ConvertToInt(this.Parameters[2]));
                                 break;
                             }
                             case "xp":
                             {
-                                this.Connection.GameMode.Avatar.ExpPoints = LogicStringUtil.ConvertToInt(this.Parameters[2]);
+                                this.Connection.GameMode.Avatar.SetCommodityCount(CommodityType.Experience, LogicStringUtil.ConvertToInt(this.Parameters[2]));
                                 break;
                             }
                             case "score":

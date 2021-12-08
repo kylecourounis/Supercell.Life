@@ -12,6 +12,8 @@
     using Supercell.Life.Server.Core.Events;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
+    using Supercell.Life.Server.Logic.Alliance;
+    using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Protocol.Commands.Server;
     using Supercell.Life.Server.Protocol.Messages;
@@ -96,7 +98,7 @@
                                 var playerId  = command[2].Split('-');
                                 var player    = Avatars.Get(new LogicLong(LogicStringUtil.ConvertToInt(playerId[0]), LogicStringUtil.ConvertToInt(playerId[1])));
 
-                                new AvailableServerCommandMessage(player.Connection, new LogicDebugCommand(player.Connection, commandId)).Send(); // <- saving is false for the purpose of testing - this does not work yet
+                                new AvailableServerCommandMessage(player.Connection, new LogicDebugCommand(player.Connection, commandId)).Send();
                                 new OwnAvatarDataMessage(player.Connection).Send();
                                     
                                 Console.WriteLine($"Sent Debug Command with ID {commandId} to player {player}");
@@ -104,7 +106,25 @@
 
                             break;
                         }
-                        
+
+                        case "sendAllianceStreamEntry":
+                        {
+                            if (Loader.Initialized)
+                            {
+                                var type = LogicStringUtil.ConvertToInt(command[1]);
+
+                                var playerId = command[2].Split('-');
+                                var player = Avatars.Get(new LogicLong(LogicStringUtil.ConvertToInt(playerId[0]), LogicStringUtil.ConvertToInt(playerId[1])));
+
+                                AllianceMember sender = player.Connection.GameMode.Avatar.Alliance.Members.Find(member => member.Identifier == player.Connection.GameMode.Avatar.Identifier);
+                                new AllianceStreamEntryMessage(player.Connection, new AllianceStreamEntry(sender, (AllianceStreamEntry.AllianceStreamType)type)).Send();
+
+                                Console.WriteLine($"Sent AllianceStreamEntry with type {(AllianceStreamEntry.AllianceStreamType)type} ({type}) to player {player}");
+                            }
+
+                            break;
+                        }
+
                         case "clear":
                         {
                             Console.Clear();

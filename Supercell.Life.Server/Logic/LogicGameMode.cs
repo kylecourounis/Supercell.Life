@@ -161,6 +161,8 @@
             this.Connection.GameMode.Random.SetIteratedRandomSeed(LogicTime.GetSecondsInTicks(this.Avatar.Time.TotalSecs));
 
             this.Avatar.Update = DateTime.UtcNow;
+
+            this.Avatar.Save();
         }
     }
 }

@@ -22,7 +22,7 @@
         {
             TypeNameHandling            = TypeNameHandling.None,            MissingMemberHandling   = MissingMemberHandling.Ignore,
             DefaultValueHandling        = DefaultValueHandling.Include,     NullValueHandling       = NullValueHandling.Ignore,
-            ReferenceLoopHandling       = ReferenceLoopHandling.Ignore,     Converters              = new List<JsonConverter> { new TimerConverter() },
+            ReferenceLoopHandling       = ReferenceLoopHandling.Ignore,     Converters              = new List<JsonConverter> { new TimerConverter(), new AllianceStreamEntryConverter() },
             Formatting                  = Formatting.Indented
         };
 
@@ -65,7 +65,6 @@
         internal static async Task<AllianceDb> Save(Alliance alliance)
         {
             var updatedEntity = await Mongo.Alliances.FindOneAndUpdateAsync(allianceDb =>
-
                 allianceDb.HighID == alliance.HighID &&
                 allianceDb.LowID == alliance.LowID,
 

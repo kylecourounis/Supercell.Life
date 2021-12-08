@@ -85,12 +85,10 @@
         /// <summary>
         /// Ticks this instance.
         /// </summary>
-        internal void Tick(int interval)
+        internal void Tick()
         {
             if (this.Started)
             {
-                this.Timer.TotalSeconds -= interval;
-
                 if (this.Timer.RemainingSecs <= 0)
                 {
                     this.Finish();

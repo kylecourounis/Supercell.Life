@@ -15,6 +15,14 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="AllianceInvitationAvatarStreamEntry"/> class.
         /// </summary>
+        internal AllianceInvitationAvatarStreamEntry()
+        {
+            // AllianceInvitationAvatarStreamEntry.
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AllianceInvitationAvatarStreamEntry"/> class.
+        /// </summary>
         internal AllianceInvitationAvatarStreamEntry(LogicClientAvatar avatar, LogicClientAvatar sender) : base(avatar, sender)
         {
             this.StreamType = AvatarStreamType.AllianceInvite;

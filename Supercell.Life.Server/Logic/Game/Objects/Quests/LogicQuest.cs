@@ -8,7 +8,6 @@
     using Supercell.Life.Titan.Logic.Enums;
     using Supercell.Life.Titan.Logic.Utils;
 
-    using Supercell.Life.Server.Core;
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
@@ -37,20 +36,6 @@
         internal LogicArrayList<LogicCharacter> Characters;
         internal int CharacterIndex;
 
-        [JsonProperty] internal string Name;
-        
-        /// <summary>
-        /// Gets the player's current sublevel in this quest.
-        /// </summary>
-        [JsonProperty]
-        internal int Level
-        {
-            get
-            {
-                return this.Avatar.NpcProgress.GetCount(this.GlobalID);
-            }
-        }
-
         /// <summary>
         /// Gets the global identifier for the <see cref="LogicQuestData"/> instance in this class.
         /// </summary>
@@ -60,6 +45,18 @@
             get
             {
                 return this.Data.GlobalID;
+            }
+        }
+
+        /// <summary>
+        /// Gets the player's current sublevel in this quest.
+        /// </summary>
+        [JsonProperty]
+        internal int Level
+        {
+            get
+            {
+                return this.Avatar.NpcProgress.GetCount(this.GlobalID);
             }
         }
 
@@ -94,6 +91,8 @@
             this.Avatar = avatar;
             this.Data   = data;
 
+            this.Avatar.PreviousSpells.Clear();
+
             int requiredQuest = 6000000; // This default value is the GlobalID of the first quest of the game
 
             if (!this.Data.RequiredQuest.IsNullOrEmptyOrWhitespace())
@@ -104,9 +103,14 @@
             if (this.Avatar.NpcProgress.ContainsKey(this.GlobalID) && this.Level == this.Levels.Size)
             {
                 this.IsReplaying = true;
+
+                if (this.ReplayProgress >= this.Levels.Count)
+                {
+                    this.ReplayProgress = 0;
+                }
             }
 
-            if (this.Avatar.NpcProgress.ContainsKey(requiredQuest) && this.Avatar.ExpLevel >= this.Data.RequiredXpLevel && this.Avatar.Energy >= this.Data.Energy)
+            if (this.Avatar.ExpLevel >= this.Data.RequiredXpLevel && this.Avatar.Energy >= this.Data.Energy)
             {
                 if (!this.IsReplaying)
                 {
@@ -115,7 +119,7 @@
 
                 this.Avatar.OngoingQuestData = this;
                 this.Avatar.Connection.State = State.Battle;
-                this.Avatar.Energy          -= this.Data.Energy;
+                this.Avatar.CommodityChangeCountHelper(CommodityType.Energy, -this.Data.Energy);
 
                 this.Characters.Clear();
 
@@ -158,10 +162,21 @@
                             this.XPReward   = this.ReplayXPReward;
 
                             this.ReplayProgress++;
+                            this.ReplayMoves += this.SublevelMoveCount;
+
+                            this.SublevelMoveCount = 0;
 
                             if (this.Avatar.BonusChestRespawnTimer.ReplayQuest == this.GlobalID)
                             {
                                 this.Avatar.BonusChestRespawnTimer.ReplayChestTimes++;
+                            }
+
+                            if (this.Avatar.BonusChestRespawnTimer.ReplayChestTimes == 5)
+                            {
+                                if (this.ReplayMoves < this.Moves)
+                                {
+                                    this.Avatar.QuestMoves.Set(this.GlobalID, this.ReplayMoves);
+                                }
                             }
                         }
                         else
@@ -179,27 +194,16 @@
                             this.XPReward   = expLevelData.DefaultQuestRewardXpPerEnergy * this.Data.Energy;
                         }
 
-                        this.Avatar.QuestMoves.AddItem(this.GlobalID, this.SublevelMoveCount);
-
-                        if (this.IsReplaying)
-                        {
-                            this.ReplayMoves += this.SublevelMoveCount;
-                            this.SublevelMoveCount = 0;
-                        }
-
                         if (this.Avatar.NpcProgress.GetCount(this.GlobalID) < this.Levels.Size)
                         {
                             this.Avatar.NpcProgress.AddItem(this.GlobalID, 1);
+                            this.Avatar.QuestMoves.AddItem(this.GlobalID, this.SublevelMoveCount); 
+
                             this.SublevelMoveCount = 0;
                         }
 
-                        if (this.Level == this.Levels.Size || this.ReplayProgress == this.Levels.Size)
+                        if (!this.IsReplaying && this.Level == this.Levels.Size)
                         {
-                            if (this.ReplayMoves > this.Moves)
-                            {
-                                this.Avatar.QuestMoves.Set(this.GlobalID, this.ReplayMoves);
-                            }
-
                             if (this.Moves <= this.Data.GoalMoveCount)
                             {
                                 if (!this.Avatar.Crowns.Contains(this.GlobalID))
@@ -209,7 +213,7 @@
                             }
                         }
 
-                        int goldDrop = Loader.Random.Rand(this.Data.MinGoldDrop, this.Data.MaxGoldDrop); // Best I can do until object collision works
+                        int goldDrop = this.Avatar.Connection.GameMode.Random.Rand(this.Data.MinGoldDrop, this.Data.MaxGoldDrop); // Best I can do until object collision works
 
                         this.Avatar.CommodityChangeCountHelper(CommodityType.Gold, this.GoldReward + goldDrop);
 

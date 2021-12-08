@@ -18,6 +18,14 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="AllianceMailAvatarStreamEntry"/> class.
         /// </summary>
+        internal AllianceMailAvatarStreamEntry()
+        {
+            // AllianceMailAvatarStreamEntry.
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AllianceMailAvatarStreamEntry"/> class.
+        /// </summary>
         internal AllianceMailAvatarStreamEntry(LogicClientAvatar avatar, LogicClientAvatar sender) : base(avatar, sender)
         {
             this.StreamType = AvatarStreamType.AllianceMail;

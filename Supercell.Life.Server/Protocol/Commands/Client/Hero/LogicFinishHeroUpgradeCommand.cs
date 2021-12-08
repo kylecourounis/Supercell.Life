@@ -26,9 +26,8 @@
         {
             int cost = LogicGamePlayUtil.GetSpeedUpCost(gamemode.Avatar.HeroUpgrade.Timer.RemainingSecs, 0);
 
-            if (gamemode.Avatar.Diamonds >= cost)
+            if (gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost))
             {
-                gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost);
                 gamemode.Avatar.HeroUpgrade.Finish();
             }
         }

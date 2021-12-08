@@ -2,10 +2,7 @@
 {
     using Supercell.Life.Titan.Logic.Math;
 
-    using Supercell.Life.Server.Files;
-    using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic.Avatar;
-    using Supercell.Life.Server.Logic.Enums;
 
     internal class LogicGamePlayUtil
     {
@@ -155,7 +152,7 @@
         /// <summary>
         /// Calculates the speed up cost.
         /// </summary>
-        internal static int CalculateSpeedUpCost(int seconds, int multiplier)
+        private static int CalculateSpeedUpCost(int seconds, int multiplier)
         {
             if (seconds > 0)
             {
@@ -205,22 +202,22 @@
             {
                 case 0:
                 {
-                    multiplier = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SPEED_UP_MODIFIER_GENERIC")).NumberValue;
+                    multiplier = Globals.SpeedUpModifierGeneric;
                     break;
                 }
                 case 1:
                 {
-                    multiplier = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SPEED_UP_MODIFIER_SHIP_CONSTRUCTION")).NumberValue;
+                    multiplier = Globals.SpeedUpModifierShipConstruction;
                     break;
                 }
                 case 2:
                 {
-                    multiplier = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SPEED_UP_MODIFIER_SPELL_CONSTRUCTION")).NumberValue;
+                    multiplier = Globals.SpeedUpModifierSpellConstruction;
                     break;
                 }
                 case 3:
                 {
-                    multiplier = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SPEED_UP_MODIFIER_ITEM_AVAILABILITY")).NumberValue;
+                    multiplier = Globals.SpeedUpModifierItemAvailability;
                     break;
                 }
                 default:

@@ -7,6 +7,7 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
+    using Supercell.Life.Server.Logic.Avatar.Slots;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
 
@@ -40,7 +41,13 @@
         {
             if (gamemode.Avatar.SpellsReady.ContainsKey(this.Spell.GlobalID))
             {
+                gamemode.Avatar.Spells.AddPreviousSpell(this.Spell.GlobalID, 1);
                 gamemode.Avatar.SpellsReady.Remove(this.Spell.GlobalID, 1);
+
+                if (gamemode.Avatar.SpellsReady.GetCount(this.Spell.GlobalID) == 0)
+                {
+                    gamemode.Avatar.SpellsReady.Remove(this.Spell.GlobalID);
+                }
             }
 
             var battle = gamemode.Battle;

@@ -4,12 +4,12 @@
     using Supercell.Life.Titan.DataStream;
 
     using Supercell.Life.Server.Logic.Avatar.Slots;
+    using Supercell.Life.Server.Logic.Enums;
+    using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Server.Network;
 
     internal class LogicUnlockSpellSlotCommand : LogicCommand
     {
-        internal int Value;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicUnlockSpellSlotCommand"/> class.
         /// </summary>
@@ -25,8 +25,9 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            if (gamemode.Avatar.Variables.GetCount(LogicVariables.SpellSlotsUnlocked.GlobalID) < 3)
+            if (gamemode.Avatar.Variables.GetCount(LogicVariables.SpellSlotsUnlocked.GlobalID) < 5 - Globals.SpellSlotsAtStart)
             {
+                gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Gold, -Globals.SpellSlotCost[gamemode.Avatar.Variables.GetCount(LogicVariables.SpellSlotsUnlocked.GlobalID)]);
                 gamemode.Avatar.Variables.AddItem(LogicVariables.SpellSlotsUnlocked.GlobalID, 1);
             }
         }

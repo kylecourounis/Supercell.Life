@@ -31,7 +31,10 @@
         internal override void Execute(LogicGameMode gamemode)
         {
             LogicQuest quest = gamemode.Avatar.Quests[this.QuestData.GlobalID];
-            this.Connection.State = State.Battle;
+
+            this.Connection.GameMode.Avatar.OngoingQuestData = quest;
+            this.Connection.State                            = State.Battle;
+
             quest.Start(gamemode.Avatar, this.QuestData);
         }
     }

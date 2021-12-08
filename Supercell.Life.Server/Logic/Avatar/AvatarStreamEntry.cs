@@ -4,11 +4,10 @@
 
     using Newtonsoft.Json;
 
-    using Supercell.Life.Server.Helpers;
-    using Supercell.Life.Server.Logic.Avatar.Entries;
-    using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Titan.DataStream;
     using Supercell.Life.Titan.Logic.Math;
+
+    using Supercell.Life.Server.Logic.Collections;
 
     internal class AvatarStreamEntry
     {
@@ -22,6 +21,8 @@
         [JsonProperty] internal int SenderLowID;
 
         [JsonProperty] internal string SenderName;
+        [JsonProperty] internal int SenderLevel;
+        [JsonProperty] internal int SenderLeague;
 
         [JsonProperty] internal DateTime Created = DateTime.UtcNow;
 
@@ -78,7 +79,7 @@
             encoder.WriteString(this.SenderName);
 
             encoder.WriteInt(0);
-            encoder.WriteInt(0);
+            encoder.WriteInt(this.SenderLeague);
             encoder.WriteInt(this.Age);
 
             encoder.WriteBoolean(this.IsRemoved);
@@ -96,12 +97,14 @@
             }
             else
             {
-                this.Sender       = avatar;
-
-                this.SenderHighID = avatar.HighID;
-                this.SenderLowID  = avatar.LowID;
-                this.SenderName   = avatar.Name;
+                this.Sender = avatar;
             }
+
+            this.SenderHighID = avatar.HighID;
+            this.SenderLowID  = avatar.LowID;
+            this.SenderName   = avatar.Name;
+            this.SenderLevel  = avatar.ExpLevel;
+            this.SenderLeague = avatar.League;
         }
 
         internal enum AvatarStreamType

@@ -27,7 +27,7 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            this.CalculateLoot(gamemode);
+            this.CalculateLoot();
 
             gamemode.Avatar.Variables.Remove(LogicVariables.SailRewardUnclaimed.GlobalID);
 
@@ -39,8 +39,10 @@
         // Everything below is still a bit of a WIP
         // ===================
 
-        private void CalculateLoot(LogicGameMode gamemode)
+        private void CalculateLoot()
         {
+            LogicGameMode gamemode = this.Connection.GameMode;
+
             int gold = 0;
             int xp   = 0;
 
