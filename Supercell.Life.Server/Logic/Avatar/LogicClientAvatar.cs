@@ -398,7 +398,7 @@ namespace Supercell.Life.Server.Logic.Avatar
             stream.WriteLogicLong(this.Identifier);
             
             stream.WriteString(this.Name);
-            stream.WriteString(this.Facebook.Identifier); // Facebook ID
+            stream.WriteString(this.Facebook.Identifier);
 
             stream.WriteInt(this.Diamonds);
             stream.WriteInt(this.FreeDiamonds);
@@ -479,76 +479,73 @@ namespace Supercell.Life.Server.Logic.Avatar
         /// </summary>
         internal void SetCommodityCount(CommodityType commodity, int amount)
         {
-            if (amount > 0)
+            switch (commodity)
             {
-                switch (commodity)
+                case CommodityType.Gold:
                 {
-                    case CommodityType.Gold:
+                    this.Gold = amount;
+                    break;
+                }
+                case CommodityType.Diamonds:
+                {
+                    this.Diamonds = amount;
+                    break;
+                }
+                case CommodityType.FreeDiamonds:
+                {
+                    this.FreeDiamonds = amount;
+                    break;
+                }
+                case CommodityType.Energy:
+                {
+                    this.Energy = amount;
+                    break;
+                }
+                case CommodityType.Experience:
+                {
+                    if (this.ExpPoints >= 2500000)
                     {
-                        this.Gold = amount;
-                        break;
+                        return;
                     }
-                    case CommodityType.Diamonds:
-                    {
-                        this.Diamonds = amount;
-                        break;
-                    }
-                    case CommodityType.FreeDiamonds:
-                    {
-                        this.FreeDiamonds = amount;
-                        break;
-                    }
-                    case CommodityType.Energy:
-                    {
-                        this.Energy = amount;
-                        break;
-                    }
-                    case CommodityType.Experience:
-                    {
-                        if (this.ExpPoints >= 2500000)
-                        {
-                            return;
-                        }
 
-                        double finalValue = amount;
+                    double finalValue = amount;
 
-                        if (this.Booster.BoostActive)
-                        {
-                            finalValue *= this.Booster.BoostPackage.Boost;
-                        }
-
-                        this.ExpPoints = (int)finalValue;
-
-                        LogicExperienceLevelData experienceLevels = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataWithID(this.ExpLevel - 1);
-
-                        if (experienceLevels.ExpPoints <= this.ExpPoints)
-                        {
-                            this.ExpPoints -= experienceLevels.ExpPoints;
-                            this.ExpLevel++;
-                        }
-
-                        break;
-                    }
-                    case CommodityType.Orb1:
+                    if (this.Booster.BoostActive)
                     {
-                        this.Orb1 = amount;
-                        break;
+                        finalValue *= this.Booster.BoostPackage.Boost;
                     }
-                    case CommodityType.Orb2:
+
+                    this.ExpPoints = (int)finalValue;
+
+                    LogicExperienceLevelData experienceLevels = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataWithID(this.ExpLevel - 1);
+
+                    if (experienceLevels.ExpPoints <= this.ExpPoints)
                     {
-                        this.Orb2 = amount;
-                        break;
+                        this.ExpPoints -= experienceLevels.ExpPoints;
+                        this.ExpLevel++;
                     }
-                    case CommodityType.Orb3:
-                    {
-                        this.Orb3 = amount;
-                        break;
-                    }
-                    case CommodityType.Orb4:
-                    {
-                        this.Orb4 = amount;
-                        break;
-                    }
+
+                    break;
+                }
+                case CommodityType.Orb1:
+                {
+                    this.Orb1 = amount;
+                    break;
+                }
+                case CommodityType.Orb2:
+                {
+                    this.Orb2 = amount;
+                    break;
+                }
+                case CommodityType.Orb3:
+                {
+                    this.Orb3 = amount;
+                    break;
+                }
+                case CommodityType.Orb4:
+                {
+                    this.Orb4 = amount;
+                    break;
                 }
             }
         }

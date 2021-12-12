@@ -27,7 +27,7 @@
                 avatar.Variables.ResetChestProgress();
 
                 LogicChest chest = new LogicChest(avatar);
-                chest.CreateMegaChest();
+                chest.CreateChest(LogicChest.ChestType.Multiplayer);
             }
         }
 

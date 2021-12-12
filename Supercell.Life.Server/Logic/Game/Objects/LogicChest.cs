@@ -29,73 +29,85 @@
         }
 
         /// <summary>
+        /// Creates the chest.
+        /// </summary>
+        internal void CreateChest(ChestType type)
+        {
+            int min;
+            int max;
+
+            switch (type)
+            {
+                case ChestType.Small:
+                {
+                    min = Globals.SmallChestModifierMin;
+                    max = Globals.SmallChestModifierMax;
+                    break;
+                }
+                case ChestType.Medium:
+                {
+                    min = Globals.MedChestModifierMin;
+                    max = Globals.MedChestModifierMax;
+                    break;
+                }
+                case ChestType.Big:
+                {
+                    min = Globals.BigChestModifierMin;
+                    max = Globals.BigChestModifierMax;
+                    break;
+                }
+                case ChestType.Multiplayer:
+                {
+                    min = Globals.MultiplayerChestModifier;
+                    max = Globals.MultiplayerChestModifier;
+                    break;
+                }
+                default:
+                {
+                    Debugger.Error("Invalid Chest Type");
+                    min = 100;
+                    max = 100;
+                    break;
+                }
+            }
+
+            int v101 = this.Avatar.Connection.GameMode.Random.Rand(max - min);
+
+            var (modGold, modXP) = this.Generate(v101, min);
+
+            Debugger.Debug($"CHEST: mod range: [{Globals.SmallChestModifierMin} -> {Globals.SmallChestModifierMax}] -> MOD GOLD: = {modGold} MOD XP: = {modXP}");
+        }
+
+        /// <summary>
         /// Creates a map chest.
         /// </summary>
         internal void CreateMapChest()
         {
             LogicExperienceLevelData expLevelData = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataWithID(this.Avatar.ExpLevel - 1);
 
-            var gold = this.Avatar.Connection.GameMode.Random.Rand(expLevelData.MapChestMaxGold - expLevelData.MapChestMinGold) + expLevelData.MapChestMinGold;
-            var xp   = this.Avatar.Connection.GameMode.Random.Rand(expLevelData.MapChestMaxXP - expLevelData.MapChestMinXP) + expLevelData.MapChestMinXP;
+            int gold = this.Avatar.Connection.GameMode.Random.Rand(expLevelData.MapChestMaxGold - expLevelData.MapChestMinGold) + expLevelData.MapChestMinGold;
+            int xp   = this.Avatar.Connection.GameMode.Random.Rand(expLevelData.MapChestMaxXP - expLevelData.MapChestMinXP) + expLevelData.MapChestMinXP;
 
             this.Avatar.CommodityChangeCountHelper(CommodityType.Gold, gold);
             this.Avatar.CommodityChangeCountHelper(CommodityType.Experience, xp);
         }
-
-        /// <summary>
-        /// Creates a small chest.
-        /// </summary>
-        internal void CreateSmallChest()
-        {
-            //int value = this.Avatar.Connection.GameMode.Random.Rand(Globals.SmallChestModifierMax - Globals.SmallChestModifierMin);
-            
-            int v101 = Loader.Random.Rand(Globals.SmallChestModifierMax - Globals.SmallChestModifierMin);
-
-            var (modGold, modXP) = this.Generate(v101, Globals.SmallChestModifierMin);
-
-            Debugger.Debug($"CHEST: mod range: [{Globals.SmallChestModifierMin} -> {Globals.SmallChestModifierMax}] -> MOD GOLD: = {modGold} MOD XP: = {modXP}");
-        }
-
-        /// <summary>
-        /// Creates a medium chest.
-        /// </summary>
-        internal void CreateMedChest()
-        {
-            int v101 = Loader.Random.Rand(Globals.MedChestModifierMax - Globals.MedChestModifierMin);
-
-            var (modGold, modXP) = this.Generate(v101, Globals.MedChestModifierMin);
-
-            Debugger.Debug($"CHEST: mod range: [{Globals.MedChestModifierMin} -> {Globals.MedChestModifierMax}] -> MOD GOLD: = {modGold} MOD XP: = {modXP}");
-        }
-
-        /// <summary>
-        /// Creates a big chest.
-        /// </summary>
-        internal void CreateBigChest()
-        {
-            int v101 = Loader.Random.Rand(Globals.BigChestModifierMax - Globals.BigChestModifierMin);
-
-            var (modGold, modXP) = this.Generate(v101, Globals.BigChestModifierMin);
-
-            Debugger.Debug($"CHEST: mod range: [{Globals.BigChestModifierMin} -> {Globals.BigChestModifierMax}] -> MOD GOLD: = {modGold} MOD XP: = {modXP}");
-        }
-
-        /// <summary>
-        /// Creates the mega chest.
-        /// </summary>
-        internal void CreateMegaChest()
-        {
-            // TODO
-        }
-
+        
         private (int, long) Generate(int rand, int modifier)
         {
             long v104 = (1717986919L * (rand + modifier)) >> 32;
 
-            int v322 = 10 * ((rand + modifier) / 10);
+            int v322  = 10 * ((rand + modifier) / 10);
             long v323 = 10 * (((int)v104 >> 2) + (v104 >> 31));
 
             return (v322, v323);
+        }
+
+        internal enum ChestType
+        {
+            Small       = 0,
+            Medium      = 1,
+            Big         = 2,
+            Multiplayer = 3
         }
 
         // ------------------------------------------------
