@@ -5,18 +5,16 @@ By reverse engineering the app's binary using IDA, I have been working to recrea
 ## The Story
 This project began because I wanted to bring back one of Supercell's best games that had been killed off during its soft-launch in 2015. I loved this game so much, and I really didn't play it enough when it was available to the public. 
 
-I aimed to use as much of Supercell's class and method namescheme as I could. *(I even recreated some base classes just to use their naming system. xD)*
+I aimed to use as much of Supercell's implementations and class and method namescheme as I could. 
 
-This server is buggy in parts, but a very reasonable amount of stuff works. Battles do not work yet, as SectorState, the turn system, and the checksums are incomplete (I'll probably patch the binary to remove the checksum, but that's for another time). Quest completion is also finicky because you can go into a quest, exit out of the app, and it will count it as completed. Quest rewards are also not really working because dumb system I guess, lol. 
-
-For more info on things that are and aren't working, go to the `Projects` tab.
+For a list of features, you can visit [this page](https://kylecourounis.com/#smash-land) on my website. For a more actively updated list, go to the `Projects` tab in this repository. 
 
 ## Setup
-***Please note that this project is not for beginners. You need at least some experience in Supercell private servers and side-loading iOS apps.***
+***Please note that this project is not for beginners. You'll need at least some experience with Supercell private servers and side-loading iOS apps.***
 
 To setup the project, you will need:
 * [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
-* MongoDB
+* [MongoDB](https://www.mongodb.com/try/download/community)
 
 To build the project, run: 
 ```
@@ -25,11 +23,20 @@ git clone https://github.com/kyledoesode/Supercell.Life.git && cd Supercell.Life
 dotnet publish "Supercell.Life.Server.csproj" -c Release -o app
 ```
 
-To configure Mongo, download and run the installer, then create a database called `SmashLand`. The server will automatically create the collections on its first run.
+When you download and run the installer for MongoDB, make sure to check the box in the installer that tells it to install MongoDB Compass. MongoDB Compass is the GUI for MongoDB. Then, open MongoDB Compass and create a database called `SmashLand`. The server will automatically create the collections on its first run.
 
-Since Apple decided to remove 32-bit app support for iOS 11 and above, to use this server, you must have a 32-bit iOS device or a 64-bit device running iOS 10 or under. You will also need AltDeploy to install the [Smash Land IPA file](https://mega.nz/file/PlNlkCxa#-921zVTKWrTiWrkv4QQOX9Epl-6bX4aLZw3Qnz1gq9U), and you must also be jailbroken in order to edit the hosts file to point the game to your computer's IP. (The original host is `game.smashlandgame.com`)
+Since Apple decided to remove 32-bit app support for iOS 11 and above, to use this server, you must choose the correct IPA file for your device.
+
+* If you have a 32-bit iOS device, you can download [this 32-bit IPA](https://mega.nz/file/2o0BxarL#v7ZMfta6IAfAxUWN_AUUNGYTZFuNM8RS2EW4d9-gEmM).
+* If you have a 64-bit iOS device, you can download [this 64-bit IPA](https://mega.nz/file/PlNlkCxa#-921zVTKWrTiWrkv4QQOX9Epl-6bX4aLZw3Qnz1gq9U).
+
+I recommend using [Sideloadly](https://sideloadly.io/) to sideload the IPA, as it is available for both Windows & Mac. However, you may use any method you feel comfortable with. One important thing to note is that if you are not using a paid Apple Developer account, you must change the bundle identifier of IPA in Sideloadly to something different. You can access this setting by clicking Advanced Options.
+
+You must also be jailbroken in order to edit the hosts file to point the game to your computer's IP. (The original host is `game.smashlandgame.com`) 
+
+Devices running iOS 12 and above have a tendency to ignore changes made to the hosts file. To remedy this, you must install a tweak Cydia called LetMeBlock. Just add PoomSmart's repository (https://poomsmart.github.io/repo/) as a source and you'll be able to install the tweak. 
 
 ### Other Credits
 I have received great advice from my friends of many years in this [Discord](https://discord.gg/XdTw2PZ) server.
 
-##### This project is not affiliated with Supercell, and no copyright infringment is intended.
+##### This project is not affiliated with Supercell, nor do I profit off of this project. No copyright infringment is intended.
