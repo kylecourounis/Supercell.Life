@@ -155,13 +155,16 @@
         /// </summary>
         internal void Save(LogicJSONObject json)
         {
-            json.Put("m_replayChestAutomaticRespawnTimer", new LogicJSONNumber(this.Timer.RemainingSecs));
-            json.Put("m_replayChestRespawnTimer", new LogicJSONNumber(this.Timer.RemainingSecs));
-            json.Put("mapDailyBonusChestRespawnTimer", new LogicJSONNumber(this.Timer.RemainingSecs));
+            if (this.Avatar.ExpLevel >= Globals.ReplayChestAvailableOnXPLevel)
+            {
+                json.Put("m_replayChestAutomaticRespawnTimer", new LogicJSONNumber(this.Timer.RemainingSecs));
+                json.Put("m_replayChestRespawnTimer", new LogicJSONNumber(this.Timer.RemainingSecs));
+                json.Put("mapDailyBonusChestRespawnTimer", new LogicJSONNumber(this.Timer.RemainingSecs));
 
-            json.Put("replayChestQuest", new LogicJSONNumber(this.ReplayQuest));
-            json.Put("replayChestTimes", new LogicJSONNumber(this.ReplayChestTimes));
-            json.Put("last_replay_level", new LogicJSONNumber(this.PreviousReplayQuest));
+                json.Put("replayChestQuest", new LogicJSONNumber(this.ReplayQuest));
+                json.Put("replayChestTimes", new LogicJSONNumber(this.ReplayChestTimes));
+                json.Put("last_replay_level", new LogicJSONNumber(this.PreviousReplayQuest));
+            }
         }
     }
 }

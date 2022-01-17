@@ -34,24 +34,28 @@
         /// </summary>
         internal void DecodeCommand(ByteStream stream, int subtick)
         {
-            int id      = stream.ReadInt();
-            var command = LogicCommandManager.CreateCommand(id, this.Connection);
+            int id = stream.ReadInt();
 
-            if (command != null)
+            if (id >= 500)
             {
-                if (this.IsCommandAllowedInCurrentState(command))
+                var command = LogicCommandManager.CreateCommand(id, this.Connection);
+
+                if (command != null)
                 {
-                    Debugger.Info($"Command {command.GetType().Name.Pad(34)} received from {this.Connection.EndPoint}.");
+                    if (this.IsCommandAllowedInCurrentState(command))
+                    {
+                        Debugger.Info($"Command {command.GetType().Name.Pad(34)} received from {this.Connection.EndPoint}.");
 
-                    command.Subtick = subtick;
-                    command.Decode(stream);
+                        command.Subtick = subtick;
+                        command.Decode(stream);
 
-                    this.Commands.Add(command);
+                        this.Commands.Add(command);
+                    }
                 }
-            }
-            else
-            {
-                Debugger.Debug(stream.ToHexa());
+                else
+                {
+                    Debugger.Debug(stream.ToHexa());
+                }
             }
         }
 
@@ -60,22 +64,22 @@
         /// </summary>
         internal void DecodeBattleCommand(ByteStream stream, int subtick)
         {
-            int id      = stream.ReadInt();
-            var command = LogicCommandManager.CreateCommand(id, this.Connection);
+            int id = stream.ReadInt();
 
             if (id >= 600)
             {
+                var command = LogicCommandManager.CreateCommand(id, this.Connection);
+
                 if (command != null)
                 {
-                    // if (this.IsCommandAllowedInCurrentState(command))
+                    if (this.IsCommandAllowedInCurrentState(command))
                     {
                         Debugger.Info($"Battle Command {command.GetType().Name.Pad(34)} received from {this.Connection.EndPoint}.");
 
                         command.Subtick = subtick;
                         command.Decode(stream);
-                        command.Execute(this.Connection.GameMode);
 
-                        // this.SectorCommands.Add(command);
+                        this.SectorCommands.Add(command);
                     }
                 }
                 else
@@ -176,14 +180,6 @@
         {
             switch ((Command)type)
             {
-                case Command.JoinAlliance:
-                {
-                    return new LogicJoinAllianceCommand(connection);
-                }
-                case Command.ChangeAllianceRole:
-                {
-                    return new LogicChangeAllianceRoleCommand(connection);
-                }
                 case Command.StartQuest:
                 {
                     return new LogicStartQuestCommand(connection);

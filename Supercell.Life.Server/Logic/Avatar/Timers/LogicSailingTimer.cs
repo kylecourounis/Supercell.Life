@@ -12,15 +12,15 @@
     {
         internal LogicClientAvatar Avatar;
 
-        [JsonProperty("timer")] internal LogicTimer Timer;
+        [JsonProperty] internal LogicTimer Timer;
 
-        [JsonProperty]          internal LogicDataSlots Heroes;
-        [JsonProperty]          internal LogicDataSlots HeroLevels;
+        [JsonProperty] internal LogicDataSlots Heroes;
+        [JsonProperty] internal LogicDataSlots HeroLevels;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="LogicSailingTimer"/> has started.
         /// </summary>
-        internal bool Sailing
+        internal bool Started
         {
             get
             {
@@ -61,12 +61,12 @@
         /// </summary>
         internal void Finish()
         {
-            if (this.Sailing)
+            if (this.Started)
             {
                 this.Timer.StopTimer();
 
                 this.Avatar.Variables.Set(LogicVariables.SailRewardUnclaimed.GlobalID, 0);
-                
+
                 this.Avatar.Save();
             }
         }
@@ -76,7 +76,7 @@
         /// </summary>
         internal void FastForward(int seconds)
         {
-            if (this.Sailing)
+            if (this.Started)
             {
                 this.Timer.FastForward(seconds);
 
@@ -92,7 +92,7 @@
         /// </summary>
         internal void Tick()
         {
-            if (this.Timer.Started)
+            if (this.Started)
             {
                 if (this.Timer.RemainingSecs <= 0)
                 {
@@ -106,7 +106,7 @@
         /// </summary>
         internal void AdjustSubTick()
         {
-            if (this.Sailing)
+            if (this.Started)
             {
                 this.Timer.AdjustSubTick();
             }
@@ -117,7 +117,7 @@
         /// </summary>
         internal void Save(LogicJSONObject json)
         {
-            if (this.Sailing)
+            if (this.Started)
             {
                 json.Put("sailTime", new LogicJSONNumber(this.Timer.RemainingSecs));
             }

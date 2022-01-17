@@ -111,15 +111,9 @@
 
                 gamemode.Avatar.HeroLevels.AddItem(new LogicDataSlot(this.Hero.GlobalID, 0));
 
-                var team = gamemode.Avatar.Team.ToObject<int[]>();
-
-                if (team[1] == 0)
+                if (gamemode.Avatar.Team.Count < 3)
                 {
-                    gamemode.Avatar.Team[1] = this.Hero.GlobalID;
-                }
-                else if (team[2] == 0)
-                {
-                    gamemode.Avatar.Team[2] = this.Hero.GlobalID;
+                    gamemode.Avatar.Team.Add(this.Hero.GlobalID);
                 }
             }
         }

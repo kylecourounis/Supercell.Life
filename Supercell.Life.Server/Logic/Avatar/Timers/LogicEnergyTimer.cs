@@ -5,13 +5,11 @@
     using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Math;
 
-    using Supercell.Life.Server.Logic.Game;
-
     internal class LogicEnergyTimer
     {
         internal LogicClientAvatar Avatar;
 
-        [JsonProperty("timer")] internal LogicTimer Timer;
+        [JsonProperty] internal LogicTimer Timer;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="LogicEnergyTimer"/> has started.
@@ -46,7 +44,7 @@
         /// </summary>
         internal void Start()
         {
-            this.Timer.StartTimer(this.Avatar.Time, Globals.EnergyRegenateSeconds);
+            this.Timer.StartTimer(this.Avatar.Time, 300);
         }
 
         /// <summary>
@@ -68,7 +66,17 @@
         {
             if (this.Started)
             {
-                this.Timer.FastForward(seconds);
+                do
+                {
+                    this.Timer.FastForward(seconds);
+
+                    if (this.Timer.RemainingSecs <= 0 && ++this.Avatar.Energy < this.Avatar.MaxEnergy)
+                    {
+                        this.Start();
+                    }
+
+                    seconds -= this.Timer.RemainingSecs;
+                } while (seconds > 0);
 
                 if (this.Timer.RemainingSecs <= 0)
                 {
@@ -82,7 +90,7 @@
         /// </summary>
         internal void Tick()
         {
-            if (!this.Timer.Started)
+            if (!this.Started)
             {
                 if (this.Avatar.Energy < this.Avatar.MaxEnergy)
                 {

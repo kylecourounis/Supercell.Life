@@ -95,7 +95,7 @@
         /// <summary>
         /// Generates a random string with the specified length.
         /// </summary>
-        public string GenerateRandomString(int length = 40)
+        public static string GenerateRandomString(int length = 40)
         {
             var random    = new Random();
             var returnVal = string.Empty;

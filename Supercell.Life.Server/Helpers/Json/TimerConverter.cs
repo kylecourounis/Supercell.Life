@@ -94,7 +94,7 @@
         /// </summary>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            if (writer.Path.Split(".")[1].Equals("timers"))
+            if (writer.Path.Split(".")[1].Equals("Timers"))
             {
                 writer.WriteStartObject();
 

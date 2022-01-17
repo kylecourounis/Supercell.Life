@@ -15,7 +15,7 @@
     {
         internal LogicClientAvatar Avatar;
 
-        [JsonProperty("timers")] internal Dictionary<int, LogicTimer> Heroes;
+        [JsonProperty("Timers")] internal Dictionary<int, LogicTimer> Heroes;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="LogicHeroTiredTimer"/> has started.

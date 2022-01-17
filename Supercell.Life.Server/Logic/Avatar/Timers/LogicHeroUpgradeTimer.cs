@@ -11,13 +11,13 @@
     {
         internal LogicClientAvatar Avatar;
 
-        [JsonProperty("hero_data")] internal int HeroData;
-        [JsonProperty("upg_timer")] internal LogicTimer Timer;
+        [JsonProperty] internal int HeroData;
+        [JsonProperty] internal LogicTimer Timer;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="LogicHeroUpgradeTimer"/> has started.
         /// </summary>
-        internal bool Upgrading
+        internal bool Started
         {
             get
             {
@@ -47,7 +47,7 @@
         /// </summary>
         internal bool CanUpgrade(LogicHeroData hero)
         {
-            if (!this.Upgrading)
+            if (!this.Started)
             {
                 if (this.Avatar.HeroLevels.ContainsKey(hero.GlobalID))
                 {
@@ -75,7 +75,7 @@
         /// </summary>
         internal void Finish()
         {
-            if (this.Upgrading)
+            if (this.Started)
             {
                 this.Timer.StopTimer();
 
@@ -91,7 +91,7 @@
         /// </summary>
         internal void FastForward(int seconds)
         {
-            if (this.Upgrading)
+            if (this.Started)
             {
                 this.Timer.FastForward(seconds);
 
@@ -107,7 +107,7 @@
         /// </summary>
         internal void Tick()
         {
-            if (this.Timer.Started)
+            if (this.Started)
             {
                 if (this.Timer.RemainingSecs <= 0)
                 {
@@ -121,7 +121,7 @@
         /// </summary>
         internal void AdjustSubTick()
         {
-            if (this.Upgrading)
+            if (this.Started)
             {
                 this.Timer.AdjustSubTick();
             }
@@ -132,7 +132,7 @@
         /// </summary>
         internal void Save(LogicJSONObject json)
         {
-            if (this.Upgrading)
+            if (this.Started)
             {
                 json.Put("upgradingHero", new LogicJSONNumber(this.HeroData));
                 json.Put("upgradingHeroTime", new LogicJSONNumber(this.Timer.RemainingSecs));

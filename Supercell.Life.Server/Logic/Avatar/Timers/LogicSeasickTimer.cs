@@ -7,14 +7,14 @@
 
     using Supercell.Life.Server.Logic.Game;
 
-    internal class LogicShipUpgradeTimer
+    internal class LogicSeasickTimer
     {
         internal LogicClientAvatar Avatar;
-        
+
         [JsonProperty] internal LogicTimer Timer;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="LogicShipUpgradeTimer"/> has started.
+        /// Gets a value indicating whether this <see cref="LogicSeasickTimer"/> has started.
         /// </summary>
         internal bool Started
         {
@@ -25,17 +25,17 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogicShipUpgradeTimer"/> class.
+        /// Initializes a new instance of the <see cref="LogicSeasickTimer"/> class.
         /// </summary>
-        public LogicShipUpgradeTimer()
+        internal LogicSeasickTimer()
         {
             this.Timer = new LogicTimer();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogicShipUpgradeTimer"/> class.
+        /// Initializes a new instance of the <see cref="LogicSeasickTimer"/> class.
         /// </summary>
-        public LogicShipUpgradeTimer(LogicClientAvatar avatar)
+        internal LogicSeasickTimer(LogicClientAvatar avatar)
         {
             this.Avatar = avatar;
             this.Timer  = new LogicTimer(avatar.Time);
@@ -46,7 +46,7 @@
         /// </summary>
         internal void Start()
         {
-            this.Timer.StartTimer(this.Avatar.Time, 3600 * Globals.ShipUpgradeDurationHours[this.Avatar.ShipLevel]);
+            this.Timer.StartTimer(this.Avatar.Time, 3600 * Globals.ShipSeasickDurationHours);
         }
 
         /// <summary>
@@ -57,8 +57,6 @@
             if (this.Started)
             {
                 this.Timer.StopTimer();
-
-                this.Avatar.ShipLevel++;
                 this.Avatar.Save();
             }
         }
@@ -109,10 +107,7 @@
         /// </summary>
         internal void Save(LogicJSONObject json)
         {
-            if (this.Started)
-            {
-                json.Put("ship_upgr", new LogicJSONNumber(this.Timer.RemainingSecs));
-            }
+            json.Put("seasick", new LogicJSONNumber(this.Timer.RemainingSecs));
         }
     }
 }

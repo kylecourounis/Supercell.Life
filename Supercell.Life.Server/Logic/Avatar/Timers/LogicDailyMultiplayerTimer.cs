@@ -16,7 +16,7 @@
 
         [JsonProperty] internal JArray HeroUsedInDaily;
 
-        [JsonProperty("timer")] internal LogicTimer Timer;
+        [JsonProperty] internal LogicTimer Timer;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="LogicDailyMultiplayerTimer"/> has started.

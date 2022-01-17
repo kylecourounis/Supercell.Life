@@ -11,7 +11,7 @@
     {
         internal LogicClientAvatar Avatar;
 
-        [JsonProperty("timers")] internal Dictionary<int, LogicTimer> Items;
+        [JsonProperty("Timers")] internal Dictionary<int, LogicTimer> Items;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="LogicItemUnavailableTimer"/> has started.

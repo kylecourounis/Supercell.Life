@@ -13,7 +13,7 @@
 
         internal LogicTime Time;
 
-        [JsonProperty("timer")] internal LogicTimer Timer;
+        [JsonProperty] internal LogicTimer Timer;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="LogicTeamMailCooldownTimer"/> has started.

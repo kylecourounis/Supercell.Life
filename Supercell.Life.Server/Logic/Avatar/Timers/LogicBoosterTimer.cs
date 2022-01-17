@@ -15,13 +15,13 @@
 
         internal LogicBoosterData BoostPackage;
 
-        [JsonProperty("boost_package")] internal int BoosterID;
-        [JsonProperty("timer")]         internal LogicTimer Timer;
+        [JsonProperty] internal int BoosterID;
+        [JsonProperty] internal LogicTimer Timer;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="LogicBoosterTimer"/> has started.
         /// </summary>
-        internal bool BoostActive
+        internal bool Started
         {
             get
             {
@@ -62,7 +62,7 @@
         /// </summary>
         internal void Finish()
         {
-            if (this.BoostActive)
+            if (this.Started)
             {
                 this.Timer.StopTimer();
 
@@ -78,7 +78,7 @@
         /// </summary>
         internal void FastForward(int seconds)
         {
-            if (this.BoostActive)
+            if (this.Started)
             {
                 this.Timer.FastForward(seconds);
 
@@ -94,7 +94,7 @@
         /// </summary>
         internal void Tick()
         {
-            if (this.Timer.Started)
+            if (this.Started)
             {
                 if (this.Timer.RemainingSecs <= 0)
                 {
@@ -108,7 +108,7 @@
         /// </summary>
         internal void AdjustSubTick()
         {
-            if (this.BoostActive)
+            if (this.Started)
             {
                 this.Timer.AdjustSubTick();
             }
@@ -119,7 +119,7 @@
         /// </summary>
         internal void Save(LogicJSONObject json)
         {
-            if (this.BoostActive)
+            if (this.Started)
             {
                 this.BoostPackage = (LogicBoosterData)CSV.Tables.Get(Gamefile.Boosters).GetDataWithID(this.BoosterID);
 

@@ -18,29 +18,43 @@
         /// </summary>
         internal override void Initialize()
         {
-            this.Set(Resource.Gold, Globals.StartingGold);
-            this.Set(Resource.Energy, Globals.InitialMaxEnergy);
+            this.SetResourceCount(CommodityType.Gold, Globals.StartingGold);
+            this.SetResourceCount(CommodityType.Energy, Globals.InitialMaxEnergy);
 
-            this.Set(Resource.Orb1, 1000000);
-            this.Set(Resource.Orb2, 1000000);
-            this.Set(Resource.Orb3, 1000000);
-            this.Set(Resource.Orb4, 1000000);
+            this.SetResourceCount(CommodityType.Orb1, 1000000);
+            this.SetResourceCount(CommodityType.Orb2, 1000000);
+            this.SetResourceCount(CommodityType.Orb3, 1000000);
+            this.SetResourceCount(CommodityType.Orb4, 1000000);
         }
 
         /// <summary>
         /// Sets the count for the specified resource.
         /// </summary>
-        internal void Set(Resource resource, int count)
+        internal void SetResourceCount(CommodityType resource, int count)
         {
-            this.Set((int)resource, count);
+            if (resource != CommodityType.Diamonds)
+            {
+                this.Set((int)resource, count);
+            }
+            else
+            {
+                Debugger.Warning("SetResourceCount() shouldn't be used for diamonds.");
+            }
         }
 
         /// <summary>
         /// Gets the count of the specified resource.
         /// </summary>
-        internal int Get(Resource resource)
+        internal int GetResourceCount(CommodityType resource)
         {
-            return this.GetCount((int)resource);
+            if (resource != CommodityType.Diamonds)
+            {
+                return this.GetCount((int)resource);
+            }
+
+            Debugger.Warning("GetResourceCount() shouldn't be used for diamonds.");
+
+            return 0;
         }
     }
 }

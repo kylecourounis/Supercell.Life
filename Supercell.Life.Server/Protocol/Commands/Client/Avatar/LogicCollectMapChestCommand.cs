@@ -23,6 +23,13 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
+            if (gamemode.MapChestsOpened == 3)
+            {
+                gamemode.MapChestsOpened = 0;
+            }
+
+            gamemode.MapChestsOpened++;
+
             LogicChest chest = new LogicChest(gamemode.Avatar);
             chest.CreateMapChest();
         }

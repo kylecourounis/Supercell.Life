@@ -23,8 +23,10 @@
 
         internal LogicClientAvatar Avatar;
 
-        internal LogicRandom Random;
+        internal int MapChestsOpened;
 
+        internal LogicRandom Random;
+        
         internal LogicBattle Battle;
 
         internal bool Resigned;
@@ -101,6 +103,7 @@
             this.Avatar.Booster.AdjustSubTick();
             this.Avatar.SpellTimer.AdjustSubTick();
             this.Avatar.ItemUnavailableTimer.AdjustSubTick();
+            this.Avatar.MapChestTimer.AdjustSubTick();
             this.Avatar.BonusChestRespawnTimer.AdjustSubTick();
             this.Avatar.DailyMultiplayerTimer.AdjustSubTick();
 
@@ -123,6 +126,7 @@
             this.Avatar.Booster.FastForward(seconds);
             this.Avatar.SpellTimer.FastForward(seconds);
             this.Avatar.ItemUnavailableTimer.FastForward(seconds);
+            this.Avatar.MapChestTimer.FastForward(seconds);
             this.Avatar.BonusChestRespawnTimer.FastForward(seconds);
             this.Avatar.DailyMultiplayerTimer.FastForward(seconds);
 
@@ -148,6 +152,7 @@
             this.Avatar.Booster.Tick();
             this.Avatar.SpellTimer.Tick();
             this.Avatar.ItemUnavailableTimer.Tick();
+            this.Avatar.MapChestTimer.Tick();
             this.Avatar.BonusChestRespawnTimer.Tick();
             this.Avatar.DailyMultiplayerTimer.Tick();
 

@@ -46,7 +46,7 @@
 
                     if (diamonds != 0)
                     {
-                        if (gamemode.Avatar.Diamonds < diamonds)
+                        if (!gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -diamonds))
                         {
                             Debugger.Error($"Unable to upgrade the item. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough diamonds. (Diamonds : {gamemode.Avatar.Diamonds}, Require : {diamonds})");
                             return;
@@ -55,7 +55,7 @@
 
                     if (gold != 0)
                     {
-                        if (gamemode.Avatar.Gold < gold)
+                        if (!gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Gold, -gold))
                         {
                             Debugger.Error($"Unable to upgrade the item. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough gold. (Gold : {gamemode.Avatar.Gold}, Require : {gold})");
                             return;
@@ -64,7 +64,7 @@
 
                     if (energy != 0)
                     {
-                        if (gamemode.Avatar.Energy < energy)
+                        if (!gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Energy, -energy))
                         {
                             Debugger.Error($"Unable to upgrade the item. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough energy. (Energy : {gamemode.Avatar.Energy}, Require : {energy}.");
                             return;
@@ -73,7 +73,7 @@
 
                     if (orb1 != 0)
                     {
-                        if (gamemode.Avatar.Orb1 < orb1)
+                        if (!gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb1, -orb1))
                         {
                             Debugger.Error($"Unable to upgrade the item. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough of orb1. (Orb1 : {gamemode.Avatar.Orb1}, Require : {orb1})");
                             return;
@@ -82,7 +82,7 @@
 
                     if (orb2 != 0)
                     {
-                        if (gamemode.Avatar.Orb2 < orb2)
+                        if (!gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb2, -orb2))
                         {
                             Debugger.Error($"Unable to upgrade the item. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough of orb2. (Orb2 : {gamemode.Avatar.Orb2}, Require : {orb2})");
                             return;
@@ -91,7 +91,7 @@
 
                     if (orb3 != 0)
                     {
-                        if (gamemode.Avatar.Orb3 < orb3)
+                        if (!gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb2, -orb3))
                         {
                             Debugger.Error($"Unable to upgrade the item. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough of orb3. (Orb3 : {gamemode.Avatar.Orb3}, Require : {orb3})");
                             return;
@@ -100,20 +100,12 @@
 
                     if (orb4 != 0)
                     {
-                        if (gamemode.Avatar.Orb4 < orb4)
+                        if (!gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb4, -orb4))
                         {
                             Debugger.Error($"Unable to upgrade the item. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough of orb4. (Orb4 : {gamemode.Avatar.Orb4}, Require : {orb4})");
                             return;
                         }
                     }
-
-                    gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -diamonds);
-                    gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Gold, -gold);
-                    gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Energy, -energy);
-                    gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb1, -orb1);
-                    gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb2, -orb2);
-                    gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb3, -orb3);
-                    gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb4, -orb4);
                 }
 
                 gamemode.Avatar.ItemInventories.AddItem(this.Item.GlobalID, 1);

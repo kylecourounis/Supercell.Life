@@ -277,7 +277,7 @@ namespace Supercell.Life.Server.Logic.Collections
 
             LogicClientAvatar avatar = new LogicClientAvatar(connection, new LogicLong(highId, low))
             {
-                Token = Loader.Random.GenerateRandomString()
+                Token = LogicRandom.GenerateRandomString()
             };
 
             switch (database)

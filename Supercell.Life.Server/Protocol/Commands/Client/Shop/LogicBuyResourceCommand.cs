@@ -9,7 +9,7 @@
 
     internal class LogicBuyResourceCommand : LogicCommand
     {
-        internal Resource Resource;
+        internal CommodityType Resource;
         internal int Amount;
 
         /// <summary>
@@ -22,7 +22,7 @@
 
         internal override void Decode(ByteStream stream)
         {
-            this.Resource = (Resource)stream.ReadInt();
+            this.Resource = (CommodityType)stream.ReadInt();
             this.Amount   = stream.ReadInt();
 
             stream.ReadByte();
@@ -34,7 +34,7 @@
         {
             switch (this.Resource)
             {
-                case Resource.Gold:
+                case CommodityType.Gold:
                 {
                     int cost = this.DiamondCost;
 
@@ -46,7 +46,7 @@
 
                     break;
                 }
-                case Resource.Energy:
+                case CommodityType.Energy:
                 {
                     int cost = this.Amount * 2;
 

@@ -17,8 +17,8 @@
     {
         internal LogicClientAvatar Avatar;
 
-        [JsonProperty("spells")] internal LogicArrayList<int> SpellIDs;
-        [JsonProperty("timer")]  internal LogicTimer Timer;
+        [JsonProperty("Spells")] internal LogicArrayList<int> SpellIDs;
+        [JsonProperty]           internal LogicTimer Timer;
 
         /// <summary>
         /// Gets the spell IDs as instances of <see cref="LogicSpellData"/>.

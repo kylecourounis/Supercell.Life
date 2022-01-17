@@ -30,9 +30,6 @@
             this.CalculateLoot();
 
             gamemode.Avatar.Variables.Remove(LogicVariables.SailRewardUnclaimed.GlobalID);
-
-            gamemode.Avatar.Sailing.Heroes.Clear();
-            gamemode.Avatar.Sailing.HeroLevels.Clear();
         }
 
         // ===================

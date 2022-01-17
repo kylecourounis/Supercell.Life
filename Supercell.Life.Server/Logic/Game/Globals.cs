@@ -12,7 +12,7 @@
         internal static int StartingGold;
         internal static int StartingDiamonds;
         internal static int InitialMaxEnergy;
-        internal static int EnergyRegenateSeconds;
+        internal static int EnergyRegenerateSeconds;
         
         internal static LogicHeroData StartingCharacter;
         internal static LogicQuestData StartingQuest;
@@ -58,6 +58,9 @@
         internal static int ResourceDiamondCost500000;
         internal static int ResourceDiamondCost1000000;
 
+        internal static int MapChestRespawnTime;
+
+        internal static int ReplayChestAvailableOnXPLevel;
         internal static int ReplayChestRespawnHours;
 
         internal static int SmallChestModifierMin;
@@ -97,7 +100,7 @@
             Globals.StartingGold                     = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("STARTING_GOLD")).NumberValue;
             Globals.StartingDiamonds                 = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("STARTING_DIAMONDS")).NumberValue;
             Globals.InitialMaxEnergy                 = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("INITIAL_MAX_ENERGY")).NumberValue;
-            Globals.EnergyRegenateSeconds            = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("ENERGY_REGENERATE_SECONDS")).NumberValue;
+            Globals.EnergyRegenerateSeconds          = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("ENERGY_REGENERATE_SECONDS")).NumberValue;
 
             Globals.StartingCharacter                = (LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataByName(((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("STARTING_CHARACTER")).TextValue);
             Globals.StartingQuest                    = (LogicQuestData)CSV.Tables.Get(Gamefile.Quests).GetDataByName(((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("STARTING_QUEST")).TextValue);
@@ -143,8 +146,11 @@
             Globals.ResourceDiamondCost500000        = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("RESOURCE_DIAMOND_COST_500000")).NumberValue;
             Globals.ResourceDiamondCost1000000       = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("RESOURCE_DIAMOND_COST_1000000")).NumberValue;
             
-            Globals.ReplayChestRespawnHours          = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("QUEST_REPLAY_CHEST_MOVE_TO_NEW_ISLAND_AFTER_HOURS")).NumberValue;
+            Globals.MapChestRespawnTime              = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("MAP_CHEST_RESPAWN_TIME")).NumberValue;
             
+            Globals.ReplayChestAvailableOnXPLevel    = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("QUEST_REPLAY_CHEST_AVAILABLE_ON_XP_LEVEL")).NumberValue;
+            Globals.ReplayChestRespawnHours          = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("QUEST_REPLAY_CHEST_MOVE_TO_NEW_ISLAND_AFTER_HOURS")).NumberValue;
+
             Globals.SmallChestModifierMin            = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SMALL_CHEST_MODIFIER_MIN")).NumberValue;
             Globals.SmallChestModifierMax            = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("SMALL_CHEST_MODIFIER_MAX")).NumberValue;
 

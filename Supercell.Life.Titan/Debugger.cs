@@ -1,12 +1,46 @@
 ﻿namespace Supercell.Life
 {
+    using System;
     using System.Diagnostics;
+    using System.IO;
     using System.Reflection;
 
     using Supercell.Life.Titan.Helpers;
 
     public static class Debugger
     {
+        private static FileInfo File;
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Debugger"/> is initialized.
+        /// </summary>
+        internal static bool Initialized
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Initializes the <see cref="Debugger"/> class.
+        /// </summary>
+        public static void Initialize()
+        {
+            if (Debugger.Initialized)
+            {
+                return;
+            }
+
+            if (!Directory.Exists("Logs"))
+            {
+                Directory.CreateDirectory("Logs");
+            }
+
+            Debugger.File = new FileInfo($"Logs/{DateTime.Now.ToString("s").Replace(":", ".")}.log");
+            Debugger.File.Create().Close();
+
+            Debugger.Initialized = true;
+        }
+
         /// <summary>
         /// Logs the specified informative message.
         /// </summary>
@@ -82,8 +116,6 @@
                 }
             }
 
-            // System.Diagnostics.Debug.WriteLine($"{Prefix} {$"{Method.DeclaringType.Name}::{Method.Name}".Pad()} : {Message}");
-
             if (method == null)
             {
                 System.Diagnostics.Debug.WriteLine($"{prefix} {"null::null".Pad()} : {message}");
@@ -91,6 +123,7 @@
             else
             {
                 System.Diagnostics.Debug.WriteLine($"{prefix} {$"{method.DeclaringType?.Name}::{method.Name.Replace("get_", string.Empty).Replace("set_", string.Empty)}".Pad()} : {message}");
+                Debugger.File.AppendAllText($"{prefix} {$"{method.DeclaringType?.Name}::{method.Name.Replace("get_", string.Empty).Replace("set_", string.Empty)}".Pad()} : {message}" + Environment.NewLine);
             }
         }
 

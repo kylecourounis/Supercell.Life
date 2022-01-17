@@ -7,7 +7,7 @@
 
     internal class SetDeviceTokenMessage : PiranhaMessage
     {
-        private string Password;
+        private string Token;
 
         /// <summary>
         /// The service node for this message.
@@ -30,7 +30,7 @@
 
         internal override void Decode()
         {
-            this.Password = this.Stream.ReadString();
+            this.Token = this.Stream.ReadString();
         }
     }
 }

@@ -39,7 +39,7 @@
 
                     if (cost > 0)
                     {
-                        if (gamemode.Avatar.Diamonds < cost)
+                        if (!gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost))
                         {
                             Debugger.Error($"Unable to buy a energy package. {gamemode.Avatar.Name} does not enough diamonds. (Diamonds : {gamemode.Avatar.Diamonds}, Require : {cost}).");
                             return;
@@ -49,7 +49,6 @@
                     gamemode.Avatar.EnergyPackages.AddItem(this.EnergyPackage.GlobalID, 1);
                     gamemode.Avatar.EnergyTimer.Stop();
 
-                    gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost);
                     gamemode.Avatar.SetCommodityCount(CommodityType.Energy, gamemode.Avatar.MaxEnergy);
                 }
                 else Debugger.Error("Unable to buy the energy package. The player has already bought all of the packages.");

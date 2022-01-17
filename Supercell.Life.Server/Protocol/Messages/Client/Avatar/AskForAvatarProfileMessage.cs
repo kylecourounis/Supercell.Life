@@ -44,10 +44,7 @@
 
         internal override void Handle()
         {
-            if (this.VisitID > 0)
-            {
-                new AvatarProfileMessage(this.Connection, this.VisitID).Send();
-            }
+            new AvatarProfileMessage(this.Connection, this.VisitID).Send();
         }
     }
 }

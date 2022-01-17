@@ -71,7 +71,7 @@
         }
 
         /// <summary>
-        /// Saves this <see cref="LogicDataSlot"/> the returned <see cref="LogicJSONObject"/>.
+        /// Saves this <see cref="LogicDataSlot"/> to the returned <see cref="LogicJSONObject"/>.
         /// </summary>
         internal LogicJSONObject Save()
         {

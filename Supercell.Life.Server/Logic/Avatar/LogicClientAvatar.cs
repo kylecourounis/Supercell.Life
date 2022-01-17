@@ -61,7 +61,6 @@ namespace Supercell.Life.Server.Logic.Avatar
         [JsonProperty] internal DateTime BanTime = DateTime.UtcNow;
 
         [JsonProperty] internal int ShipLevel;
-        [JsonProperty] internal int Seasick;
 
         [JsonProperty] internal Facebook Facebook;
 
@@ -100,12 +99,14 @@ namespace Supercell.Life.Server.Logic.Avatar
         [JsonProperty] internal LogicEnergyTimer EnergyTimer;
         [JsonProperty] internal LogicBoosterTimer Booster;
         [JsonProperty] internal LogicHeroUpgradeTimer HeroUpgrade;
-        [JsonProperty] internal LogicSailingTimer Sailing;
-        [JsonProperty] internal LogicHeroTiredTimer HeroTiredTimer;
         [JsonProperty] internal LogicShipUpgradeTimer ShipUpgrade;
+        [JsonProperty] internal LogicSailingTimer Sailing;
+        [JsonProperty] internal LogicSeasickTimer SeasickTimer; // I don't think this is correct, but I'm keeping it here for now
+        [JsonProperty] internal LogicHeroTiredTimer HeroTiredTimer;
         [JsonProperty] internal LogicItemUnavailableTimer ItemUnavailableTimer;
         [JsonProperty] internal LogicSpellTimer SpellTimer;
         [JsonProperty] internal LogicTeamMailCooldownTimer TeamMailCooldownTimer;
+        [JsonProperty] internal LogicMapChestTimer MapChestTimer;
         [JsonProperty] internal LogicBonusChestRespawnTimer BonusChestRespawnTimer;
         [JsonProperty] internal LogicDailyMultiplayerTimer DailyMultiplayerTimer;
 
@@ -147,8 +148,8 @@ namespace Supercell.Life.Server.Logic.Avatar
         /// </summary>
         internal int Gold
         {
-            get => this.Resources.Get(Resource.Gold);
-            set => this.Resources.Set(Resource.Gold, value);
+            get => this.Resources.GetResourceCount(CommodityType.Gold);
+            set => this.Resources.SetResourceCount(CommodityType.Gold, value);
         }
 
         /// <summary>
@@ -158,14 +159,14 @@ namespace Supercell.Life.Server.Logic.Avatar
         {
             get
             {
-                if (this.Resources.Get(Resource.Energy) > this.MaxEnergy)
+                if (this.Resources.GetResourceCount(CommodityType.Energy) > this.MaxEnergy)
                 {
                     this.Energy = this.MaxEnergy;
                 }
 
-                return this.Resources.Get(Resource.Energy);
+                return this.Resources.GetResourceCount(CommodityType.Energy);
             }
-            set => this.Resources.Set(Resource.Energy, value);
+            set => this.Resources.SetResourceCount(CommodityType.Energy, value);
         }
 
         /// <summary>
@@ -173,8 +174,8 @@ namespace Supercell.Life.Server.Logic.Avatar
         /// </summary>
         internal int Orb1
         {
-            get => this.Resources.Get(Resource.Orb1);
-            set => this.Resources.Set(Resource.Orb1, value);
+            get => this.Resources.GetResourceCount(CommodityType.Orb1);
+            set => this.Resources.SetResourceCount(CommodityType.Orb1, value);
         }
 
         /// <summary>
@@ -182,8 +183,8 @@ namespace Supercell.Life.Server.Logic.Avatar
         /// </summary>
         internal int Orb2
         {
-            get => this.Resources.Get(Resource.Orb2);
-            set => this.Resources.Set(Resource.Orb2, value);
+            get => this.Resources.GetResourceCount(CommodityType.Orb2);
+            set => this.Resources.SetResourceCount(CommodityType.Orb2, value);
         }
 
         /// <summary>
@@ -191,8 +192,8 @@ namespace Supercell.Life.Server.Logic.Avatar
         /// </summary>
         internal int Orb3
         {
-            get => this.Resources.Get(Resource.Orb3);
-            set => this.Resources.Set(Resource.Orb3, value);
+            get => this.Resources.GetResourceCount(CommodityType.Orb3);
+            set => this.Resources.SetResourceCount(CommodityType.Orb3, value);
         }
 
         /// <summary>
@@ -200,8 +201,8 @@ namespace Supercell.Life.Server.Logic.Avatar
         /// </summary>
         internal int Orb4
         {
-            get => this.Resources.Get(Resource.Orb4);
-            set => this.Resources.Set(Resource.Orb4, value);
+            get => this.Resources.GetResourceCount(CommodityType.Orb4);
+            set => this.Resources.SetResourceCount(CommodityType.Orb4, value);
         }
         
         /// <summary>
@@ -237,7 +238,7 @@ namespace Supercell.Life.Server.Logic.Avatar
                 return this.ExpLevel
                        + this.ExpPoints
                        + this.Diamonds
-                       + this.Diamonds
+                       + this.FreeDiamonds
                        + this.Score
                        + this.Resources.Checksum
                        + this.AchievementProgress.Checksum
@@ -253,8 +254,8 @@ namespace Supercell.Life.Server.Logic.Avatar
         internal LogicClientAvatar()
         {
             this.Time                    = new LogicTime();
-            this.Team                    = new JArray(Globals.StartingCharacter.GlobalID, 0, 0);
-            
+            this.Team                    = new JArray(Globals.StartingCharacter.GlobalID);
+
             this.AchievementProgress     = new LogicDataSlots(this);
             this.Resources               = new LogicResources(this);
             this.Variables               = new LogicVariables(this);
@@ -287,11 +288,13 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.EnergyTimer             = new LogicEnergyTimer(this);
             this.Booster                 = new LogicBoosterTimer(this);
             this.HeroUpgrade             = new LogicHeroUpgradeTimer(this);
-            this.Sailing                 = new LogicSailingTimer(this);
-            this.HeroTiredTimer          = new LogicHeroTiredTimer(this);
             this.ShipUpgrade             = new LogicShipUpgradeTimer(this);
+            this.Sailing                 = new LogicSailingTimer(this);
+            this.SeasickTimer            = new LogicSeasickTimer(this);
+            this.HeroTiredTimer          = new LogicHeroTiredTimer(this);
             this.ItemUnavailableTimer    = new LogicItemUnavailableTimer(this);
             this.SpellTimer              = new LogicSpellTimer(this);
+            this.MapChestTimer           = new LogicMapChestTimer(this);
             this.BonusChestRespawnTimer  = new LogicBonusChestRespawnTimer(this);
             this.TeamMailCooldownTimer   = new LogicTeamMailCooldownTimer(this);
             this.DailyMultiplayerTimer   = new LogicDailyMultiplayerTimer(this);
@@ -299,7 +302,7 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.Items                   = new LogicItems(this);
 
             this.Facebook                = new Facebook(this);
-
+            
             this.Diamonds                = Globals.StartingDiamonds;
             this.FreeDiamonds            = Globals.StartingDiamonds;
 
@@ -363,15 +366,15 @@ namespace Supercell.Life.Server.Logic.Avatar
 
             this.EnergyTimer.Save(json);
 
-            json.Put("map_chest", new LogicJSONNumber());
+            this.MapChestTimer.Save(json);
 
             this.BonusChestRespawnTimer.Save(json);
 
             this.DailyMultiplayerTimer.Save(json);
 
-            // json.Put("pvp_chest", new LogicJSONNumber());
+            json.Put("pvp_chest", new LogicJSONNumber(this.Variables.GetCount(LogicVariables.ChestProgress.GlobalID)));
 
-            json.Put("seasick", new LogicJSONNumber());
+            this.SeasickTimer.Save(json);
             
             this.HeroUpgrade.Save(json);
 
@@ -481,11 +484,6 @@ namespace Supercell.Life.Server.Logic.Avatar
         {
             switch (commodity)
             {
-                case CommodityType.Gold:
-                {
-                    this.Gold = amount;
-                    break;
-                }
                 case CommodityType.Diamonds:
                 {
                     this.Diamonds = amount;
@@ -494,11 +492,6 @@ namespace Supercell.Life.Server.Logic.Avatar
                 case CommodityType.FreeDiamonds:
                 {
                     this.FreeDiamonds = amount;
-                    break;
-                }
-                case CommodityType.Energy:
-                {
-                    this.Energy = amount;
                     break;
                 }
                 case CommodityType.Experience:
@@ -510,7 +503,7 @@ namespace Supercell.Life.Server.Logic.Avatar
 
                     double finalValue = amount;
 
-                    if (this.Booster.BoostActive)
+                    if (this.Booster.Started)
                     {
                         finalValue *= this.Booster.BoostPackage.Boost;
                     }
@@ -527,24 +520,9 @@ namespace Supercell.Life.Server.Logic.Avatar
 
                     break;
                 }
-                case CommodityType.Orb1:
+                default:
                 {
-                    this.Orb1 = amount;
-                    break;
-                }
-                case CommodityType.Orb2:
-                {
-                    this.Orb2 = amount;
-                    break;
-                }
-                case CommodityType.Orb3:
-                {
-                    this.Orb3 = amount;
-                    break;
-                }
-                case CommodityType.Orb4:
-                {
-                    this.Orb4 = amount;
+                    this.Resources.SetResourceCount(commodity, amount);
                     break;
                 }
             }
@@ -557,29 +535,8 @@ namespace Supercell.Life.Server.Logic.Avatar
         {
             switch (commodity)
             {
-                case CommodityType.Gold:
-                {
-                    if (amount < 0)
-                    {
-                        if (this.Gold < amount)
-                        {
-                            return false;
-                        }
-                    }
-
-                    this.SetCommodityCount(CommodityType.Gold, this.Gold + amount);
-                    break;
-                }
                 case CommodityType.Diamonds:
                 {
-                    if (amount < 0)
-                    {
-                        if (this.Diamonds < amount)
-                        {
-                            return false;
-                        }
-                    }
-
                     this.SetCommodityCount(CommodityType.Diamonds, this.Diamonds + amount);
                     break;
                 }
@@ -587,19 +544,6 @@ namespace Supercell.Life.Server.Logic.Avatar
                 {
                     this.SetCommodityCount(CommodityType.FreeDiamonds, this.FreeDiamonds + amount);
                     this.SetCommodityCount(CommodityType.Diamonds, this.Diamonds + amount);
-                    break;
-                }
-                case CommodityType.Energy:
-                {
-                    if (amount < 0)
-                    {
-                        if (this.Energy < amount)
-                        {
-                            return false;
-                        }
-                    }
-
-                    this.SetCommodityCount(CommodityType.Energy, this.Energy + amount);
                     break;
                 }
                 case CommodityType.Experience:
@@ -611,7 +555,7 @@ namespace Supercell.Life.Server.Logic.Avatar
 
                     double finalValue = amount;
 
-                    if (this.Booster.BoostActive)
+                    if (this.Booster.Started)
                     {
                         finalValue *= this.Booster.BoostPackage.Boost;
                     }
@@ -628,56 +572,17 @@ namespace Supercell.Life.Server.Logic.Avatar
                         
                     break;
                 }
-                case CommodityType.Orb1:
+                default:
                 {
                     if (amount < 0)
                     {
-                        if (this.Orb1 < amount)
+                        if (this.Resources.GetResourceCount(commodity) < amount)
                         {
                             return false;
                         }
                     }
 
-                    this.SetCommodityCount(CommodityType.Orb1, this.Orb1 + amount);
-                    break;
-                }
-                case CommodityType.Orb2:
-                {
-                    if (amount < 0)
-                    {
-                        if (this.Orb2 < amount)
-                        {
-                            return false;
-                        }
-                    }
-
-                    this.SetCommodityCount(CommodityType.Orb2, this.Orb2 + amount);
-                    break;
-                }
-                case CommodityType.Orb3:
-                {
-                    if (amount < 0)
-                    {
-                        if (this.Orb3 < amount)
-                        {
-                            return false;
-                        }
-                    }
-
-                    this.SetCommodityCount(CommodityType.Orb3, this.Orb3 + amount);
-                    break;
-                }
-                case CommodityType.Orb4:
-                {
-                    if (amount < 0)
-                    {
-                        if (this.Orb4 < amount)
-                        {
-                            return false;
-                        }
-                    }
-
-                    this.SetCommodityCount(CommodityType.Orb4, this.Orb4 + amount);
+                    this.Resources.AddItem((int)commodity, amount); 
                     break;
                 }
             }

@@ -7,14 +7,14 @@
 
     using Supercell.Life.Server.Logic.Game;
 
-    internal class LogicShipUpgradeTimer
+    internal class LogicMapChestTimer
     {
         internal LogicClientAvatar Avatar;
         
         [JsonProperty] internal LogicTimer Timer;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="LogicShipUpgradeTimer"/> has started.
+        /// Gets a value indicating whether this <see cref="LogicMapChestTimer"/> has started.
         /// </summary>
         internal bool Started
         {
@@ -25,17 +25,17 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogicShipUpgradeTimer"/> class.
+        /// Initializes a new instance of the <see cref="LogicMapChestTimer"/> class.
         /// </summary>
-        public LogicShipUpgradeTimer()
+        public LogicMapChestTimer()
         {
             this.Timer = new LogicTimer();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogicShipUpgradeTimer"/> class.
+        /// Initializes a new instance of the <see cref="LogicMapChestTimer"/> class.
         /// </summary>
-        public LogicShipUpgradeTimer(LogicClientAvatar avatar)
+        public LogicMapChestTimer(LogicClientAvatar avatar)
         {
             this.Avatar = avatar;
             this.Timer  = new LogicTimer(avatar.Time);
@@ -46,7 +46,7 @@
         /// </summary>
         internal void Start()
         {
-            this.Timer.StartTimer(this.Avatar.Time, 3600 * Globals.ShipUpgradeDurationHours[this.Avatar.ShipLevel]);
+            this.Timer.StartTimer(this.Avatar.Time, LogicMath.Min(162000 * Globals.MapChestRespawnTime, 54000 * Globals.MapChestRespawnTime));
         }
 
         /// <summary>
@@ -57,8 +57,6 @@
             if (this.Started)
             {
                 this.Timer.StopTimer();
-
-                this.Avatar.ShipLevel++;
                 this.Avatar.Save();
             }
         }
@@ -109,10 +107,7 @@
         /// </summary>
         internal void Save(LogicJSONObject json)
         {
-            if (this.Started)
-            {
-                json.Put("ship_upgr", new LogicJSONNumber(this.Timer.RemainingSecs));
-            }
+            json.Put("map_chest", new LogicJSONNumber()); // Some sort of seed - any number over 10 seems to give two diamonds.
         }
     }
 }

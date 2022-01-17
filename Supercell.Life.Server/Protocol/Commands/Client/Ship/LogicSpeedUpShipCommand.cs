@@ -27,9 +27,8 @@
         {
             int cost = LogicGamePlayUtil.GetSpeedUpCost(gamemode.Avatar.Sailing.Timer.RemainingSecs, 0);
             
-            if (gamemode.Avatar.Diamonds >= cost)
+            if (gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost))
             {
-                gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost);
                 gamemode.Avatar.Sailing.Finish();
             }
         }
