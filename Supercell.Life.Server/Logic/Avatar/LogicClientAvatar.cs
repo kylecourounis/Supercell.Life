@@ -12,7 +12,6 @@ namespace Supercell.Life.Server.Logic.Avatar
     using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Math;
 
-    using Supercell.Life.Server.Core;
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
@@ -591,12 +590,12 @@ namespace Supercell.Life.Server.Logic.Avatar
         }
 
         /// <summary>
-        /// Saves the specified avatar.
+        /// Saves this instance.
         /// </summary>
-        internal void Save(DBMS database = Settings.Database)
+        internal void Save()
         {
-            Avatars.Save(this, database);
-            Alliances.Save(this.Alliance, database);
+            Avatars.Update(this);
+            this.Alliance?.Save();
         }
 
         /// <summary>

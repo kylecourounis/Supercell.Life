@@ -70,8 +70,7 @@
                 new AvatarStreamEntryMessage(avatar.Connection, kickedMsg).Send();
 
                 alliance.AddEntry(new AllianceEventStreamEntry(allianceMember, executor, AllianceStreamEntry.AllianceStreamEvent.Kick));
-
-                Alliances.Save(alliance);
+                alliance.Save();
             }
         }
     }

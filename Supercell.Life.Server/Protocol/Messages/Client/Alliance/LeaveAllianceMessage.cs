@@ -64,7 +64,7 @@
 
                 alliance.Members.Remove(member);
 
-                Alliances.Save(alliance);
+                alliance.Save();
             }
         }
 

@@ -60,7 +60,7 @@
         }
 
         /// <summary>
-        /// Creates the avatar in the database.
+        /// Saves the avatar to the database.
         /// </summary>
         internal static async Task<AvatarDb> Save(LogicClientAvatar avatar)
         {

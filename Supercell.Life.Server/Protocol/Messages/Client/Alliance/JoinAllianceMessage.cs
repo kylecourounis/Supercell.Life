@@ -53,7 +53,7 @@
                     this.Connection.GameMode.Avatar.ClanHighID = alliance.HighID;
                     this.Connection.GameMode.Avatar.ClanLowID  = alliance.LowID;
 
-                    Alliances.Save(alliance);
+                    alliance.Save();
 
                     new AvailableServerCommandMessage(this.Connection, new LogicChangeAllianceRoleCommand(this.Connection)
                     {

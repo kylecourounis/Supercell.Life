@@ -298,6 +298,19 @@
         }
 
         /// <summary>
+        /// Updates the specified alliance in the cache.
+        /// </summary>
+        internal static void Update(Alliance alliance)
+        {
+            alliance.Update = DateTime.UtcNow;
+
+            if (!Alliances.Pool.TryUpdate(alliance.Identifier, alliance, Alliances.Get(alliance.Identifier)))
+            {
+                Debugger.Error($"Error updating alliance with ID {alliance.Identifier}");
+            }
+        }
+
+        /// <summary>
         /// Saves the specified alliance in the specified database.
         /// </summary>
         internal static void Save(Alliance alliance, DBMS database = Settings.Database)

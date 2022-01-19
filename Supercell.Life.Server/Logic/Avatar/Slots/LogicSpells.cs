@@ -31,8 +31,6 @@
                 { "id",  id    },
                 { "cnt", count }
             });
-
-            this.Avatar.Save();
         }
 
         /// <summary>

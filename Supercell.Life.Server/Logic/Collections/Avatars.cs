@@ -304,7 +304,20 @@ namespace Supercell.Life.Server.Logic.Collections
 
             return avatar;
         }
-        
+
+        /// <summary>
+        /// Updates the specified player in the cache.
+        /// </summary>
+        internal static void Update(LogicClientAvatar avatar)
+        {
+            avatar.Update = DateTime.UtcNow;
+
+            if (!Avatars.Pool.TryUpdate(avatar.Identifier, avatar, Avatars.Get(avatar.Identifier)))
+            {
+                Debugger.Error($"Error updating avatar with ID {avatar.Identifier}");
+            }
+        }
+
         /// <summary>
         /// Saves the specified player in the specified database.
         /// </summary>
@@ -408,7 +421,8 @@ namespace Supercell.Life.Server.Logic.Collections
             {
                 try
                 {
-                    avatar.Save(database);
+                    Avatars.Save(avatar);
+                    Alliances.Save(avatar.Alliance);
                 }
                 catch (Exception exception)
                 {

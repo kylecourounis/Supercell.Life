@@ -59,7 +59,7 @@
                 if (alliance != null)
                 {
                     this.CheckValues(alliance);
-                    Alliances.Save(alliance);
+                    alliance.Save();
 
                     foreach (LogicClientAvatar avatar in alliance.Members.Select(member => Avatars.Get(member.Identifier)).Where(avatar => avatar.Connection != null))
                     {

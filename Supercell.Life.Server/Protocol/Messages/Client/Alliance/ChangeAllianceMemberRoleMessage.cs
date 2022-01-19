@@ -59,7 +59,7 @@
                     alliance.AddEntry(new AllianceEventStreamEntry(sender, sender, AllianceStreamEntry.AllianceStreamEvent.Demoted));
                 }
 
-                Alliances.Save(alliance);
+                alliance.Save();
 
                 new AvailableServerCommandMessage(this.Connection, new LogicChangeAllianceRoleCommand(this.Connection)
                 {

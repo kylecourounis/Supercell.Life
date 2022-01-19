@@ -171,6 +171,14 @@
         }
 
         /// <summary>
+        /// Saves this instance.
+        /// </summary>
+        internal void Save()
+        {
+            Alliances.Update(this);
+        }
+
+        /// <summary>
         /// Returns a <see cref="string" /> that represents this instance.
         /// </summary>
         public override string ToString()
