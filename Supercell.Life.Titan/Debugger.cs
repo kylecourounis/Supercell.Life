@@ -11,6 +11,8 @@
     {
         private static FileInfo File;
 
+        private static readonly object FileLock = new object();
+
         /// <summary>
         /// Gets a value indicating whether this <see cref="Debugger"/> is initialized.
         /// </summary>
@@ -122,8 +124,14 @@
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine($"{prefix} {$"{method.DeclaringType?.Name}::{method.Name.Replace("get_", string.Empty).Replace("set_", string.Empty)}".Pad()} : {message}");
-                Debugger.File.AppendAllText($"{prefix} {$"{method.DeclaringType?.Name}::{method.Name.Replace("get_", string.Empty).Replace("set_", string.Empty)}".Pad()} : {message}" + Environment.NewLine);
+                string msg = $"{prefix} {$"{method.DeclaringType?.Name}::{method.Name.Replace("get_", string.Empty).Replace("set_", string.Empty)}".Pad()} : {message}";
+                
+                System.Diagnostics.Debug.WriteLine(msg);
+
+                lock (Debugger.FileLock)
+                {
+                    Debugger.File.AppendAllText(msg + Environment.NewLine);
+                }
             }
         }
 

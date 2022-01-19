@@ -91,7 +91,7 @@
             this.Avatar = avatar;
             this.Data   = data;
 
-            this.Avatar.PreviousSpells.Clear();
+            this.Avatar.Connection.State = State.Battle;
 
             int requiredQuest = 6000000; // This default value is the GlobalID of the first quest of the game
 
@@ -100,25 +100,26 @@
                 requiredQuest = ((LogicQuestData)CSV.Tables.Get(Gamefile.Quests).GetDataByName(this.Data.RequiredQuest)).GlobalID;
             }
 
-            if (this.Avatar.NpcProgress.ContainsKey(this.GlobalID) && this.Level == this.Levels.Size)
-            {
-                this.IsReplaying = true;
-
-                if (this.ReplayProgress >= this.Levels.Count)
-                {
-                    this.ReplayProgress = 0;
-                }
-            }
-
             if (this.Avatar.ExpLevel >= this.Data.RequiredXpLevel && this.Avatar.Energy >= this.Data.Energy)
             {
+                this.Avatar.PreviousSpells.Clear();
+
+                if (this.Avatar.NpcProgress.ContainsKey(this.GlobalID) && this.Level == this.Levels.Size)
+                {
+                    this.IsReplaying = true;
+
+                    if (this.ReplayProgress >= this.Levels.Count)
+                    {
+                        this.ReplayProgress = 0;
+                    }
+                }
+
                 if (!this.IsReplaying)
                 {
                     this.ReplayMoves = 0;
                 }
 
                 this.Avatar.OngoingQuestData = this;
-                this.Avatar.Connection.State = State.Battle;
                 this.Avatar.CommodityChangeCountHelper(CommodityType.Energy, -this.Data.Energy);
 
                 this.Characters.Clear();
@@ -181,17 +182,25 @@
                         }
                         else
                         {
-                            int id = Files.CsvHelpers.GlobalID.GetID(this.GlobalID) - 1;
-
-                            if (id < 1)
+                            if (this.Data.GoldRewardOverride > 0 && this.Data.XpRewardOverride > 0)
                             {
-                                id = 1;
+                                this.GoldReward = this.Data.GoldRewardOverride;
+                                this.XPReward   = this.Data.XpRewardOverride;
                             }
+                            else
+                            {
+                                int id = Files.CsvHelpers.GlobalID.GetID(this.GlobalID) - 1;
 
-                            LogicExperienceLevelData expLevelData = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataByName(id >= 35 ? "35" : LogicStringUtil.IntToString(id));
+                                if (id < 1)
+                                {
+                                    id = 1;
+                                }
 
-                            this.GoldReward = expLevelData.DefaultQuestRewardGoldPerEnergy * this.Data.Energy;
-                            this.XPReward   = expLevelData.DefaultQuestRewardXpPerEnergy * this.Data.Energy;
+                                LogicExperienceLevelData expLevelData = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataByName(id >= 35 ? "35" : LogicStringUtil.IntToString(id));
+
+                                this.GoldReward = expLevelData.DefaultQuestRewardGoldPerEnergy * this.Data.Energy;
+                                this.XPReward   = expLevelData.DefaultQuestRewardXpPerEnergy * this.Data.Energy;
+                            }
                         }
 
                         if (this.Avatar.NpcProgress.GetCount(this.GlobalID) < this.Levels.Size)

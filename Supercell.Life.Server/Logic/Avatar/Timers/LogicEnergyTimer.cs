@@ -44,7 +44,7 @@
         /// </summary>
         internal void Start()
         {
-            this.Timer.StartTimer(this.Avatar.Time, 300);
+            this.Timer.StartTimer(300);
         }
 
         /// <summary>
