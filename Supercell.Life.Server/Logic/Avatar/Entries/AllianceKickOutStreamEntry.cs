@@ -33,16 +33,16 @@
         internal override void Encode(ChecksumEncoder encoder)
         {
             base.Encode(encoder);
-            
-            encoder.WriteString(null);
+
+            //encoder.WriteString(this.Reason);
 
             //encoder.WriteLogicLong(new LogicLong(this.AllianceHighID, this.AllianceLowID));
             //encoder.WriteString(this.AllianceName);
             //encoder.WriteInt(this.AllianceBadge);
+            
+            //encoder.WriteByte(0);
 
-            //encoder.WriteBoolean(false);
-
-            //encoder.WriteLogicLong(new LogicLong(this.SenderHighID, this.SenderLowID)); // Not entirely sure what this is - client only reads it if the boolean above is true */
+            //encoder.WriteLogicLong(new LogicLong(this.SenderHighID, this.SenderLowID)); // Not entirely sure what this is - client only reads it if the boolean above is true
         }
     }
 }

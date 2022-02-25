@@ -73,15 +73,16 @@
         /// </summary>
         internal virtual void Encode(ChecksumEncoder encoder)
         {
+            encoder.WriteInt((int)this.StreamType);
+
             encoder.WriteLogicLong(new LogicLong(this.HighID, this.LowID));
-
             encoder.WriteLogicLong(new LogicLong(this.SenderHighID, this.SenderLowID));
+
             encoder.WriteString(this.SenderName);
-
-            encoder.WriteInt(0);
+            encoder.WriteInt(this.SenderLevel);
             encoder.WriteInt(this.SenderLeague);
-            encoder.WriteInt(this.Age);
 
+            encoder.WriteInt(this.Age);
             encoder.WriteBoolean(this.IsRemoved);
             encoder.WriteBoolean(this.IsNew);
         }
@@ -98,20 +99,20 @@
             else
             {
                 this.Sender = avatar;
-            }
 
-            this.SenderHighID = avatar.HighID;
-            this.SenderLowID  = avatar.LowID;
-            this.SenderName   = avatar.Name;
-            this.SenderLevel  = avatar.ExpLevel;
-            this.SenderLeague = avatar.League;
+                this.SenderHighID = avatar.HighID;
+                this.SenderLowID  = avatar.LowID;
+                this.SenderName   = avatar.Name;
+                this.SenderLevel  = avatar.ExpLevel;
+                this.SenderLeague = avatar.League;
+            }
         }
 
         internal enum AvatarStreamType
         {
             BattleLog,
-            AllianceJoin   = 3,
-            AllianceInvite = 4,
+            AllianceJoin   = 1,
+            AllianceInvite = 3,
             AllianceKick   = 5,
             AllianceMail   = 6,
             Unknown        = 7

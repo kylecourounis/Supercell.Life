@@ -329,6 +329,9 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 
+# Files to Ignore
+Supercell.Life.Server/Tests.cs
+
 # Mac
 .DS_Store
 ._*

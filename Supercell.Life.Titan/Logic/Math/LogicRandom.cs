@@ -55,15 +55,7 @@
         /// </summary>
         public int Rand(int min, int max)
         {
-            while (true)
-            {
-                int rand = this.Rand(max);
-
-                if (rand >= min)
-                {
-                    return rand;
-                }
-            }
+            return min + this.Rand(max - min);
         }
 
         /// <summary>

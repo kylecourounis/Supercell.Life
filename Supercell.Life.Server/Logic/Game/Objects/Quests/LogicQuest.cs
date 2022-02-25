@@ -12,7 +12,6 @@
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Avatar;
-    using Supercell.Life.Server.Logic.Avatar.Slots;
     using Supercell.Life.Server.Logic.Enums;
 
     [JsonObject(MemberSerialization.OptIn)]
@@ -170,13 +169,13 @@
                             if (this.Avatar.BonusChestRespawnTimer.ReplayQuest == this.GlobalID)
                             {
                                 this.Avatar.BonusChestRespawnTimer.ReplayChestTimes++;
-                            }
 
-                            if (this.Avatar.BonusChestRespawnTimer.ReplayChestTimes == 5)
-                            {
-                                if (this.ReplayMoves < this.Moves)
+                                if (this.Avatar.BonusChestRespawnTimer.ReplayChestTimes == 5)
                                 {
-                                    this.Avatar.QuestMoves.Set(this.GlobalID, this.ReplayMoves);
+                                    if (this.ReplayMoves < this.Moves)
+                                    {
+                                        this.Avatar.QuestMoves.Set(this.GlobalID, this.ReplayMoves);
+                                    }
                                 }
                             }
                         }
@@ -189,35 +188,35 @@
                             }
                             else
                             {
-                                int id = Files.CsvHelpers.GlobalID.GetID(this.GlobalID) - 1;
+                                int level = Files.CsvHelpers.GlobalID.GetID(this.GlobalID) - 1;
 
-                                if (id < 1)
+                                if (level < 1)
                                 {
-                                    id = 1;
+                                    level = 1;
                                 }
 
-                                LogicExperienceLevelData expLevelData = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataByName(id >= 35 ? "35" : LogicStringUtil.IntToString(id));
+                                LogicExperienceLevelData expLevelData = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataByName(level >= 35 ? "35" : LogicStringUtil.IntToString(level));
 
                                 this.GoldReward = expLevelData.DefaultQuestRewardGoldPerEnergy * this.Data.Energy;
                                 this.XPReward   = expLevelData.DefaultQuestRewardXpPerEnergy * this.Data.Energy;
                             }
-                        }
 
-                        if (this.Avatar.NpcProgress.GetCount(this.GlobalID) < this.Levels.Size)
-                        {
-                            this.Avatar.NpcProgress.AddItem(this.GlobalID, 1);
-                            this.Avatar.QuestMoves.AddItem(this.GlobalID, this.SublevelMoveCount); 
-
-                            this.SublevelMoveCount = 0;
-                        }
-
-                        if (!this.IsReplaying && this.Level == this.Levels.Size)
-                        {
-                            if (this.Moves <= this.Data.GoalMoveCount)
+                            if (this.Avatar.NpcProgress.GetCount(this.GlobalID) < this.Levels.Size)
                             {
-                                if (!this.Avatar.Crowns.Contains(this.GlobalID))
+                                this.Avatar.NpcProgress.AddItem(this.GlobalID, 1);
+                                this.Avatar.QuestMoves.AddItem(this.GlobalID, this.SublevelMoveCount);
+
+                                this.SublevelMoveCount = 0;
+                            }
+
+                            if (this.Level == this.Levels.Size)
+                            {
+                                if (this.Moves <= this.Data.GoalMoveCount)
                                 {
-                                    this.Avatar.Crowns.Add(this.GlobalID);
+                                    if (!this.Avatar.Crowns.Contains(this.GlobalID))
+                                    {
+                                        this.Avatar.Crowns.Add(this.GlobalID);
+                                    }
                                 }
                             }
                         }

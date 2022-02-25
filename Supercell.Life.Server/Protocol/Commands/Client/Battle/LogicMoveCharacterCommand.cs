@@ -59,7 +59,9 @@
 
             if (battle == null)
             {
-                if (gamemode.Avatar.OngoingQuestData.Data.QuestType.Equals("Basic"))
+                LogicQuest ongoingQuest = gamemode.Avatar.OngoingQuestData;
+
+                if (ongoingQuest.Data.QuestType.Equals("Basic"))
                 {
                     if (this.DirectionX + 256 > 512)
                     {
@@ -80,13 +82,13 @@
                         return;
                     }
 
-                    gamemode.Avatar.OngoingQuestData.SublevelMoveCount++;
+                    ongoingQuest.SublevelMoveCount++;
                     
-                    LogicLevel ongoingLevel = gamemode.Avatar.OngoingQuestData.Levels[gamemode.Avatar.OngoingQuestData.ReplayProgress];
+                    LogicLevel ongoingLevel = ongoingQuest.Levels[gamemode.Avatar.OngoingQuestData.ReplayProgress];
 
                     if (!gamemode.Avatar.OngoingQuestData.IsReplaying)
                     {
-                        ongoingLevel = gamemode.Avatar.OngoingQuestData.Levels[gamemode.Avatar.OngoingQuestData.Level];
+                        ongoingLevel = ongoingQuest.Levels[ongoingQuest.Level];
                     }
 
                     ongoingLevel?.Battles[ongoingLevel.CurrentBattle].CheckCollision(vector);

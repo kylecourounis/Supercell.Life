@@ -53,15 +53,17 @@
         {
             LogicCommandManager commandManager = this.Connection.GameMode.CommandManager;
 
-            if (commandManager.Commands != null)
+            if (this.CommandCount > 0)
             {
-                while (commandManager.Commands.Size > 0)
+                if (commandManager.Commands != null)
                 {
-                    commandManager.ExecuteCommand(commandManager.Commands[0]);
-                    commandManager.Commands.RemoveAt(0);
-                }
+                    do
+                    {
+                        commandManager.ExecuteCommand(commandManager.Commands[0]);
+                    } while (commandManager.Commands.Size > 0);
 
-                this.Connection.GameMode.Avatar.Save();
+                    this.Connection.GameMode.Avatar.Save();
+                }
             }
 
             this.Connection.GameMode.Avatar.Time.ClientSubTick = this.Subtick;

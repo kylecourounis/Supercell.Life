@@ -107,7 +107,7 @@
         /// </summary>
         internal void Save(LogicJSONObject json)
         {
-            json.Put("map_chest", new LogicJSONNumber()); // Some sort of seed - any number over 10 seems to give two diamonds.
+            json.Put("map_chest", new LogicJSONNumber()); // Some sort of seed - any number over 10 seems to make the chests give diamonds.
         }
     }
 }

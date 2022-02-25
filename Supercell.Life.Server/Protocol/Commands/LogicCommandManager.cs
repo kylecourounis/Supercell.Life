@@ -10,7 +10,6 @@
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
     using Supercell.Life.Server.Protocol.Commands.Client;
-    using Supercell.Life.Server.Protocol.Commands.Server;
 
     internal class LogicCommandManager
     {
@@ -65,7 +64,7 @@
         internal void DecodeBattleCommand(ByteStream stream, int subtick)
         {
             int id = stream.ReadInt();
-
+            
             if (id >= 600)
             {
                 var command = LogicCommandManager.CreateCommand(id, this.Connection);
@@ -102,6 +101,8 @@
                     {
                         this.Connection.GameMode.Avatar.Time.ClientSubTick = command.ExecuteSubTick;
                         this.Connection.GameMode.Tick();
+                        
+                        this.Commands.Remove(command);
 
                         command.Execute(this.Connection.GameMode);
                     }
@@ -230,7 +231,7 @@
                 }
                 case Command.CollectShipReward:
                 {
-                    return new LogicCollectShipRewardCommand(connection);
+                    return new LogicClaimShipRewardCommand(connection);
                 }
                 case Command.SpeedUpShip:
                 {

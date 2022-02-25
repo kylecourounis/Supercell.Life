@@ -4,11 +4,11 @@
 
     using Newtonsoft.Json;
 
-    using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Titan.Logic.Math;
-
-    using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Titan.Logic.Json;
+
+    using Supercell.Life.Server.Logic.Avatar;
+    using Supercell.Life.Server.Logic.Game;
 
     internal class LogicBonusChestRespawnTimer
     {
@@ -70,12 +70,12 @@
             if (this.Started)
             {
                 this.Timer.StopTimer();
-
-                this.ReplayQuest      = 0;
-                this.ReplayChestTimes = 0;
-
-                this.Start();
             }
+
+            this.ReplayQuest = 0;
+            this.ReplayChestTimes = 0;
+
+            this.Start();
         }
 
         /// <summary>
@@ -105,10 +105,6 @@
                 {
                     this.Finish();
                 }
-            }
-            else
-            {
-                this.Start();
             }
         }
 
@@ -160,7 +156,7 @@
                 json.Put("m_replayChestAutomaticRespawnTimer", new LogicJSONNumber(this.Timer.RemainingSecs));
                 json.Put("m_replayChestRespawnTimer", new LogicJSONNumber(this.Timer.RemainingSecs));
                 json.Put("mapDailyBonusChestRespawnTimer", new LogicJSONNumber(this.Timer.RemainingSecs));
-
+                
                 json.Put("replayChestQuest", new LogicJSONNumber(this.ReplayQuest));
                 json.Put("replayChestTimes", new LogicJSONNumber(this.ReplayChestTimes));
                 json.Put("last_replay_level", new LogicJSONNumber(this.PreviousReplayQuest));

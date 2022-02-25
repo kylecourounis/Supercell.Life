@@ -25,7 +25,7 @@
         /// <summary>
         /// Initializes the <see cref="Debugger"/> class.
         /// </summary>
-        public static void Initialize()
+        public static void Init()
         {
             if (Debugger.Initialized)
             {

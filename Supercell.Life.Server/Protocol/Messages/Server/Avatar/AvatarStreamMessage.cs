@@ -30,7 +30,6 @@
 
             this.Connection.GameMode.Avatar.StreamEntries.ForEach(entry =>
             {
-                this.Stream.WriteInt((int)entry.StreamType);
                 entry.Encode(this.Stream);
             });
         }

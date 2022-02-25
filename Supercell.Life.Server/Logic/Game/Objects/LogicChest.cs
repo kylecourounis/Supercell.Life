@@ -1,5 +1,7 @@
 ﻿namespace Supercell.Life.Server.Logic.Game.Objects
 {
+    using Supercell.Life.Titan.Logic.Math;
+
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic.Avatar;
@@ -84,37 +86,61 @@
         {
             LogicExperienceLevelData expLevelData = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataWithID(this.Avatar.ExpLevel - 1);
 
-            var (goldSeed, xpSeed) = this.GetSeeds();
+            var (goldSeed, xpSeed, modify) = this.GetSeeds();
+            
+            int gold = this.RandomWithSeed(goldSeed, expLevelData.MapChestMinGold, expLevelData.MapChestMaxGold);
+            int xp   = this.RandomWithSeed(xpSeed, expLevelData.MapChestMinXP, expLevelData.MapChestMaxXP);
 
-            this.Avatar.Connection.GameMode.Random.SetIteratedRandomSeed(goldSeed);
-            int gold = this.Avatar.Connection.GameMode.Random.Rand(expLevelData.MapChestMaxGold - expLevelData.MapChestMinGold) + expLevelData.MapChestMinGold;
-
-            this.Avatar.Connection.GameMode.Random.SetIteratedRandomSeed(xpSeed);
-            int xp   = this.Avatar.Connection.GameMode.Random.Rand(expLevelData.MapChestMaxXP - expLevelData.MapChestMinXP) + expLevelData.MapChestMinXP;
-
-            Debugger.Debug($"{gold} {xp}");
-
-            //this.Avatar.CommodityChangeCountHelper(CommodityType.Gold, gold);
-            //this.Avatar.CommodityChangeCountHelper(CommodityType.Experience, xp);
+            switch (modify)
+            {
+                case CommodityType.Gold:
+                {
+                    gold += goldSeed / 2;
+                    break;
+                }
+                case CommodityType.Experience:
+                {
+                    xp += LogicMath.Abs(xpSeed);
+                    break;
+                }
+            }
+            
+            this.Avatar.CommodityChangeCountHelper(CommodityType.Gold, gold);
+            this.Avatar.CommodityChangeCountHelper(CommodityType.Experience, xp);
 
             this.Avatar.MapChestTimer.Start();
         }
 
-        internal (int, int) GetSeeds()
+        /// <summary>
+        /// Generates a pseudo-random number between the specified range with the specified seed.
+        /// </summary>
+        private int RandomWithSeed(int seed, int min, int max)
         {
+            this.Avatar.Connection.GameMode.Random.SetIteratedRandomSeed(seed);
+            return this.Avatar.Connection.GameMode.Random.Rand(min, max);
+        }
+        
+        /// <summary>
+        /// Gets the seeds for LogicRandom based on the number of map chests that have been opened.
+        /// </summary>
+        private (int, int, CommodityType) GetSeeds()
+        {
+            /*
+             * Triple Structure:
+             *   The first integer is the seed for the gold generation
+             *   The second integer is the seed for the XP generation
+             *   The CommodityType determines which one needs slight modifications after the numbers have been generated
+             */
+
             switch (this.Avatar.Connection.GameMode.MapChestsOpened)
             {
                 case 2:
                 {
-                    return (6, 2);
-                }
-                case 3:
-                {
-                    return (0, -2);
+                    return (6, 2, CommodityType.Gold);
                 }
                 default:
                 {
-                    return (0, -2);
+                    return (0, -2, CommodityType.Experience);
                 }
             }
         }

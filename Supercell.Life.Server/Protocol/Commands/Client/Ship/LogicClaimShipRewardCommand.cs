@@ -10,14 +10,14 @@
     using Supercell.Life.Server.Logic.Game;
     using Supercell.Life.Server.Network;
 
-    internal class LogicCollectShipRewardCommand : LogicCommand
+    internal class LogicClaimShipRewardCommand : LogicCommand
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogicCollectShipRewardCommand"/> class.
+        /// Initializes a new instance of the <see cref="LogicClaimShipRewardCommand"/> class.
         /// </summary>
-        public LogicCollectShipRewardCommand(Connection connection) : base(connection)
+        public LogicClaimShipRewardCommand(Connection connection) : base(connection)
         {
-            // LogicCollectShipRewardCommand.
+            // LogicClaimShipRewardCommand.
         }
 
         internal override void Decode(ByteStream stream)
@@ -30,12 +30,14 @@
             this.CalculateLoot();
 
             gamemode.Avatar.Variables.Remove(LogicVariables.SailRewardUnclaimed.GlobalID);
+
+            gamemode.Avatar.Sailing.Heroes.Clear();
+            gamemode.Avatar.Sailing.HeroLevels.Clear();
         }
-
-        // ===================
-        // Everything below is still a bit of a WIP
-        // ===================
-
+        
+        /// <summary>
+        /// Calculates the loot based on the heroes that were sent out to sail.
+        /// </summary>
         private void CalculateLoot()
         {
             LogicGameMode gamemode = this.Connection.GameMode;
@@ -43,10 +45,12 @@
             int gold = 0;
             int xp   = 0;
 
-            for (int i = 0; i < gamemode.Avatar.Sailing.HeroLevels.Select(pair => pair.Value.Count).OrderByDescending(x => x).ToList().Count; i++)
-            {
-                int level = gamemode.Avatar.Sailing.HeroLevels.Select(hero => gamemode.Avatar.HeroLevels.Get(hero.Value.Id)).Select(item => item.Count).ToArray()[i];
+            int[] sailingLevels = gamemode.Avatar.Sailing.HeroLevels.OrderByDescending(pair => pair.Value.Count).Select(pair => pair.Value.Count).ToArray();
 
+            for (int i = 0; i < sailingLevels.Length; i++)
+            {
+                int level = sailingLevels[i];
+                
                 switch (i)
                 {
                     case 0:
@@ -57,12 +61,6 @@
                         break;
                     }
                     case 1:
-                    {
-                        gold += Globals.ShipGoldPerHeroLevel[level] / 2;
-                        xp   += Globals.ShipXPPerHeroLevel[level] / 2;
-
-                        break;
-                    }
                     case 2:
                     {
                         gold += Globals.ShipGoldPerHeroLevel[level] / 2;
@@ -72,24 +70,20 @@
                     }
                 }
             }
-
-            double goldMultiplier = 1.0 + LogicCollectShipRewardCommand.MakeDouble(gamemode.Random.Rand(Globals.ShipGoldVariation));
-            double xpMultiplier   = 1.0 + LogicCollectShipRewardCommand.MakeDouble(gamemode.Random.Rand(Globals.ShipXPVariation));
-
-            Debugger.Debug($"{(int)(gold * goldMultiplier)}, {(int)(xp * xpMultiplier)}");
+            
+            double goldMultiplier = 1.0 + LogicClaimShipRewardCommand.MakeDouble(gamemode.Random.Rand(Globals.ShipGoldVariation));
+            double xpMultiplier   = 1.0 + LogicClaimShipRewardCommand.MakeDouble(gamemode.Random.Rand(Globals.ShipXPVariation));
 
             gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Gold, (int)(gold * goldMultiplier));
             gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Experience, (int)(xp * xpMultiplier));
         }
 
+        /// <summary>
+        /// Makes a double with the specified integer in the hundredths place if it's less than ten, or after the decimal point if it's greater than ten.
+        /// </summary>
         private static double MakeDouble(int randNum)
         {
-            if (randNum < 10)
-            {
-                return double.Parse($"0.0{randNum}");
-            }
-
-            return double.Parse($"0.{randNum}");
+            return randNum < 10 ? double.Parse($"0.0{randNum}") : double.Parse($"0.{randNum}");
         }
     }
 }

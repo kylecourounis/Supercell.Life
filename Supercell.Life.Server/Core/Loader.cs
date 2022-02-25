@@ -36,7 +36,7 @@
             
             Loader.Random = new LogicRandom();
 
-            Debugger.Initialize();
+            Debugger.Init();
 
             Fingerprint.Init();
             CSV.Init();
