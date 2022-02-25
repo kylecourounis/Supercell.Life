@@ -226,14 +226,14 @@
 
                         this.Avatar.CommodityChangeCountHelper(CommodityType.Gold, this.GoldReward + goldDrop);
 
-                        if (this.Avatar.Items.IsAttached(LogicItems.EnergyRecycler))
+                        if (this.Avatar.Items.EnergyRecycler.IsAttached)
                         {
                             this.Avatar.CommodityChangeCountHelper(CommodityType.Energy, 1);
                         }
 
-                        if (this.Avatar.Items.IsAttached(LogicItems.PlunderThunder))
+                        if (this.Avatar.Items.PlunderThunder.IsAttached)
                         {
-                            this.Avatar.CommodityChangeCountHelper(CommodityType.Experience, (int)Math.Round(this.XPReward * this.Avatar.Items.PercentageMultiplier(LogicItems.PlunderThunder, 1.02, 0.02)));
+                            this.Avatar.CommodityChangeCountHelper(CommodityType.Experience, (int)Math.Round(this.XPReward * this.Avatar.Items.PlunderThunder.PercentageMultiplier(1.02, 0.02)));
                         }
                         else
                         {
