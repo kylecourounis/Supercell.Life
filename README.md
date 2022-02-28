@@ -27,8 +27,8 @@ When you download and run the installer for MongoDB, make sure to check the box 
 
 Since Apple decided to remove 32-bit app support for iOS 11 and above, to use this server, you must choose the correct IPA file for your device.
 
-* If you have a 32-bit iOS device, you can download [this 32-bit IPA](https://mega.nz/file/2o0BxarL#v7ZMfta6IAfAxUWN_AUUNGYTZFuNM8RS2EW4d9-gEmM).
-* If you have a 64-bit iOS device, you can download [this 64-bit IPA](https://mega.nz/file/PlNlkCxa#-921zVTKWrTiWrkv4QQOX9Epl-6bX4aLZw3Qnz1gq9U).
+* If you have a 32-bit iOS device, you can download [this 32-bit IPA](https://mega.nz/file/PlNlkCxa#-921zVTKWrTiWrkv4QQOX9Epl-6bX4aLZw3Qnz1gq9U).
+* If you have a 64-bit iOS device, you can download [this 64-bit IPA](https://mega.nz/file/2o0BxarL#v7ZMfta6IAfAxUWN_AUUNGYTZFuNM8RS2EW4d9-gEmM).
 
 I recommend using [Sideloadly](https://sideloadly.io/) to sideload the IPA, as it is available for both Windows & Mac. However, you may use any method you feel comfortable with. One important thing to note is that if you are not using a paid Apple Developer account, you must change the bundle identifier of IPA in Sideloadly to something different. You can access this setting by clicking Advanced Options.
 
