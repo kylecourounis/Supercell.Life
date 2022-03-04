@@ -44,7 +44,7 @@
 
             this.Stream.WriteString(LogicVersion.ServerType);
 
-            this.Stream.WriteInt(1); // Total Session
+            this.Stream.WriteInt(this.Connection.GameMode.Avatar.TotalSessions++); // Total Session
             this.Stream.WriteInt(this.Connection.GameMode.Avatar.TimePlayed); // Played Time
             this.Stream.WriteInt(0); // Played Time in day
 

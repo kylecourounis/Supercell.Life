@@ -44,7 +44,7 @@
         /// </summary>
         internal void Start()
         {
-            this.Timer.StartTimer(300);
+            this.Timer.StartTimer(this.Avatar.Time, 300);
         }
 
         /// <summary>
@@ -66,22 +66,7 @@
         {
             if (this.Started)
             {
-                do
-                {
-                    this.Timer.FastForward(seconds);
-
-                    if (this.Timer.RemainingSecs <= 0 && ++this.Avatar.Energy < this.Avatar.MaxEnergy)
-                    {
-                        this.Start();
-                    }
-
-                    seconds -= this.Timer.RemainingSecs;
-                } while (seconds > 0);
-
-                if (this.Timer.RemainingSecs <= 0)
-                {
-                    this.Stop();
-                }
+                this.Timer.FastForward(seconds);
             }
         }
 
@@ -99,16 +84,13 @@
             }
             else
             {
-                if (this.Started)
+                while (this.Timer.RemainingSecs <= 0)
                 {
-                    while (this.Timer.RemainingSecs <= 0)
+                    if (++this.Avatar.Energy < this.Avatar.MaxEnergy)
                     {
-                        if (++this.Avatar.Energy < this.Avatar.MaxEnergy)
-                        {
-                            this.Start();
-                        }
-                        else this.Stop();
+                        this.Start();
                     }
+                    else this.Stop();
                 }
             }
         }

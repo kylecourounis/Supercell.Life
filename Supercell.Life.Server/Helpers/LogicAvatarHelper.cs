@@ -56,7 +56,7 @@
                 {
                     if (avatar.Score >= league.PromoteLimit)
                     {
-                        avatar.League += 1;
+                        avatar.League++;
                     }
                 }
             }
@@ -67,9 +67,9 @@
                     avatar.Score = 0;
                 }
 
-                if (avatar.Score <= league.DemoteLimit)
+                if (avatar.Score <= league.DemoteLimit && avatar.League > 0)
                 {
-                    avatar.League -= 1;
+                    avatar.League--;
                 }
             }
 

@@ -8,6 +8,8 @@
 
     internal class Obstacle
     {
+        internal int Hits;
+
         /// <summary>
         /// Gets the data.
         /// </summary>
@@ -40,6 +42,7 @@
             this.Data = (LogicObstacleData)CSV.Tables.Get(Gamefile.Obstacles).GetDataWithID(json.GetJsonNumber("data").GetIntValue());
             this.X    = json.GetJsonNumber("x").GetIntValue();
             this.Y    = json.GetJsonNumber("y").GetIntValue();
+            this.Hits = 0;
         }
 
         /// <summary>

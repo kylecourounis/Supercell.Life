@@ -1,5 +1,7 @@
 ﻿namespace Supercell.Life.Server.Logic.Game.Objects.Quests
 {
+    using System;
+
     using Supercell.Life.Titan.Logic;
     using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Math;
@@ -129,10 +131,10 @@
                     for (int i = 0; i < this.Enemies.Size; i++)
                     {
                         Enemy enemy = this.Enemies[i];
-
-                        LogicVector2 enemyVector = new LogicVector2(LogicMath.Cos(enemy.X, 255), LogicMath.Sin(enemy.Y, 255));
-                        Debugger.Debug($"Enemy Coords : {enemyVector}, Enemy Angle : {enemyVector.Angle}, Enemy Radius : {LogicMath.GetRadius(enemyVector.X, enemyVector.Y)}, Distance Between : {enemyVector.GetDistance(vector)}");
-
+                        
+                        LogicVector2 enemyVector = new LogicVector2(enemy.X / 255 / 255, -(enemy.Y / 255 / 255));
+                        Debugger.Debug($"{enemy.Data.ExportName} - Coords : {enemyVector}, Angle Between : {enemyVector.GetAngleBetween(vector.X, vector.Y)}, Distance Between : {vector.GetDistance(enemyVector)}");
+                        
                         if (this.Level.Quest.SublevelMoveCount == enemy.FirstAttackOnTurn)
                         {
                             this.DamageCharacter(enemy, vector, enemyVector);
@@ -145,13 +147,40 @@
                             }
                         }
 
-                        /* if (vector.X == enemyVector.X && vector.Y == enemyVector.Y)
+                        if (enemyVector.GetAngleBetween(vector.X, vector.Y) <= enemy.Data.Radius)
                         {
-                            Debugger.Debug(this.Enemies[i].Data.GlobalID);
+                            enemy.Hitpoints -= this.Level.Quest.Characters[this.Level.Quest.CharacterIndex].Damage;
 
-                            this.Enemies.RemoveAt(i);
-                            this.EnemiesKilled++;
-                        } */
+                            Debugger.Debug(enemy.Hitpoints + this.Level.Quest.Characters[this.Level.Quest.CharacterIndex].Damage + " -> " + enemy.Hitpoints);
+
+                            if (enemy.Hitpoints <= 0)
+                            {
+                                Debugger.Debug(this.Enemies[i].Data.GlobalID);
+
+                                this.Enemies.RemoveAt(i);
+                                this.EnemiesKilled++;
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < this.Obstacles.Size; i++)
+                    {
+                        Obstacle obstacle = this.Obstacles[i];
+                        
+                        LogicVector2 obstacleVector = new LogicVector2(obstacle.X / 255 / 255, -(obstacle.Y / 255 / 255));
+                        Debugger.Debug($"{obstacle.Data.ExportName} - Coords : {obstacleVector}, Angle Between : {obstacleVector.GetAngleBetween(vector.X, vector.Y)}, Distance Between : {vector.GetDistance(obstacleVector)}");
+                        
+                        if (obstacleVector.GetAngleBetween(vector.X, vector.Y) <= obstacle.Data.Radius)
+                        {
+                            obstacle.Hits++;
+
+                            if (obstacle.Hits == 3)
+                            {
+                                Debugger.Debug(this.Obstacles[i].Data.GlobalID);
+
+                                this.Obstacles.RemoveAt(i);
+                            }
+                        }
                     }
                 }
 

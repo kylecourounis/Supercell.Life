@@ -163,7 +163,8 @@
                 this.Avatar.TeamMailCooldownTimer.Tick();
             }
 
-            this.Connection.GameMode.Random.SetIteratedRandomSeed(LogicTime.GetSecondsInTicks(this.Avatar.Time.TotalSecs));
+            this.Avatar.Time.IncreaseTick();
+            // this.Connection.GameMode.Random.SetIteratedRandomSeed(this.Avatar.Time.Tick);
 
             this.Avatar.Update = DateTime.UtcNow;
 

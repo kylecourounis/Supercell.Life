@@ -58,12 +58,7 @@ namespace Supercell.Life.Server.Files.CsvLogic
         {
             get; set;
         }
-
-        public int Hitpoints
-        {
-            get; set;
-        }
-
+        
         public int Radius
         {
             get; set;

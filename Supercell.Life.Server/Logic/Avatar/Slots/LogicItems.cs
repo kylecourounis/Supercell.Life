@@ -68,7 +68,7 @@
                 
                 foreach (var slot in this.Avatar.ItemLevels.Values)
                 {
-                    array.Add(slot.Save());
+                    array.Add(slot.SaveToJSON());
                 }
 
                 return array;

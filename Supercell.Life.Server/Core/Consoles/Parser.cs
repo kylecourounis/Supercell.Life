@@ -3,6 +3,7 @@
     using System;
     using System.Threading;
 
+    using Supercell.Life.Titan.Core;
     using Supercell.Life.Titan.Helpers;
     using Supercell.Life.Titan.Logic.Enums;
     using Supercell.Life.Titan.Logic.Math;
@@ -13,12 +14,10 @@
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Logic.Alliance;
-    using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Logic.Collections;
     using Supercell.Life.Server.Protocol.Commands.Server;
     using Supercell.Life.Server.Protocol.Messages;
     using Supercell.Life.Server.Protocol.Messages.Server;
-    using Supercell.Life.Titan.Core;
 
     internal class Parser
     {
@@ -45,14 +44,14 @@
             {
                 while (true)
                 {
-                    int cursorTop2 = Console.CursorTop = Console.WindowTop + Console.WindowHeight - 1;
+                    int cursorTop = Console.CursorTop = Console.WindowTop + Console.WindowHeight - 1;
                     Console.Write($"root@{Constants.LocalIP.ToString().Split(":")[0]} > ");
 
                     string[] command = Console.ReadLine()?.Split(' ');
 
-                    Console.SetCursorPosition(0, cursorTop2 - 1);
+                    Console.SetCursorPosition(0, cursorTop - 1);
                     Console.Write(new string(' ', Console.BufferWidth) + Environment.NewLine);
-                    Console.SetCursorPosition(0, cursorTop2 - 2);
+                    Console.SetCursorPosition(0, cursorTop - 2);
 
                     switch (command?[0].Replace("/", string.Empty))
                     {
@@ -77,12 +76,11 @@
                         {
                             if (Loader.Initialized)
                             {
-                                var tag  = command[1];
-                                var rank = (Rank)Enum.GetValues(typeof(Rank)).GetValue(LogicStringUtil.ConvertToInt(command[2]));
-                                
-                                LogicTagUtil.ToHighLow(tag, out int highId, out int lowId);
+                                var playerId = command[1].Split('-');
+                                var player = Avatars.Get(new LogicLong(LogicStringUtil.ConvertToInt(playerId[0]), LogicStringUtil.ConvertToInt(playerId[1])));
 
-                                var player = Avatars.Get(new LogicLong(highId, lowId));
+                                var rank = (Rank)Enum.GetValues(typeof(Rank)).GetValue(LogicStringUtil.ConvertToInt(command[2]));
+
                                 player.SetRank(rank);
                             }
 
@@ -98,8 +96,10 @@
                                 var playerId  = command[2].Split('-');
                                 var player    = Avatars.Get(new LogicLong(LogicStringUtil.ConvertToInt(playerId[0]), LogicStringUtil.ConvertToInt(playerId[1])));
 
-                                new AvailableServerCommandMessage(player.Connection, new LogicDebugCommand(player.Connection, commandId)).Send();
-                                new OwnAvatarDataMessage(player.Connection).Send();
+                                if (player.Connection != null)
+                                {
+                                    new AvailableServerCommandMessage(player.Connection, new LogicDebugCommand(player.Connection, commandId)).Send();
+                                }
                                     
                                 Console.WriteLine($"Sent Debug Command with ID {commandId} to player {player}");
                             }

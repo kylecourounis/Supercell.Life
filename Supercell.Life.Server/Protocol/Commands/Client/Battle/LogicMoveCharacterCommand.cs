@@ -50,11 +50,11 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            LogicVector2 vector = new LogicVector2(LogicMath.Cos(this.DirectionX, 255), LogicMath.Sin(this.DirectionY, 255));
+            LogicVector2 vector = new LogicVector2(LogicMath.Abs(this.DirectionX), LogicMath.Abs(this.DirectionY));
 
             Debugger.Debug($"DirectionX : {this.DirectionX}, DirectionY : {this.DirectionY}, Value : {this.Value} (S : {this.S}, F : {this.F})");
-            Debugger.Debug($"Coords : {vector}, Angle : {vector.Angle}, Radius : {LogicMath.GetRadius(vector.X, vector.Y)}");
-
+            Debugger.Debug($"Coords : {vector}, Angle : {vector.Angle}, Length : {vector.Length}");
+            
             var battle = gamemode.Battle;
 
             if (battle == null)
@@ -84,7 +84,7 @@
 
                     ongoingQuest.SublevelMoveCount++;
                     
-                    LogicLevel ongoingLevel = ongoingQuest.Levels[gamemode.Avatar.OngoingQuestData.ReplayProgress];
+                    LogicLevel ongoingLevel = ongoingQuest.Levels[gamemode.Avatar.OngoingQuestData.ReplayLevel];
 
                     if (!gamemode.Avatar.OngoingQuestData.IsReplaying)
                     {
@@ -102,8 +102,8 @@
                 
                 LogicMoveCharacterCommand cmd = new LogicMoveCharacterCommand(opponent.Connection)
                 {
-                    DirectionX     = -this.DirectionX,
-                    DirectionY     = -this.DirectionY,
+                    DirectionX     = this.DirectionX,
+                    DirectionY     = this.DirectionY,
                     Value          = this.Value,
                     ExecuteSubTick = this.ExecuteSubTick,
                     ExecutorID     = this.ExecutorID

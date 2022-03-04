@@ -175,7 +175,7 @@
 
             foreach (int spell in this.SpellIDs)
             {
-                productionSlots.Add(new LogicDataSlot(spell, 1).Save());
+                productionSlots.Add(new LogicDataSlot(spell, 1).SaveToJSON());
             }
 
             LogicJSONObject jObject = new LogicJSONObject();

@@ -55,7 +55,7 @@
 
                 foreach (var spell in this.Values)
                 {
-                    array.Add(spell.Save());
+                    array.Add(spell.SaveToJSON());
                 }
 
                 return array;

@@ -73,7 +73,7 @@
         /// <summary>
         /// Saves this <see cref="LogicDataSlot"/> to the returned <see cref="LogicJSONObject"/>.
         /// </summary>
-        internal LogicJSONObject Save()
+        internal LogicJSONObject SaveToJSON()
         {
             LogicJSONObject json = new LogicJSONObject();
 
@@ -84,9 +84,9 @@
         }
 
         /// <summary>
-        /// Loads this <see cref="LogicDataSlot"/> from the specified <see cref="LogicJSONObject"/>.
+        /// Reads this <see cref="LogicDataSlot"/> from the specified <see cref="LogicJSONObject"/>.
         /// </summary>
-        internal void Load(LogicJSONObject json)
+        internal void ReadFromJSON(LogicJSONObject json)
         {
             this.Id    = json.GetJsonNumber("id").GetIntValue();
             this.Count = json.GetJsonNumber("cnt").GetIntValue();

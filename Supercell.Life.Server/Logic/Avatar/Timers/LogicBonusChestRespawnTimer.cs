@@ -128,7 +128,7 @@
             {
                 if (this.Avatar.NpcProgress != null)
                 {
-                    var basicQuests = this.Avatar.QuestMoves.Values.ToList();
+                    var basicQuests = this.Avatar.NpcProgress.Values.ToList();
 
                     if (basicQuests.Count > 1)
                     {

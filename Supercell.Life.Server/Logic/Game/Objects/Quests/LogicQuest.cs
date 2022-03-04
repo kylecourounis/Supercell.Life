@@ -1,6 +1,7 @@
 ﻿namespace Supercell.Life.Server.Logic.Game.Objects.Quests
 {
     using System;
+    using System.Linq;
 
     using Newtonsoft.Json;
 
@@ -27,13 +28,14 @@
         internal int GoldReward;
         internal int XPReward;
 
+        internal int ReplayLevel;
         internal int ReplayGoldReward;
         internal int ReplayXPReward;
 
         internal bool IsReplaying;
 
         internal LogicArrayList<LogicCharacter> Characters;
-        internal int CharacterIndex;
+        internal int CharacterIndex = 1;
 
         /// <summary>
         /// Gets the global identifier for the <see cref="LogicQuestData"/> instance in this class.
@@ -58,9 +60,6 @@
                 return this.Avatar.NpcProgress.GetCount(this.GlobalID);
             }
         }
-
-        [JsonProperty] internal int ReplayProgress;
-        [JsonProperty] internal int ReplayMoves;
 
         /// <summary>
         /// Gets the number of moves in this <see cref="LogicQuest"/>.
@@ -106,23 +105,14 @@
                 if (this.Avatar.NpcProgress.ContainsKey(this.GlobalID) && this.Level == this.Levels.Size)
                 {
                     this.IsReplaying = true;
-
-                    if (this.ReplayProgress >= this.Levels.Count)
-                    {
-                        this.ReplayProgress = 0;
-                    }
+                    this.ReplayLevel = this.Avatar.Connection.GameMode.Random.Rand(this.Levels.Size);
                 }
-
-                if (!this.IsReplaying)
-                {
-                    this.ReplayMoves = 0;
-                }
-
+                
                 this.Avatar.OngoingQuestData = this;
                 this.Avatar.CommodityChangeCountHelper(CommodityType.Energy, -this.Data.Energy);
 
                 this.Characters.Clear();
-
+                
                 foreach (var hero in this.Avatar.Team.ToObject<int[]>())
                 {
                     this.Avatar.HeroQuests.AddItem(hero, 1);
@@ -160,11 +150,11 @@
                         {
                             this.GoldReward = this.ReplayGoldReward;
                             this.XPReward   = this.ReplayXPReward;
-
-                            this.ReplayProgress++;
-                            this.ReplayMoves += this.SublevelMoveCount;
-
-                            this.SublevelMoveCount = 0;
+                            
+                            if (this.SublevelMoveCount < this.Avatar.QuestMoves.GetMovesForLevel(this.GlobalID, this.ReplayLevel))
+                            { 
+                                this.Avatar.QuestMoves.Set(this.GlobalID, this.ReplayLevel, this.SublevelMoveCount);
+                            }
 
                             if (this.Avatar.BonusChestRespawnTimer.ReplayQuest == this.GlobalID)
                             {
@@ -172,10 +162,7 @@
 
                                 if (this.Avatar.BonusChestRespawnTimer.ReplayChestTimes == 5)
                                 {
-                                    if (this.ReplayMoves < this.Moves)
-                                    {
-                                        this.Avatar.QuestMoves.Set(this.GlobalID, this.ReplayMoves);
-                                    }
+                                    // Create Chest
                                 }
                             }
                         }
@@ -204,14 +191,14 @@
                             if (this.Avatar.NpcProgress.GetCount(this.GlobalID) < this.Levels.Size)
                             {
                                 this.Avatar.NpcProgress.AddItem(this.GlobalID, 1);
-                                this.Avatar.QuestMoves.AddItem(this.GlobalID, this.SublevelMoveCount);
+                                this.Avatar.QuestMoves.AddItem(this.GlobalID, this.Level - 1, this.SublevelMoveCount);
 
                                 this.SublevelMoveCount = 0;
                             }
 
                             if (this.Level == this.Levels.Size)
                             {
-                                if (this.Moves <= this.Data.GoalMoveCount)
+                                if (this.Avatar.QuestMoves.GetCount(this.GlobalID) <= this.Data.GoalMoveCount)
                                 {
                                     if (!this.Avatar.Crowns.Contains(this.GlobalID))
                                     {
@@ -253,13 +240,16 @@
         /// </summary>
         internal void CalculateChestLoot()
         {
-            if (this.Level == this.Levels.Size && (this.Data.QuestType != "Unlock" || this.Data.QuestType != "PvP"))
+            if (!this.IsReplaying)
             {
-                Debugger.Debug("Create a chest.");
-            }
-            else
-            {
-                Debugger.Debug("No chest yet.");
+                if (this.Level == this.Levels.Size && (this.Data.QuestType != "Unlock" || this.Data.QuestType != "PvP"))
+                {
+                    Debugger.Debug("Create a chest.");
+                }
+                else
+                {
+                    Debugger.Debug("No chest yet.");
+                }
             }
         }
     }

@@ -57,10 +57,10 @@
             {
                 if (commandManager.Commands != null)
                 {
-                    do
+                    while (commandManager.Commands.Size > 0)
                     {
                         commandManager.ExecuteCommand(commandManager.Commands[0]);
-                    } while (commandManager.Commands.Size > 0);
+                    }
 
                     this.Connection.GameMode.Avatar.Save();
                 }

@@ -40,7 +40,6 @@
             try
             {
                 APIHandler.Listener = new HttpListener();
-                APIHandler.Listener.Prefixes.Add("http://brokencell.home:8080/");
                 APIHandler.Listener.Prefixes.Add("http://127.0.0.1:8080/");
                 APIHandler.Listener.Prefixes.Add("http://*:8080/");
                 APIHandler.Listener.Start();
@@ -78,16 +77,23 @@
         /// </summary>
         private static void EndProcess(this HttpListenerContext context)
         {
-            LogicLong player = LogicTagUtil.ToLogicLong(context.Request.QueryString["player"]);
-            int debugCmd     = LogicStringUtil.ConvertToInt(context.Request.QueryString["command"]);
-            
+            LogicLong player = new LogicLong(0, LogicStringUtil.ConvertToInt(context.Request.QueryString["player"]));
+            int debugAction  = LogicStringUtil.ConvertToInt(context.Request.QueryString["action"]);
+            int argument     = LogicStringUtil.ConvertToInt(context.Request.QueryString["argument"]);
+            int globalID     = LogicStringUtil.ConvertToInt(context.Request.QueryString["globalID"]);
+
             Connection connection = Avatars.Get(player).Connection;
 
             if (connection != null)
             {
                 if (connection.IsConnected && LogicVersion.IsIntegration)
                 {
-                    new AvailableServerCommandMessage(connection, new LogicDebugCommand(connection, debugCmd)).Send();
+                    new AvailableServerCommandMessage(connection, new LogicDebugCommand(connection, debugAction)
+                    {
+                        IntArgument = argument,
+                        GlobalID = globalID
+                    }).Send();
+
                     context.Response.Close(LogicStringUtil.GetBytes("OK"), true);
                 }
                 else

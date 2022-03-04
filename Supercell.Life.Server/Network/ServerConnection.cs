@@ -315,14 +315,7 @@
         /// </summary>
         private static void OnSendCompleted(object sender, SocketAsyncEventArgs asyncEvent)
         {
-            if (asyncEvent.DisconnectReuseSocket)
-            {
-                ServerConnection.WritePool.Enqueue(asyncEvent);
-            }
-            else
-            {
-                asyncEvent.Dispose();
-            }
+            ServerConnection.WritePool.Enqueue(asyncEvent);
         }
 
         /// <summary>
@@ -343,16 +336,9 @@
 
             Connections.Remove(token.Connection);
 
-            if (asyncEvent.DisconnectReuseSocket)
-            {
-                ServerConnection.ReadPool.Enqueue(asyncEvent);
-            }
-            else
-            {
-                asyncEvent.Dispose();
-            }
-
             token.Dispose();
+
+            ServerConnection.ReadPool.Enqueue(asyncEvent);
         }
     }
 }

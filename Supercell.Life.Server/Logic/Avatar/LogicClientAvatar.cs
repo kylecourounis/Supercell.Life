@@ -54,7 +54,8 @@ namespace Supercell.Life.Server.Logic.Avatar
         [JsonProperty] internal JArray Team;
 
         [JsonProperty] internal Rank Rank;
-
+        
+        [JsonProperty] internal int TotalSessions;
         [JsonProperty] internal DateTime Update = DateTime.UtcNow;
         [JsonProperty] internal DateTime Created = DateTime.UtcNow;
         [JsonProperty] internal DateTime BanTime = DateTime.UtcNow;
@@ -63,7 +64,7 @@ namespace Supercell.Life.Server.Logic.Avatar
 
         [JsonProperty] internal Facebook Facebook;
 
-        [JsonProperty] internal LogicDataSlots AchievementProgress;
+        [JsonProperty] internal LogicAchievementProgress AchievementProgress;
         [JsonProperty] internal LogicResources Resources;
         [JsonProperty] internal LogicVariables Variables;
 
@@ -255,7 +256,7 @@ namespace Supercell.Life.Server.Logic.Avatar
             this.Time                    = new LogicTime();
             this.Team                    = new JArray(Globals.StartingCharacter.GlobalID);
 
-            this.AchievementProgress     = new LogicDataSlots(this);
+            this.AchievementProgress     = new LogicAchievementProgress(this);
             this.Resources               = new LogicResources(this);
             this.Variables               = new LogicVariables(this);
 
@@ -395,7 +396,7 @@ namespace Supercell.Life.Server.Logic.Avatar
         /// </summary>
         internal void Encode(ByteStream stream)
         {
-            stream.WriteInt(0); // 'sub_19AAC4' - weird int written before the ID
+            stream.WriteInt(0); // LogicBase::encode
 
             stream.WriteLogicLong(this.Identifier);
             

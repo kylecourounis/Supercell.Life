@@ -151,7 +151,7 @@
         /// </summary>
         private void Login()
         {
-            this.Connection.GameMode.Avatar.Connection ??= this.Connection;
+            this.Connection.GameMode.Avatar.Connection = this.Connection;
 
             new LoginOkMessage(this.Connection).Send();
             new OwnAvatarDataMessage(this.Connection).Send();

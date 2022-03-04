@@ -85,7 +85,7 @@
 
                 foreach (var quest in this.Values)
                 {
-                    array.Add(quest.Save());
+                    array.Add(quest.SaveToJSON());
                 }
 
                 return array;

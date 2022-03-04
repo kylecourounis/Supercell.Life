@@ -4,7 +4,7 @@
 
     public class LogicRandom
     {
-        private int Seed = -237100689;
+        private int Seed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicRandom"/> class.
@@ -31,17 +31,17 @@
             
             if (max >= 1)
             {
-                int seed = this.IterateRandomSeed();
+                this.Seed = this.IterateRandomSeed();
 
                 int v6;
 
-                if (seed <= -1)
+                if (this.Seed <= -1)
                 {
-                    v6 = -seed;
+                    v6 = -this.Seed;
                 }
                 else
                 {
-                    v6 = seed;
+                    v6 = this.Seed;
                 }
 
                 result = v6 % max;

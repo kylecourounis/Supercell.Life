@@ -1,7 +1,6 @@
 ﻿namespace Supercell.Life.Server.Logic.Game.Objects
 {
-    using Supercell.Life.Titan.Logic.Math;
-
+    using Supercell.Life.Server.Core;
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic.Avatar;
@@ -12,7 +11,7 @@
         private readonly LogicClientAvatar Avatar;
 
         internal byte[] byte_2B415A = { 2, 0, 0, 0, 0, 0, 1, 0, 5, 0, 0, 2, 0, 0, 1, 0, 1 };
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicChest"/> class.
         /// </summary>
@@ -71,12 +70,15 @@
                     break;
                 }
             }
-
+            
             int v101 = this.Avatar.Connection.GameMode.Random.Rand(max - min);
-
-            var (modGold, modXP) = this.Generate(v101, min);
+            int v103 = this.Avatar.Connection.GameMode.Random.Rand(max - min);
+            
+            var (modGold, modXP) = this.Generate(v101, v103, min);
 
             Debugger.Debug($"CHEST: mod range: [{min} -> {max}] -> MOD GOLD: = {modGold} MOD XP: = {modXP}");
+
+
         }
 
         /// <summary>
@@ -85,71 +87,23 @@
         internal void CreateMapChest()
         {
             LogicExperienceLevelData expLevelData = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataWithID(this.Avatar.ExpLevel - 1);
-
-            var (goldSeed, xpSeed, modify) = this.GetSeeds();
             
-            int gold = this.RandomWithSeed(goldSeed, expLevelData.MapChestMinGold, expLevelData.MapChestMaxGold);
-            int xp   = this.RandomWithSeed(xpSeed, expLevelData.MapChestMinXP, expLevelData.MapChestMaxXP);
-
-            switch (modify)
-            {
-                case CommodityType.Gold:
-                {
-                    gold += goldSeed / 2;
-                    break;
-                }
-                case CommodityType.Experience:
-                {
-                    xp += LogicMath.Abs(xpSeed);
-                    break;
-                }
-            }
+            int gold = this.Avatar.Connection.GameMode.Random.Rand(expLevelData.MapChestMinGold, expLevelData.MapChestMaxGold);
+            int xp   = this.Avatar.Connection.GameMode.Random.Rand(expLevelData.MapChestMinXP, expLevelData.MapChestMaxXP);
+            
+            Debugger.Debug($"{gold}, {xp}");
             
             this.Avatar.CommodityChangeCountHelper(CommodityType.Gold, gold);
             this.Avatar.CommodityChangeCountHelper(CommodityType.Experience, xp);
 
             this.Avatar.MapChestTimer.Start();
         }
-
-        /// <summary>
-        /// Generates a pseudo-random number between the specified range with the specified seed.
-        /// </summary>
-        private int RandomWithSeed(int seed, int min, int max)
-        {
-            this.Avatar.Connection.GameMode.Random.SetIteratedRandomSeed(seed);
-            return this.Avatar.Connection.GameMode.Random.Rand(min, max);
-        }
         
-        /// <summary>
-        /// Gets the seeds for LogicRandom based on the number of map chests that have been opened.
-        /// </summary>
-        private (int, int, CommodityType) GetSeeds()
+        private (int, long) Generate(int a1, int a2, int modifier)
         {
-            /*
-             * Triple Structure:
-             *   The first integer is the seed for the gold generation
-             *   The second integer is the seed for the XP generation
-             *   The CommodityType determines which one needs slight modifications after the numbers have been generated
-             */
+            long v104 = (1717986919L * (a2 + modifier)) >> 32;
 
-            switch (this.Avatar.Connection.GameMode.MapChestsOpened)
-            {
-                case 2:
-                {
-                    return (6, 2, CommodityType.Gold);
-                }
-                default:
-                {
-                    return (0, -2, CommodityType.Experience);
-                }
-            }
-        }
-
-        private (int, long) Generate(int rand, int modifier)
-        {
-            long v104 = (1717986919L * (rand + modifier)) >> 32;
-
-            int v322  = 10 * ((rand + modifier) / 10);
+            int v322  = 10 * ((a1 + modifier) / 10);
             long v323 = 10 * (((int)v104 >> 2) + (v104 >> 31));
 
             return (v322, v323);

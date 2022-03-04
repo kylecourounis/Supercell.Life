@@ -47,16 +47,7 @@
             this.SendThread.Start();
             this.ReceiveThread.Start();
         }
-
-        /// <summary>
-        /// Stops the send/receive threads.
-        /// </summary>
-        internal void StopThreads()
-        {
-            this.SendResetEvent.Close();
-            this.ReceiveResetEvent.Close();
-        }
-
+        
         /// <summary>
         /// Dequeues a message and then processes it.
         /// </summary>
@@ -66,7 +57,7 @@
             {
                 this.ReceiveResetEvent.WaitOne();
 
-                while (this.ReceiveQueue.TryDequeue(out PiranhaMessage message))
+                if (this.ReceiveQueue.TryDequeue(out PiranhaMessage message))
                 {
                     Debugger.Info($"Packet {message.Type.ToString().Pad(35)} received from {message.Connection.EndPoint}.");
 
@@ -95,7 +86,7 @@
             {
                 this.SendResetEvent.WaitOne();
 
-                while (this.SendQueue.TryDequeue(out PiranhaMessage message))
+                if (this.SendQueue.TryDequeue(out PiranhaMessage message))
                 {
                     if (message.IsServerToClientMessage)
                     {
