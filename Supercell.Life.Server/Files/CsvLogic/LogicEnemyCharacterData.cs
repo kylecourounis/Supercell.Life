@@ -15,6 +15,11 @@ namespace Supercell.Life.Server.Files.CsvLogic
             this.CreateReferences(this, row);
         }
 
+        public string Name
+        {
+            get; set;
+        }
+
         public string TID
         {
             get; set;

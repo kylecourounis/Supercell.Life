@@ -105,6 +105,14 @@
                 this.Timer.AdjustSubTick();
             }
         }
+        
+        /// <summary>
+        /// Gets the remaining time for this <see cref="LogicEnergyTimer"/>.
+        /// </summary>
+        internal int GetTimeRemaining(int timeSinceLastSave)
+        {
+            return 300 - (this.Timer.RemainingSecs - timeSinceLastSave);
+        }
 
         /// <summary>
         /// Saves this instance to the specified <see cref="LogicJSONObject"/>.

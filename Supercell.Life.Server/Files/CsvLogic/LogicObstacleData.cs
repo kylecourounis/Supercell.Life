@@ -14,6 +14,11 @@ namespace Supercell.Life.Server.Files.CsvLogic
             this.CreateReferences(this, row);
         }
 
+        public string Name
+        {
+            get; set;
+        }
+
         public int Scale
         {
             get; set;
@@ -58,7 +63,17 @@ namespace Supercell.Life.Server.Files.CsvLogic
         {
             get; set;
         }
-        
+
+        public string Shape
+        {
+            get; set;
+        }
+
+        public int Hitpoints
+        {
+            get; set;
+        }
+
         public int Radius
         {
             get; set;

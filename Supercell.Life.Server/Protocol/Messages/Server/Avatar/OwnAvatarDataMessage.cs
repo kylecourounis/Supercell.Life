@@ -34,7 +34,7 @@
 
         internal override void Encode()
         {
-            this.Stream.WriteInt(this.TimeSinceLastSave);
+            this.Stream.WriteInt(this.Connection.GameMode.Avatar.EnergyTimer.GetTimeRemaining(this.TimeSinceLastSave));
             this.Stream.WriteInt(0);
             this.Stream.WriteInt(0);
             this.Stream.WriteInt(0);

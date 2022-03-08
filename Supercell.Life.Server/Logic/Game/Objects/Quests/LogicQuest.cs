@@ -14,6 +14,7 @@
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic.Avatar;
     using Supercell.Life.Server.Logic.Enums;
+    using Supercell.Life.Titan.Logic.Math;
 
     [JsonObject(MemberSerialization.OptIn)]
     internal class LogicQuest
@@ -118,6 +119,19 @@
                     this.Avatar.HeroQuests.AddItem(hero, 1);
                     this.Characters.Add(new LogicCharacter(this.Avatar, hero));
                 }
+
+                this.SetInitialCharacterPositions();
+            }
+        }
+
+        /// <summary>
+        /// Sets the initial character positions.
+        /// </summary>
+        internal void SetInitialCharacterPositions()
+        {
+            for (int i = 0; i < this.Characters.Count; i++)
+            {
+                this.Characters[i].Position = i == 0 ? new LogicVector2(50, 245) : new LogicVector2(this.Characters[i - 1].Position.X + 75, i == 1 ? 250 : 245);
             }
         }
 
@@ -226,7 +240,7 @@
                             this.Avatar.CommodityChangeCountHelper(CommodityType.Experience, this.XPReward);
                         }
 
-                        this.CalculateChestLoot();
+                        this.CreateChest();
                     }
 
                     break;
@@ -235,10 +249,9 @@
         }
 
         /// <summary>
-        /// Calculates the chest loot.
-        /// Very much WIP.
+        /// Creates a chest.
         /// </summary>
-        internal void CalculateChestLoot()
+        internal void CreateChest()
         {
             if (!this.IsReplaying)
             {

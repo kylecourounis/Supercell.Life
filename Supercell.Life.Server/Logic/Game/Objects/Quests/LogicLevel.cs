@@ -1,7 +1,5 @@
 ﻿namespace Supercell.Life.Server.Logic.Game.Objects.Quests
 {
-    using System;
-
     using Supercell.Life.Titan.Logic;
     using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Math;
@@ -124,7 +122,14 @@
             /// </summary>
             internal void CheckCollision(LogicVector2 vector)
             {
+                // TODO: Set a new direction once a hero collides with the level, an obstacle, or an enemy that takes more than one hit to eliminate
+
                 this.UpdateCharacterPosition(vector);
+                
+                if (LogicCollisionHelper.CollideWithLevel(vector))
+                {
+                    this.Level.Quest.Characters[this.Level.Quest.CharacterIndex].Bounces++;
+                }
 
                 if (this.Enemies.Size > 0)
                 {
@@ -132,34 +137,30 @@
                     {
                         Enemy enemy = this.Enemies[i];
                         
-                        LogicVector2 enemyVector = new LogicVector2(enemy.X / 255 / 255, -(enemy.Y / 255 / 255));
-                        Debugger.Debug($"{enemy.Data.ExportName} - Coords : {enemyVector}, Angle Between : {enemyVector.GetAngleBetween(vector.X, vector.Y)}, Distance Between : {vector.GetDistance(enemyVector)}");
+                        LogicVector2 enemyVector = new LogicVector2(enemy.X / (255 * 255), enemy.Y / (255 * 255));
+                        Debugger.Debug($"{enemy.Data.Name} - Coords : {enemyVector}, Angle Between : {enemyVector.GetAngleBetween(vector.X, vector.Y)}, Distance Between : {vector.GetDistance(enemyVector)}");
                         
                         if (this.Level.Quest.SublevelMoveCount == enemy.FirstAttackOnTurn)
                         {
-                            this.DamageCharacter(enemy, vector, enemyVector);
+                            foreach (LogicCharacter character in this.Level.Quest.Characters)
+                            {
+                                this.DamageCharacter(enemy, character.Position, enemyVector);
+                            }
                         }
                         else if (this.Level.Quest.SublevelMoveCount > enemy.FirstAttackOnTurn)
                         {
                             if (this.Level.Quest.SublevelMoveCount % enemy.AttackTurnSeq == 0)
                             {
-                                this.DamageCharacter(enemy, vector, enemyVector);
+                                foreach (LogicCharacter character in this.Level.Quest.Characters)
+                                {
+                                    this.DamageCharacter(enemy, character.Position, enemyVector);
+                                }
                             }
                         }
-
-                        if (enemyVector.GetAngleBetween(vector.X, vector.Y) <= enemy.Data.Radius)
+                        
+                        if (enemyVector.GetAngleBetween(vector.X, vector.Y) <= enemy.Data.Radius + this.Level.Quest.Characters[this.Level.Quest.CharacterIndex].HeroData.Radius)
                         {
-                            enemy.Hitpoints -= this.Level.Quest.Characters[this.Level.Quest.CharacterIndex].Damage;
-
-                            Debugger.Debug(enemy.Hitpoints + this.Level.Quest.Characters[this.Level.Quest.CharacterIndex].Damage + " -> " + enemy.Hitpoints);
-
-                            if (enemy.Hitpoints <= 0)
-                            {
-                                Debugger.Debug(this.Enemies[i].Data.GlobalID);
-
-                                this.Enemies.RemoveAt(i);
-                                this.EnemiesKilled++;
-                            }
+                            this.HitEnemy(i);
                         }
                     }
 
@@ -167,28 +168,22 @@
                     {
                         Obstacle obstacle = this.Obstacles[i];
                         
-                        LogicVector2 obstacleVector = new LogicVector2(obstacle.X / 255 / 255, -(obstacle.Y / 255 / 255));
-                        Debugger.Debug($"{obstacle.Data.ExportName} - Coords : {obstacleVector}, Angle Between : {obstacleVector.GetAngleBetween(vector.X, vector.Y)}, Distance Between : {vector.GetDistance(obstacleVector)}");
+                        LogicVector2 obstacleVector = new LogicVector2(obstacle.X / (255 * 255), obstacle.Y / (255 * 255));
+                        Debugger.Debug($"{obstacle.Data.Name} - Coords : {obstacleVector}, Angle Between : {obstacleVector.GetAngleBetween(vector.X, vector.Y)}, Distance Between : {vector.GetDistance(obstacleVector)}");
                         
                         if (obstacleVector.GetAngleBetween(vector.X, vector.Y) <= obstacle.Data.Radius)
                         {
-                            obstacle.Hits++;
-
-                            if (obstacle.Hits == 3)
-                            {
-                                Debugger.Debug(this.Obstacles[i].Data.GlobalID);
-
-                                this.Obstacles.RemoveAt(i);
-                            }
+                            this.HitObstacle(i);
                         }
                     }
                 }
-
+                
                 Debugger.Debug($"Current Battle: {this.Level.CurrentBattle}");
 
                 if (this.IsCompleted)
                 {
                     this.Level.CurrentBattle++;
+                    this.Level.Quest.SetInitialCharacterPositions();
                 }
             }
 
@@ -199,7 +194,64 @@
             {
                 this.Level.Quest.Characters[this.Level.Quest.CharacterIndex].Position = position;
             }
-            
+
+            /// <summary>
+            /// Hits the <see cref="Enemy"/> at the specified index.
+            /// </summary>
+            internal void HitEnemy(int idx)
+            {
+                Enemy enemy = this.Enemies[idx];
+
+                enemy.Hitpoints -= this.Level.Quest.Characters[this.Level.Quest.CharacterIndex].Damage;
+
+                if (enemy.Hitpoints <= 0)
+                {
+                    Debugger.Debug($"Removed {enemy.Data.Name} ({enemy.Hitpoints + this.Level.Quest.Characters[this.Level.Quest.CharacterIndex].Damage} -> {enemy.Hitpoints})");
+
+                    this.Enemies.RemoveAt(idx);
+                    this.EnemiesKilled++;
+                }
+            }
+
+            /// <summary>
+            /// Hits the <see cref="Obstacle"/> at the specified index.
+            /// </summary>
+            internal void HitObstacle(int idx)
+            {
+                Obstacle obstacle = this.Obstacles[idx];
+                    
+                obstacle.Hits++;
+                this.Level.Quest.Characters[this.Level.Quest.CharacterIndex].Bounces++;
+
+                if (obstacle.Data.GlobalID == 15000001) // Beehive
+                {
+                    switch (obstacle.Hits)
+                    {
+                        case 1:
+                        {
+                            // this.Enemies.Add(new Enemy(12000002, obstacle.X / (255 * 255) - 5, obstacle.Y / (255 * 255)));
+                            break;
+                        }
+                        case 2:
+                        {
+                            // this.Enemies.Add(new Enemy(12000002, obstacle.X / (255 * 255), obstacle.Y / (255 * 255) + 5));
+                            break;
+                        }
+                        case 3:
+                        {
+                            // this.Enemies.Add(new Enemy(12000002, obstacle.X / (255 * 255), obstacle.Y / (255 * 255) - 5));
+                            break;
+                        }
+                    }
+                }
+
+                if (obstacle.Hits == obstacle.Data.Hitpoints)
+                {
+                    Debugger.Debug($"Removed {obstacle.Data.Name}");
+                    this.Obstacles.RemoveAt(idx);
+                }
+            }
+
             /// <summary>
             /// Damages the character.
             /// </summary>
@@ -207,9 +259,9 @@
             {
                 if (this.Level.Quest.Characters.Count > 1)
                 {
-                    int distance = enemyVector.GetDistance(heroVector);
+                    int angle = enemyVector.GetAngleBetween(heroVector.X, heroVector.Y);
 
-                    if (distance <= enemy.Data.Radius)
+                    if (angle <= enemy.Data.Radius)
                     {
                         LogicCharacter character = this.Level.Quest.Characters.Find(c => c.Position.IsEqual(heroVector));
                         character?.HitCharacter(enemy.Damage);

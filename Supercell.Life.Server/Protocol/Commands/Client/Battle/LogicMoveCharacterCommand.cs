@@ -50,11 +50,11 @@
 
         internal override void Execute(LogicGameMode gamemode)
         {
-            LogicVector2 vector = new LogicVector2(LogicMath.Abs(this.DirectionX), LogicMath.Abs(this.DirectionY));
+            LogicVector2 vector = new LogicVector2(256 - LogicMath.Abs(this.DirectionX), LogicMath.Abs(this.DirectionY));
 
             Debugger.Debug($"DirectionX : {this.DirectionX}, DirectionY : {this.DirectionY}, Value : {this.Value} (S : {this.S}, F : {this.F})");
-            Debugger.Debug($"Coords : {vector}, Angle : {vector.Angle}, Length : {vector.Length}");
-            
+            Debugger.Debug($"Coords : {vector}, Angle : {vector.Angle}");
+
             var battle = gamemode.Battle;
 
             if (battle == null)

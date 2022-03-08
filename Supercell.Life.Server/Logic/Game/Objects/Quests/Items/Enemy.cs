@@ -5,6 +5,7 @@
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic.Enums;
+    using Supercell.Life.Titan.Logic.Utils;
 
     internal class Enemy
     {
@@ -52,6 +53,20 @@
         internal int Damage;
         internal int FirstAttackOnTurn;
         internal int AttackTurnSeq;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Enemy"/> class.
+        /// </summary>
+        internal Enemy(int globalID, int x, int y)
+        {
+            this.Data  = (LogicEnemyCharacterData)CSV.Tables.Get(Gamefile.EnemyCharacters).GetDataWithID(globalID);
+            this.X     = x;
+            this.Y     = y;
+            this.Team  = 1;
+            this.Level = LogicStringUtil.ConvertToInt(this.Data.ExportName.Split("_")[2].Replace("lvl", string.Empty));
+
+            this.Initialize();
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Enemy"/> class.

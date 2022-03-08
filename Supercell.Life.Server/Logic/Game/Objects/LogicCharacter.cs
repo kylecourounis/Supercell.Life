@@ -19,6 +19,8 @@
 
         internal int SpecialAttackDamage;
 
+        internal int Bounces;
+
         internal LogicVector2 Position;
 
         /// <summary>
