@@ -97,15 +97,12 @@
             {
                 if (command.ExecuteSubTick <= command.Subtick)
                 {
-                    if (this.Connection.GameMode.Avatar.Time.ClientSubTick <= command.ExecuteSubTick)
-                    {
-                        this.Connection.GameMode.Avatar.Time.ClientSubTick = command.ExecuteSubTick;
-                        this.Connection.GameMode.Tick();
-                        
-                        this.Commands.Remove(command);
+                    this.Connection.GameMode.Avatar.Time.ClientSubTick = command.ExecuteSubTick;
+                    this.Connection.GameMode.Tick();
 
-                        command.Execute(this.Connection.GameMode);
-                    }
+                    this.Commands.Remove(command);
+
+                    command.Execute(this.Connection.GameMode);
                 }
                 else Debugger.Error($"Execute command failed! Command should have already executed. (type={command.Type}, server_tick)");
             }

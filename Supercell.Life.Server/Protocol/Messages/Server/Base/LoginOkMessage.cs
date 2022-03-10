@@ -48,7 +48,7 @@
             this.Stream.WriteInt(this.Connection.GameMode.Avatar.TimePlayed); // Played Time
             this.Stream.WriteInt(0); // Played Time in day
 
-            this.Stream.WriteString(null); // 103121310241222
+            this.Stream.WriteString(null); // Facebook ID
             this.Stream.WriteString(string.Empty);
             this.Stream.WriteString(string.Empty);
 

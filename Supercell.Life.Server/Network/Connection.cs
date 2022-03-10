@@ -26,11 +26,15 @@
         internal LogicGameMode GameMode;
 
         internal State State = State.Disconnected;
-
-        // LogicDefines
+        
+        internal bool Android;
+        internal bool Advertising;
+        internal string UDID;
         internal string MACAddress;
         internal string DeviceModel;
-        // ------------
+        internal string ADID;
+        internal string OSVersion;
+        internal string PreferredLanguage;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Connection"/> class.

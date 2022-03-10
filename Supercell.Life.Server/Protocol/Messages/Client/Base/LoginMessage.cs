@@ -20,13 +20,13 @@
         private LogicLong AvatarID;
         
         private string Token;
-        private string MasterHash;
 
         private int Major;
         private int Minor;
         private int Build;
-
-        private string Language;
+        private string MasterHash;
+        
+        private int Seed;
 
         /// <summary>
         /// The service node for this message.
@@ -58,9 +58,42 @@
             this.MasterHash             = this.Stream.ReadString();
 
             this.Stream.ReadString();
-            this.Stream.ReadString();
+            this.Connection.UDID        = this.Stream.ReadString();
             this.Connection.MACAddress  = this.Stream.ReadString();
             this.Connection.DeviceModel = this.Stream.ReadString();
+            
+            this.Stream.ReadBytes(4);
+
+            if (!this.Stream.IsAtEnd)
+            {
+                this.Connection.PreferredLanguage = this.Stream.ReadString();
+
+                if (!this.Stream.IsAtEnd)
+                {
+                    this.Connection.ADID          = this.Stream.ReadString();
+
+                    if (!this.Stream.IsAtEnd)
+                    {
+                        this.Connection.OSVersion = this.Stream.ReadString();
+                        this.Connection.Android   = this.Stream.ReadBoolean(); // This will always be false
+
+                        this.Stream.ReadInt(); // 0
+
+                        this.Stream.ReadByte(); // 0
+                        this.Stream.ReadByte(); // 0
+                        this.Stream.ReadByte(); // 0
+                        this.Stream.ReadByte(); // 0
+
+                        this.Stream.ReadString();
+
+                        this.Connection.Advertising = this.Stream.ReadBoolean();
+
+                        this.Stream.ReadString(); 
+
+                        this.Seed                   = this.Stream.ReadInt();
+                    }
+                }
+            }
         }
 
         internal override void Handle()
@@ -152,6 +185,8 @@
         private void Login()
         {
             this.Connection.GameMode.Avatar.Connection = this.Connection;
+
+            this.Connection.GameMode.Random.SetIteratedRandomSeed(this.Seed);
 
             new LoginOkMessage(this.Connection).Send();
             new OwnAvatarDataMessage(this.Connection).Send();

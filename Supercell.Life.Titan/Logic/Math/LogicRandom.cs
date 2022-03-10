@@ -77,6 +77,14 @@
         }
 
         /// <summary>
+        /// Gets the iterated random seed.
+        /// </summary>
+        public int GetIteratedRandomSeed()
+        {
+            return this.Seed;
+        }
+
+        /// <summary>
         /// Sets the iterated random seed.
         /// </summary>
         public void SetIteratedRandomSeed(int randSeed)
