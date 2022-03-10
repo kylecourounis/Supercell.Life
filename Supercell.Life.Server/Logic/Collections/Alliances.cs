@@ -291,6 +291,8 @@
                     }
                 }
 
+                Alliances.Add(alliance);
+
                 return alliance;
             }
 
