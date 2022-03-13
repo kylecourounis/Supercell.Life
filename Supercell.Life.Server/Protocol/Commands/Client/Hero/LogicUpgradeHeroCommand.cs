@@ -11,7 +11,7 @@
 
     internal class LogicUpgradeHeroCommand : LogicCommand
     {
-        private LogicHeroData Hero;
+        internal LogicHeroData Hero;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicUpgradeHeroCommand"/> class.
@@ -49,7 +49,7 @@
                         }
                     }
 
-                    string[] cost = this.Hero.Cost[gamemode.Avatar.HeroLevels.GetCount(this.Hero.GlobalID)].Split(',');
+                    string[] cost = this.Hero.Cost[gamemode.Avatar.HeroLevels.GetCount(this.Hero.GlobalID) + 1].Split(',');
 
                     if (cost.Length >= 7)
                     {
@@ -108,7 +108,7 @@
 
                         if (orb3 != 0)
                         {
-                            if (!gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb2, -orb3))
+                            if (!gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb3, -orb3))
                             {
                                 Debugger.Error($"Unable to upgrade the hero. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough of orb3. (Orb3 : {gamemode.Avatar.Orb3}, Require : {orb3})");
                                 return;

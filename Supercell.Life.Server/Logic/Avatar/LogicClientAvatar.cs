@@ -576,7 +576,7 @@ namespace Supercell.Life.Server.Logic.Avatar
                 {
                     if (amount < 0)
                     {
-                        if (this.Resources.GetResourceCount(commodity) < amount)
+                        if (this.Resources.GetResourceCount(commodity) < LogicMath.Abs(amount))
                         {
                             return false;
                         }

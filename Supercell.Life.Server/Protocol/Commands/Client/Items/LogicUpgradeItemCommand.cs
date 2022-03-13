@@ -11,7 +11,7 @@
 
     internal class LogicUpgradeItemCommand : LogicCommand
     {
-        private LogicItemsData Item;
+        internal LogicItemsData Item;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicUpgradeItemCommand"/> class.
@@ -32,7 +32,7 @@
         {
             if (gamemode.Avatar.ExpLevel >= this.Item.RequiredXp)
             {
-                string[] cost = this.Item.Cost[gamemode.Avatar.ItemLevels.GetCount(this.Item.GlobalID)].Split(',');
+                string[] cost = this.Item.Cost[gamemode.Avatar.ItemLevels.GetCount(this.Item.GlobalID) + 1].Split(',');
 
                 if (cost.Length >= 7)
                 {
@@ -91,7 +91,7 @@
 
                     if (orb3 != 0)
                     {
-                        if (!gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb2, -orb3))
+                        if (!gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb3, -orb3))
                         {
                             Debugger.Error($"Unable to upgrade the item. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough of orb3. (Orb3 : {gamemode.Avatar.Orb3}, Require : {orb3})");
                             return;

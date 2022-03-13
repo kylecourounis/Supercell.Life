@@ -57,6 +57,8 @@
         internal static int ResourceDiamondCost100000;
         internal static int ResourceDiamondCost500000;
         internal static int ResourceDiamondCost1000000;
+        internal static int ResourceDiamondCost10000000;
+        internal static int ResourceEnergyCostPerUnit;
 
         internal static int MapChestRespawnTime;
 
@@ -145,6 +147,8 @@
             Globals.ResourceDiamondCost100000        = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("RESOURCE_DIAMOND_COST_100000")).NumberValue;
             Globals.ResourceDiamondCost500000        = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("RESOURCE_DIAMOND_COST_500000")).NumberValue;
             Globals.ResourceDiamondCost1000000       = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("RESOURCE_DIAMOND_COST_1000000")).NumberValue;
+            Globals.ResourceDiamondCost10000000      = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("RESOURCE_DIAMOND_COST_10000000")).NumberValue;
+            Globals.ResourceEnergyCostPerUnit        = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("RESOURCE_ENERGY_COST_PER_UNIT")).NumberValue;
             
             Globals.MapChestRespawnTime              = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("MAP_CHEST_RESPAWN_TIME")).NumberValue;
             

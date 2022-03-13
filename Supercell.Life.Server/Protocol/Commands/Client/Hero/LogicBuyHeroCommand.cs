@@ -33,7 +33,7 @@
         {
             if (gamemode.Avatar.ExpLevel >= this.Hero.RequiredXpLevel)
             {
-                string[] cost = this.Hero.Cost[gamemode.Avatar.ItemLevels.GetCount(this.Hero.GlobalID)].Split(',');
+                string[] cost = this.Hero.Cost[gamemode.Avatar.ItemLevels.GetCount(this.Hero.GlobalID) + 1].Split(',');
 
                 if (cost.Length >= 7)
                 {
@@ -92,7 +92,7 @@
 
                     if (orb3 != 0)
                     {
-                        if (!gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb2, -orb3))
+                        if (!gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Orb3, -orb3))
                         {
                             Debugger.Error($"Unable to buy the hero. {gamemode.Avatar.Name} ({gamemode.Avatar}) does not have enough of orb3. (Orb3 : {gamemode.Avatar.Orb3}, Require : {orb3})");
                             return;

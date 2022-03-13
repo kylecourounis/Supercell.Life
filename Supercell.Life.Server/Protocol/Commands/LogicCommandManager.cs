@@ -294,6 +294,10 @@
                 {
                     return new LogicSpeedUpItemCommand(connection);
                 }
+                case Command.BuyRemainingResources:
+                {
+                    return new LogicBuyRemainingResourcesCommand(connection);
+                }
                 case Command.MoveCharacter:
                 {
                     return new LogicMoveCharacterCommand(connection);

@@ -3,6 +3,7 @@
     using Supercell.Life.Titan.Logic.Math;
 
     using Supercell.Life.Server.Logic.Avatar;
+    using Supercell.Life.Server.Logic.Enums;
 
     internal class LogicGamePlayUtil
     {
@@ -229,6 +230,80 @@
             }
 
             return LogicGamePlayUtil.CalculateSpeedUpCost(time, multiplier);
+        }
+
+        /// <summary>
+        /// Gets the diamond cost for the specified commodity.
+        /// </summary>
+        internal static int GetResourceDiamondCost(int count, CommodityType commodity)
+        {
+            if (LogicMath.Min(0x7FFFFFFF, 14000000) < count)
+            {
+                return 99999999;
+            }
+
+            if (commodity.ToString().StartsWith("Orb"))
+            {
+                if (count > 0)
+                {
+                    // TODO
+                    // return *(_DWORD*)(v5 + 208) * count;
+                }
+
+                Debugger.Warning("getResourceDiamondCost resourceCount <= 0");
+            }
+            if (commodity == CommodityType.Energy)
+            {
+                if (count > 0)
+                {
+                    return Globals.ResourceEnergyCostPerUnit * count;
+                }
+
+                Debugger.Warning("getResourceDiamondCost energy resourceCount <= 0");
+            }
+            
+            if (count >= 1)
+            {
+                if (count >= 100)
+                {
+                    if (count >= 1000)
+                    {
+                        if (count >= 10000)
+                        {
+                            if (count >= 50000)
+                            {
+                                if (count >= 100000)
+                                {
+                                    if (count >= 500000)
+                                    {
+                                        if (count >= 1000000)
+                                        {
+                                            return Globals.ResourceDiamondCost10000000 + ((Globals.ResourceDiamondCost10000000 - Globals.ResourceDiamondCost10000000) * (count / 1000 - 1000) + 4500) / 9000;
+                                        }
+
+                                        return Globals.ResourceDiamondCost1000000 + ((Globals.ResourceDiamondCost1000000 - Globals.ResourceDiamondCost1000000) * (count / 100 - 1000) + 4500) / 9000;
+                                    }
+
+                                    return Globals.ResourceDiamondCost500000 + ((Globals.ResourceDiamondCost1000000 - Globals.ResourceDiamondCost500000) * (count / 100 - 1000) + 4500) / 9000;
+                                }
+
+                                return Globals.ResourceDiamondCost50000 + ((Globals.ResourceDiamondCost100000 - Globals.ResourceDiamondCost50000) * (count / 10 - 1000) + 2000) / 9000;
+                            }
+
+                            return Globals.ResourceDiamondCost10000 + ((Globals.ResourceDiamondCost100000 - Globals.ResourceDiamondCost10000) * (count / 10 - 1000) + 4500) / 9000;
+                        }
+
+                        return Globals.ResourceDiamondCost1000 + ((Globals.ResourceDiamondCost10000 - Globals.ResourceDiamondCost100) * (count - 1000) + 4500) / 9000;
+                    }
+
+                    return Globals.ResourceDiamondCost100 + ((Globals.ResourceDiamondCost1000 - Globals.ResourceDiamondCost100) * (count - 100) + 450) / 900;
+                }
+
+                return Globals.ResourceDiamondCost10;
+            }
+
+            Debugger.Warning("getResourceDiamondCost resourceCount <= 0");
+            return 0;
         }
     }
 }

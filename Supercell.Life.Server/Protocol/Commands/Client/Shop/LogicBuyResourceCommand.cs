@@ -38,9 +38,8 @@
                 {
                     int cost = this.DiamondCost;
 
-                    if (gamemode.Avatar.Diamonds >= cost)
+                    if (gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost))
                     {
-                        gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost);
                         gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Gold, this.Amount);
                     }
 
@@ -50,9 +49,8 @@
                 {
                     int cost = this.Amount * 2;
 
-                    if (gamemode.Avatar.Diamonds >= cost)
+                    if (gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost))
                     {
-                        gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost);
                         gamemode.Avatar.EnergyTimer.Stop();
                         gamemode.Avatar.SetCommodityCount(CommodityType.Energy, gamemode.Avatar.MaxEnergy);
                     }
