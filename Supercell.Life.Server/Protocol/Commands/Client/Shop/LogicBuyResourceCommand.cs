@@ -36,8 +36,8 @@
             {
                 case CommodityType.Gold:
                 {
-                    int cost = this.DiamondCost;
-
+                    int cost = LogicGamePlayUtil.GetResourceDiamondCost(this.Amount, CommodityType.Gold);
+                    
                     if (gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost))
                     {
                         gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Gold, this.Amount);
@@ -47,8 +47,8 @@
                 }
                 case CommodityType.Energy:
                 {
-                    int cost = this.Amount * 2;
-
+                    int cost = LogicGamePlayUtil.GetResourceDiamondCost(this.Amount, CommodityType.Energy);
+                    
                     if (gamemode.Avatar.CommodityChangeCountHelper(CommodityType.Diamonds, -cost))
                     {
                         gamemode.Avatar.EnergyTimer.Stop();
@@ -56,52 +56,6 @@
                     }
 
                     break;
-                }
-            }
-        }
-
-        private int DiamondCost
-        {
-            get
-            {
-                switch (this.Amount)
-                {
-                    case 10:
-                    {
-                        return Globals.ResourceDiamondCost10;
-                    }
-                    case 100:
-                    {
-                        return Globals.ResourceDiamondCost100;
-                    }
-                    case 1000:
-                    {
-                        return Globals.ResourceDiamondCost1000;
-                    }
-                    case 10000:
-                    {
-                        return Globals.ResourceDiamondCost10000;
-                    }
-                    case 50000:
-                    {
-                        return Globals.ResourceDiamondCost50000;
-                    }
-                    case 100000:
-                    {
-                        return Globals.ResourceDiamondCost100000;
-                    }
-                    case 500000:
-                    {
-                        return Globals.ResourceDiamondCost500000;
-                    }
-                    case 1000000:
-                    {
-                        return Globals.ResourceDiamondCost1000000;
-                    }
-                    default:
-                    {
-                        return 0;
-                    }
                 }
             }
         }

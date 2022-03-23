@@ -38,7 +38,7 @@
                 gamemode.Avatar.Team.Clear();
             }
 
-            for (int i = 0; i < this.Heroes.Count; i++)
+            for (int i = 0; i < this.Heroes.Size; i++)
             {
                 gamemode.Avatar.Team[i] = this.Heroes[i].GlobalID;
             }

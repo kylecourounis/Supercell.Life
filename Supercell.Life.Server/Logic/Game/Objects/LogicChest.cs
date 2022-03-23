@@ -1,6 +1,5 @@
 ﻿namespace Supercell.Life.Server.Logic.Game.Objects
 {
-    using Supercell.Life.Server.Core;
     using Supercell.Life.Server.Files;
     using Supercell.Life.Server.Files.CsvLogic;
     using Supercell.Life.Server.Logic.Avatar;
@@ -71,14 +70,13 @@
                 }
             }
             
-            int v101 = this.Avatar.Connection.GameMode.Random.Rand(max - min);
-            int v103 = this.Avatar.Connection.GameMode.Random.Rand(max - min);
+            int v101 = this.Avatar.GameMode.Random.Rand(max - min);
+            int v103 = this.Avatar.GameMode.Random.Rand(max - min);
             
             var (modGold, modXP) = this.Generate(v101, v103, min);
 
             Debugger.Debug($"CHEST: mod range: [{min} -> {max}] -> MOD GOLD: = {modGold} MOD XP: = {modXP}");
-
-
+            Debugger.Debug($"{this.Avatar.Gold % modGold}, {this.Avatar.ExpPoints % modXP}");
         }
 
         /// <summary>
@@ -88,8 +86,8 @@
         {
             LogicExperienceLevelData expLevelData = (LogicExperienceLevelData)CSV.Tables.Get(Gamefile.ExperienceLevels).GetDataWithID(this.Avatar.ExpLevel - 1);
             
-            int gold = this.Avatar.Connection.GameMode.Random.Rand(expLevelData.MapChestMinGold, expLevelData.MapChestMaxGold);
-            int xp   = this.Avatar.Connection.GameMode.Random.Rand(expLevelData.MapChestMinXP, expLevelData.MapChestMaxXP);
+            int gold = this.Avatar.GameMode.Random.Rand(expLevelData.MapChestMinGold, expLevelData.MapChestMaxGold);
+            int xp   = this.Avatar.GameMode.Random.Rand(expLevelData.MapChestMinXP, expLevelData.MapChestMaxXP);
             
             Debugger.Debug($"{gold}, {xp}");
             

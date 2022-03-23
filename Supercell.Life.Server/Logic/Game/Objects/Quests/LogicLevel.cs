@@ -257,7 +257,7 @@
             /// </summary>
             internal void DamageCharacter(Enemy enemy, LogicVector2 heroVector, LogicVector2 enemyVector)
             {
-                if (this.Level.Quest.Characters.Count > 1)
+                if (this.Level.Quest.Characters.Size > 1)
                 {
                     int angle = enemyVector.GetAngleBetween(heroVector.X, heroVector.Y);
 

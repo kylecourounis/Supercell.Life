@@ -135,7 +135,7 @@
                         this.PreviousReplayQuest = this.ReplayQuest;
 
                         var completedQuests = basicQuests.Take(basicQuests.Count - 1).ToList();
-                        this.ReplayQuest = completedQuests[this.Avatar.Connection.GameMode.Random.Rand(completedQuests.Count - 1)].Data.GlobalID;
+                        this.ReplayQuest = completedQuests[this.Avatar.GameMode.Random.Rand(completedQuests.Count - 1)].Data.GlobalID;
 
                         if (this.PreviousReplayQuest == 0)
                         {

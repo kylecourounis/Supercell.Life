@@ -106,7 +106,7 @@
                 if (this.Avatar.NpcProgress.ContainsKey(this.GlobalID) && this.Level == this.Levels.Size)
                 {
                     this.IsReplaying = true;
-                    this.ReplayLevel = this.Avatar.Connection.GameMode.Random.Rand(this.Levels.Size);
+                    this.ReplayLevel = this.Avatar.GameMode.Random.Rand(this.Levels.Size);
                 }
                 
                 this.Avatar.OngoingQuestData = this;
@@ -129,7 +129,7 @@
         /// </summary>
         internal void SetInitialCharacterPositions()
         {
-            for (int i = 0; i < this.Characters.Count; i++)
+            for (int i = 0; i < this.Characters.Size; i++)
             {
                 this.Characters[i].Position = i == 0 ? new LogicVector2(50, 245) : new LogicVector2(this.Characters[i - 1].Position.X + 75, i == 1 ? 250 : 245);
             }
@@ -222,7 +222,7 @@
                             }
                         }
 
-                        int goldDrop = this.Avatar.Connection.GameMode.Random.Rand(this.Data.MinGoldDrop, this.Data.MaxGoldDrop); // Best I can do until object collision works
+                        int goldDrop = this.Avatar.GameMode.Random.Rand(this.Data.MinGoldDrop, this.Data.MaxGoldDrop); // Best I can do until object collision works
 
                         this.Avatar.CommodityChangeCountHelper(CommodityType.Gold, this.GoldReward + goldDrop);
 
@@ -258,6 +258,9 @@
                 if (this.Level == this.Levels.Size && (this.Data.QuestType != "Unlock" || this.Data.QuestType != "PvP"))
                 {
                     Debugger.Debug("Create a chest.");
+
+                    LogicChest chest = new LogicChest(this.Avatar);
+                    chest.CreateChest(LogicChest.ChestType.Medium);
                 }
                 else
                 {

@@ -51,7 +51,7 @@
             {
                 if (this.Avatar.HeroLevels.ContainsKey(hero.GlobalID))
                 {
-                    return hero.Cost.Count > this.Avatar.HeroLevels[hero.GlobalID].Count + 1;
+                    return hero.Cost.Size > this.Avatar.HeroLevels[hero.GlobalID].Count + 1;
                 }
             }
 

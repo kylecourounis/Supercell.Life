@@ -49,7 +49,7 @@
                         this.AddRow(new Row(this));
                     }
 
-                    for (int i = 0; i < this.Headers.Count; i++)
+                    for (int i = 0; i < this.Headers.Size; i++)
                     {
                         this.Columns[i].Add(values[i]);
                     }
@@ -70,7 +70,7 @@
         /// </summary>
         public int GetRowCount()
         {
-            return this.Rows.Count;
+            return this.Rows.Size;
         }
 
         /// <summary>
@@ -110,7 +110,7 @@
 
             Column column = this.Columns[columnIdx];
             int nextOffset = 0;
-            if (idx + 1 >= this.Rows.Count)
+            if (idx + 1 >= this.Rows.Size)
             {
                 nextOffset = column.GetSize();
             }
@@ -145,7 +145,7 @@
         /// </summary>
         public int GetColumnRowCount()
         {
-            return this.Columns.Count > 0 ? this.Columns[0].GetSize() : 0;
+            return this.Columns.Size > 0 ? this.Columns[0].GetSize() : 0;
         }
     }
 }

@@ -89,7 +89,7 @@
                 }
                 else
                 {
-                    newLeader = alliance.Members[Loader.Random.Rand(alliance.Members.Count)];
+                    newLeader = alliance.Members[Loader.Random.Rand(alliance.Members.Size)];
 
                     if (newLeader != null)
                     {

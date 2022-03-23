@@ -38,7 +38,7 @@
         {
             avatar.Variables.UpdatePvPVariables(false);
 
-            avatar.Connection.GameMode.Resigned = false;
+            avatar.GameMode.Resigned = false;
         }
 
         /// <summary>

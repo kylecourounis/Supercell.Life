@@ -26,7 +26,7 @@
         
         internal override void Encode()
         {
-            this.Stream.WriteInt(this.Connection.GameMode.Avatar.StreamEntries.Count);
+            this.Stream.WriteInt(this.Connection.GameMode.Avatar.StreamEntries.Size);
 
             this.Connection.GameMode.Avatar.StreamEntries.ForEach(entry =>
             {

@@ -57,7 +57,7 @@
         internal AvatarStreamEntry(LogicClientAvatar avatar)
         {
             this.Avatar = avatar;
-            this.LowID  = this.Avatar.StreamEntries.Count + 1;
+            this.LowID  = this.Avatar.StreamEntries.Size + 1;
         }
 
         /// <summary>

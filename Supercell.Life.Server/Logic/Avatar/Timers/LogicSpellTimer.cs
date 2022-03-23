@@ -83,7 +83,7 @@
                 this.SpellIDs.Remove(this.SpellIDs[slot]);
             }
 
-            if (this.SpellIDs.Count == 0)
+            if (this.SpellIDs.Size == 0)
             {
                 this.Finish();
             }
@@ -142,7 +142,7 @@
             {
                 while (this.Timer.RemainingSecs <= 0)
                 {
-                    if (this.SpellIDs.Count > 0)
+                    if (this.SpellIDs.Size > 0)
                     {
                         this.Avatar.SpellsReady.AddItem(this.Spells[0].GlobalID, 1);
 

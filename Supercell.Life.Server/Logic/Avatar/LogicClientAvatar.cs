@@ -118,6 +118,8 @@ namespace Supercell.Life.Server.Logic.Avatar
 
         internal readonly LogicTime Time;
 
+        internal int TimeSinceLastSave;
+
         /// <summary>
         /// Gets the player identifier.
         /// </summary>
@@ -142,6 +144,11 @@ namespace Supercell.Life.Server.Logic.Avatar
         /// Gets the time played for this <see cref="LogicClientAvatar"/>.
         /// </summary>
         internal int TimePlayed => DateTime.UtcNow.Subtract(this.Created).Seconds;
+
+        /// <summary>
+        /// Gets the instance of <see cref="LogicGameMode"/> for this <see cref="LogicClientAvatar"/>.
+        /// </summary>
+        internal LogicGameMode GameMode => this.Connection.GameMode;
 
         /// <summary>
         /// Gets or sets the gold.

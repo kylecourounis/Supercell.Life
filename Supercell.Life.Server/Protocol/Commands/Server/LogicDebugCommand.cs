@@ -65,7 +65,7 @@
 
                     foreach (var quest in gamemode.Avatar.Quests.Values)
                     {
-                        gamemode.Avatar.NpcProgress.AddItem(quest.GlobalID, quest.Levels.Count);
+                        gamemode.Avatar.NpcProgress.AddItem(quest.GlobalID, quest.Levels.Size);
                         gamemode.Avatar.QuestUnlockSeens.AddItem(quest.GlobalID, 1);
                     }
 

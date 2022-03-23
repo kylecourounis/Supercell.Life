@@ -33,7 +33,7 @@
             {
                 int alreadyBought = gamemode.Avatar.EnergyPackages.GetCount(this.EnergyPackage.GlobalID);
 
-                if (this.EnergyPackage.Diamonds.Count > alreadyBought)
+                if (this.EnergyPackage.Diamonds.Size > alreadyBought)
                 {
                     int cost = this.EnergyPackage.Diamonds[alreadyBought];
 

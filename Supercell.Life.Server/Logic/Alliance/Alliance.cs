@@ -54,7 +54,7 @@
         {
             get
             {
-                return this.Entries.Count + 1;
+                return this.Entries.Size + 1;
             }
         }
 
@@ -157,7 +157,7 @@
         {
             entry.LowID = this.Seed;
 
-            if (this.Entries.Count >= 40)
+            if (this.Entries.Size >= 40)
             {
                 this.Entries.RemoveAt(0);
             }

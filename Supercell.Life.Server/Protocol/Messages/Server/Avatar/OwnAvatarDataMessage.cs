@@ -9,8 +9,6 @@
 
     internal class OwnAvatarDataMessage : PiranhaMessage
     {
-        private readonly int TimeSinceLastSave;
-
         /// <summary>
         /// The service node for this message.
         /// </summary>
@@ -27,17 +25,17 @@
         /// </summary>
         public OwnAvatarDataMessage(Connection connection) : base (connection)
         {
-            this.Type              = Message.OwnAvatarData;
-            this.TimeSinceLastSave = (int)DateTime.UtcNow.Subtract(this.Connection.GameMode.Avatar.Update).TotalSeconds;
-            this.Connection.State  = State.Home;
+            this.Type                                         = Message.OwnAvatarData;
+            this.Connection.State                             = State.Home;
+            this.Connection.GameMode.Avatar.TimeSinceLastSave = (int)DateTime.UtcNow.Subtract(this.Connection.GameMode.Avatar.Update).TotalSeconds;
         }
 
         internal override void Encode()
         {
-            this.Stream.WriteInt(this.Connection.GameMode.Avatar.EnergyTimer.GetTimeRemaining(this.TimeSinceLastSave));
+            this.Stream.WriteInt(this.Connection.GameMode.Avatar.EnergyTimer.GetTimeRemaining());
             this.Stream.WriteInt(this.Connection.GameMode.Random.GetIteratedRandomSeed());
-            this.Stream.WriteInt(0);
-            this.Stream.WriteInt(0);
+            this.Stream.WriteInt(-1);
+            this.Stream.WriteInt(-1);
 
             this.Connection.GameMode.Avatar.Encode(this.Stream);
         }
@@ -45,7 +43,7 @@
         internal override void Handle()
         {
             this.Connection.GameMode.AdjustSubTick();
-            this.Connection.GameMode.FastForward(this.TimeSinceLastSave);
+            this.Connection.GameMode.FastForward(this.Connection.GameMode.Avatar.TimeSinceLastSave);
             this.Connection.GameMode.Tick();
         }
     }

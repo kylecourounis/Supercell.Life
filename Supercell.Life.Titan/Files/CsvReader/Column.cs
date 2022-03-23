@@ -31,7 +31,7 @@
         {
             if (value == null)
             {
-                this.Values.Add(this.Values.Count > 0 ? this.Values.Last() : string.Empty);
+                this.Values.Add(this.Values.Size > 0 ? this.Values.Last() : string.Empty);
             }
             else
             {
@@ -44,7 +44,7 @@
         /// </summary>
         public string Get(int row)
         {
-            return (this.Values.Count > row) ? this.Values[row] : null;
+            return (this.Values.Size > row) ? this.Values[row] : null;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@
         /// </summary>
         public int GetSize()
         {
-            return this.Values.Count;
+            return this.Values.Size;
         }
     }
 }

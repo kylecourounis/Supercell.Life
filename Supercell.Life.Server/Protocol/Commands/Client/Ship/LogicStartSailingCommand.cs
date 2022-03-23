@@ -56,9 +56,9 @@
                 {
                     level += characterIdx;
 
-                    if (level > Globals.ShipGoldPerHeroLevel.Count)
+                    if (level > Globals.ShipGoldPerHeroLevel.Size)
                     {
-                        level = Globals.ShipGoldPerHeroLevel.Count;
+                        level = Globals.ShipGoldPerHeroLevel.Size;
                     }
                 }
                 

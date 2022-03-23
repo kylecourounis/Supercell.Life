@@ -261,49 +261,50 @@
 
                 Debugger.Warning("getResourceDiamondCost energy resourceCount <= 0");
             }
-            
-            if (count >= 1)
+
+            if (count <= 9)
             {
-                if (count >= 100)
+                return Globals.ResourceDiamondCost10;
+            }
+
+            if (count > 99)
+            {
+                if (count < 1000)
                 {
-                    if (count >= 1000)
-                    {
-                        if (count >= 10000)
-                        {
-                            if (count >= 50000)
-                            {
-                                if (count >= 100000)
-                                {
-                                    if (count >= 500000)
-                                    {
-                                        if (count >= 1000000)
-                                        {
-                                            return Globals.ResourceDiamondCost10000000 + ((Globals.ResourceDiamondCost10000000 - Globals.ResourceDiamondCost10000000) * (count / 1000 - 1000) + 4500) / 9000;
-                                        }
-
-                                        return Globals.ResourceDiamondCost1000000 + ((Globals.ResourceDiamondCost1000000 - Globals.ResourceDiamondCost1000000) * (count / 100 - 1000) + 4500) / 9000;
-                                    }
-
-                                    return Globals.ResourceDiamondCost500000 + ((Globals.ResourceDiamondCost1000000 - Globals.ResourceDiamondCost500000) * (count / 100 - 1000) + 4500) / 9000;
-                                }
-
-                                return Globals.ResourceDiamondCost50000 + ((Globals.ResourceDiamondCost100000 - Globals.ResourceDiamondCost50000) * (count / 10 - 1000) + 2000) / 9000;
-                            }
-
-                            return Globals.ResourceDiamondCost10000 + ((Globals.ResourceDiamondCost100000 - Globals.ResourceDiamondCost10000) * (count / 10 - 1000) + 4500) / 9000;
-                        }
-
-                        return Globals.ResourceDiamondCost1000 + ((Globals.ResourceDiamondCost10000 - Globals.ResourceDiamondCost100) * (count - 1000) + 4500) / 9000;
-                    }
-
                     return Globals.ResourceDiamondCost100 + ((Globals.ResourceDiamondCost1000 - Globals.ResourceDiamondCost100) * (count - 100) + 450) / 900;
                 }
+                if (count <= 9999)
+                {
+                    return Globals.ResourceDiamondCost1000 + ((Globals.ResourceDiamondCost10000 - Globals.ResourceDiamondCost1000) * (count - 1000) + 4500) / 9000;
+                }
+                if (count <= 49999)
+                {
+                    return Globals.ResourceDiamondCost10000 + ((Globals.ResourceDiamondCost100000 - Globals.ResourceDiamondCost10000) * (count / 10 - 1000) + 4500) / 9000;
+                }
 
-                return Globals.ResourceDiamondCost10;
+                if (count > 99999)
+                {
+                    if (count <= 499999)
+                    {
+                        return Globals.ResourceDiamondCost100000 + ((Globals.ResourceDiamondCost1000000 - Globals.ResourceDiamondCost100000) * (count / 100 - 1000) + 4500) / 9000;
+                    }
+
+                    if (count > 999999)
+                    {
+                        return Globals.ResourceDiamondCost1000000 + ((Globals.ResourceDiamondCost10000000 - Globals.ResourceDiamondCost1000000) * (count / 1000 - 1000) + 4500) / 9000;
+                    }
+
+                    return Globals.ResourceDiamondCost500000 + ((Globals.ResourceDiamondCost1000000 - Globals.ResourceDiamondCost100000) * (count / 100 - 5000) + 2500) / 9000;
+                }
+                else
+                {
+                    return Globals.ResourceDiamondCost50000 + ((Globals.ResourceDiamondCost100000 - Globals.ResourceDiamondCost10000) * (count / 10 - 5000) + 2500) / 9000;
+                }
             }
 
             Debugger.Warning("getResourceDiamondCost resourceCount <= 0");
             return 0;
         }
+
     }
 }

@@ -75,7 +75,7 @@
         {
             get
             {
-                return this.GameModes.All(avatar => avatar.Connection.GameMode.Battle == null);
+                return this.GameModes.All(avatar => avatar.Battle == null);
             }
         }
 

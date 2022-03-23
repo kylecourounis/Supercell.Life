@@ -109,11 +109,11 @@
         /// <summary>
         /// Gets the remaining time for this <see cref="LogicEnergyTimer"/>.
         /// </summary>
-        internal int GetTimeRemaining(int timeSinceLastSave)
+        internal int GetTimeRemaining()
         {
-            return 300 - (this.Timer.RemainingSecs - timeSinceLastSave);
+            return this.Started ? 300 - LogicMath.Abs(this.Timer.RemainingSecs - this.Avatar.TimeSinceLastSave) : this.Avatar.TimeSinceLastSave;
         }
-
+        
         /// <summary>
         /// Saves this instance to the specified <see cref="LogicJSONObject"/>.
         /// </summary>
