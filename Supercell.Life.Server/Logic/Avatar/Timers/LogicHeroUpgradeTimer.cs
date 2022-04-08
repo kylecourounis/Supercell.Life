@@ -47,15 +47,7 @@
         /// </summary>
         internal bool CanUpgrade(LogicHeroData hero)
         {
-            if (!this.Started)
-            {
-                if (this.Avatar.HeroLevels.ContainsKey(hero.GlobalID))
-                {
-                    return hero.Cost.Size > this.Avatar.HeroLevels[hero.GlobalID].Count + 1;
-                }
-            }
-
-            return false;
+            return this.Avatar.HeroLevels.ContainsKey(hero.GlobalID) && hero.Cost.Size > this.Avatar.HeroLevels[hero.GlobalID].Count + 1;
         }
 
         /// <summary>
@@ -75,15 +67,12 @@
         /// </summary>
         internal void Finish()
         {
-            if (this.Started)
-            {
-                this.Timer.StopTimer();
+            this.Timer.StopTimer();
 
-                this.Avatar.HeroLevels.AddItem(this.HeroData, 1);
-                this.HeroData = -1;
-                
-                this.Avatar.Save();
-            }
+            this.Avatar.HeroLevels.AddItem(this.HeroData, 1);
+            this.HeroData = -1;
+
+            this.Avatar.Save();
         }
 
         /// <summary>
@@ -91,14 +80,11 @@
         /// </summary>
         internal void FastForward(int seconds)
         {
-            if (this.Started)
-            {
-                this.Timer.FastForward(seconds);
+            this.Timer.FastForward(seconds);
 
-                if (this.Timer.RemainingSecs <= 0)
-                {
-                    this.Finish();
-                }
+            if (this.Timer.RemainingSecs <= 0)
+            {
+                this.Finish();
             }
         }
 
@@ -107,12 +93,9 @@
         /// </summary>
         internal void Tick()
         {
-            if (this.Started)
+            if (this.Timer.RemainingSecs <= 0)
             {
-                if (this.Timer.RemainingSecs <= 0)
-                {
-                    this.Finish();
-                }
+                this.Finish();
             }
         }
 
@@ -121,10 +104,7 @@
         /// </summary>
         internal void AdjustSubTick()
         {
-            if (this.Started)
-            {
-                this.Timer.AdjustSubTick();
-            }
+            this.Timer.AdjustSubTick();
         }
 
         /// <summary>

@@ -1,7 +1,8 @@
 ﻿namespace Supercell.Life.Server.Protocol.Messages.Server
 {
     using System;
-    
+
+    using Supercell.Life.Titan.Helpers;
     using Supercell.Life.Titan.Logic.Enums;
 
     using Supercell.Life.Server.Core;
@@ -25,7 +26,7 @@
         {
             get
             {
-                return Settings.MaintenanceTime > DateTime.UtcNow ? (int) Settings.MaintenanceTime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds : 0;
+                return Settings.MaintenanceTime > DateTime.UtcNow ? (int)Settings.MaintenanceTime.Subtract(Timestamp.Unix).TotalSeconds : 0;
             }
         }
 

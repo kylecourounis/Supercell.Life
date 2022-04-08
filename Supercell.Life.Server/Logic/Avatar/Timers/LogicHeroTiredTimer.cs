@@ -65,19 +65,16 @@
         /// </summary>
         internal void Finish()
         {
-            if (this.Started)
+            foreach (var (hero, timer) in this.Heroes)
             {
-                foreach (var (hero, timer) in this.Heroes)
+                if (timer.RemainingSecs <= 0)
                 {
-                    if (timer.RemainingSecs <= 0)
-                    {
-                        timer.StopTimer();
+                    timer.StopTimer();
 
-                        this.Avatar.HeroTired.Remove(hero);
-                        this.Heroes.Remove(hero);
+                    this.Avatar.HeroTired.Remove(hero);
+                    this.Heroes.Remove(hero);
 
-                        this.Avatar.Save();
-                    }
+                    this.Avatar.Save();
                 }
             }
         }
@@ -87,16 +84,13 @@
         /// </summary>
         internal void FastForward(int seconds)
         {
-            if (this.Started)
+            foreach (var timer in this.Heroes.Values.Where(timer => timer.RemainingSecs <= 0))
             {
-                foreach (var timer in this.Heroes.Values.Where(timer => timer.RemainingSecs <= 0))
-                {
-                    timer.FastForward(seconds);
-                }
-
-                this.Update();
-                this.Finish();
+                timer.FastForward(seconds);
             }
+
+            this.Update();
+            this.Finish();
         }
 
         /// <summary>
@@ -104,11 +98,8 @@
         /// </summary>
         internal void Tick()
         {
-            if (this.Started)
-            {
-                this.Update();
-                this.Finish();
-            }
+            this.Update();
+            this.Finish();
         }
 
         /// <summary>
@@ -116,12 +107,9 @@
         /// </summary>
         internal void AdjustSubTick()
         {
-            if (this.Started)
+            foreach (var timer in this.Heroes.Values)
             {
-                foreach (var timer in this.Heroes.Values)
-                {
-                    timer.AdjustSubTick();
-                }
+                timer.AdjustSubTick();
             }
         }
 

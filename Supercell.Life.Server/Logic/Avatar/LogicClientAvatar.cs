@@ -143,7 +143,7 @@ namespace Supercell.Life.Server.Logic.Avatar
         /// <summary>
         /// Gets the time played for this <see cref="LogicClientAvatar"/>.
         /// </summary>
-        internal int TimePlayed => DateTime.UtcNow.Subtract(this.Created).Seconds;
+        internal TimeSpan TimePlayed => DateTime.UtcNow.Subtract(this.Created);
 
         /// <summary>
         /// Gets the instance of <see cref="LogicGameMode"/> for this <see cref="LogicClientAvatar"/>.

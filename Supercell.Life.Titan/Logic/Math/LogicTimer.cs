@@ -18,7 +18,7 @@
             {
                 if (this.TotalSeconds > 0)
                 {
-                    if (this.StartSubTick != -1)
+                    if (this.Started)
                     {
                         int ticks = LogicTime.GetSecondsInTicks(this.TotalSeconds) + this.StartSubTick - this.Time.ClientSubTick;
 
@@ -49,7 +49,7 @@
             {
                 if (this.TotalSeconds > 0)
                 {
-                    if (this.StartSubTick != -1)
+                    if (this.Started)
                     {
                         int ticks = LogicTime.GetSecondsInTicks(this.TotalSeconds) + this.StartSubTick - this.Time.ClientSubTick;
                         int ms = 1000 * (ticks / 60);
@@ -110,7 +110,7 @@
                     this.StartSubTick = this.Time.ClientSubTick;
                 }
             }
-            else throw new Exception("Unable to start timer when the 'Time' is null. Start Timer with StartTimer(Time,Secs) method.");
+            else throw new LogicException("Unable to start the timer when the 'Time' is null. Start the timer with StartTimer(time,seconds) method.");
         }
 
         /// <summary>
@@ -140,7 +140,7 @@
         /// </summary>
         public void FastForward(int seconds)
         {
-            if (this.StartSubTick != -1)
+            if (this.Started)
             {
                 if (seconds >= 0)
                 {

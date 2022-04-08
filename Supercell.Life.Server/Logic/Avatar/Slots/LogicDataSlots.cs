@@ -149,8 +149,6 @@
         /// </summary>
         internal void Decode(ByteStream stream)
         {
-            this.Clear();
-
             int count = stream.ReadInt();
 
             if (count > 0)

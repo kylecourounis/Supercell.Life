@@ -61,15 +61,12 @@
         {
             var timer = this.Items[item];
 
-            if (timer.Started)
-            {
-                timer.StopTimer();
+            timer.StopTimer();
 
-                this.Avatar.ItemUnavailable.Remove(item);
-                this.Items.Remove(item);
+            this.Avatar.ItemUnavailable.Remove(item);
+            this.Items.Remove(item);
 
-                this.Avatar.Save();
-            }
+            this.Avatar.Save();
         }
 
         /// <summary>
@@ -77,20 +74,17 @@
         /// </summary>
         internal void FastForward(int seconds)
         {
-            if (this.Started)
+            foreach (var (item, timer) in this.Items)
             {
-                foreach (var (item, timer) in this.Items)
+                timer.FastForward(seconds);
+
+                if (timer.RemainingSecs <= 0)
                 {
-                    timer.FastForward(seconds);
-
-                    if (timer.RemainingSecs <= 0)
-                    {
-                        this.Finish(item);
-                    }
+                    this.Finish(item);
                 }
-
-                this.Update();
             }
+
+            this.Update();
         }
 
         /// <summary>
@@ -98,16 +92,13 @@
         /// </summary>
         internal void Tick()
         {
-            if (this.Started)
-            {
-                this.Update();
+            this.Update();
 
-                foreach (var (item, timer) in this.Items)
+            foreach (var (item, timer) in this.Items)
+            {
+                if (timer.RemainingSecs <= 0)
                 {
-                    if (timer.RemainingSecs <= 0)
-                    {
-                        this.Finish(item);
-                    }
+                    this.Finish(item);
                 }
             }
         }
@@ -117,12 +108,9 @@
         /// </summary>
         internal void AdjustSubTick()
         {
-            if (this.Started)
+            foreach (var timer in this.Items.Values)
             {
-                foreach (var timer in this.Items.Values)
-                {
-                    timer.AdjustSubTick();
-                }
+                timer.AdjustSubTick();
             }
         }
 

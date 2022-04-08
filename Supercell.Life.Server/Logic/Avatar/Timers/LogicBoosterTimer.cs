@@ -62,15 +62,12 @@
         /// </summary>
         internal void Finish()
         {
-            if (this.Started)
-            {
-                this.Timer.StopTimer();
+            this.Timer.StopTimer();
 
-                this.BoosterID    = 0;
-                this.BoostPackage = null;
+            this.BoosterID = 0;
+            this.BoostPackage = null;
 
-                this.Avatar.Save();
-            }
+            this.Avatar.Save();
         }
 
         /// <summary>
@@ -78,14 +75,11 @@
         /// </summary>
         internal void FastForward(int seconds)
         {
-            if (this.Started)
-            {
-                this.Timer.FastForward(seconds);
+            this.Timer.FastForward(seconds);
 
-                if (this.Timer.RemainingSecs <= 0)
-                {
-                    this.Finish();
-                }
+            if (this.Timer.RemainingSecs <= 0)
+            {
+                this.Finish();
             }
         }
 
@@ -94,12 +88,9 @@
         /// </summary>
         internal void Tick()
         {
-            if (this.Started)
+            if (this.Timer.RemainingSecs <= 0)
             {
-                if (this.Timer.RemainingSecs <= 0)
-                {
-                    this.Finish();
-                }
+                this.Finish();
             }
         }
 
@@ -108,10 +99,7 @@
         /// </summary>
         internal void AdjustSubTick()
         {
-            if (this.Started)
-            {
-                this.Timer.AdjustSubTick();
-            }
+            this.Timer.AdjustSubTick();
         }
 
         /// <summary>

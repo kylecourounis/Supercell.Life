@@ -52,11 +52,8 @@
         /// </summary>
         internal void Stop()
         {
-            if (this.Started)
-            {
-                this.Timer.StopTimer();
-                this.Avatar.Save();
-            }
+            this.Timer.StopTimer();
+            this.Avatar.Save();
         }
 
         /// <summary>
@@ -64,10 +61,7 @@
         /// </summary>
         internal void FastForward(int seconds)
         {
-            if (this.Started)
-            {
-                this.Timer.FastForward(seconds);
-            }
+            this.Timer.FastForward(seconds);
         }
 
         /// <summary>
@@ -100,12 +94,9 @@
         /// </summary>
         internal void AdjustSubTick()
         {
-            if (this.Started)
-            {
-                this.Timer.AdjustSubTick();
-            }
+            this.Timer.AdjustSubTick();
         }
-        
+
         /// <summary>
         /// Gets the remaining time for this <see cref="LogicEnergyTimer"/>.
         /// </summary>

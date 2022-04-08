@@ -102,19 +102,16 @@
         /// </summary>
         internal void Finish()
         {
-            if (this.Started)
+            this.Timer.StopTimer();
+
+            foreach (var spell in this.Spells)
             {
-                this.Timer.StopTimer();
-
-                foreach (var spell in this.Spells)
-                {
-                    this.Avatar.SpellsReady.AddItem(spell.GlobalID, 1);
-                }
-
-                this.SpellIDs.Clear();
-
-                this.Avatar.Save();
+                this.Avatar.SpellsReady.AddItem(spell.GlobalID, 1);
             }
+
+            this.SpellIDs.Clear();
+
+            this.Avatar.Save();
         }
 
         /// <summary>
@@ -122,14 +119,11 @@
         /// </summary>
         internal void FastForward(int seconds)
         {
-            if (this.Timer.Started)
-            {
-                this.Timer.FastForward(seconds);
+            this.Timer.FastForward(seconds);
 
-                if (this.Timer.RemainingSecs <= 0)
-                {
-                    this.Finish();
-                }
+            if (this.Timer.RemainingSecs <= 0)
+            {
+                this.Finish();
             }
         }
 
@@ -138,22 +132,19 @@
         /// </summary>
         internal void Tick()
         {
-            if (this.Started)
+            while (this.Timer.RemainingSecs <= 0)
             {
-                while (this.Timer.RemainingSecs <= 0)
+                if (this.SpellIDs.Size > 0)
                 {
-                    if (this.SpellIDs.Size > 0)
-                    {
-                        this.Avatar.SpellsReady.AddItem(this.Spells[0].GlobalID, 1);
+                    this.Avatar.SpellsReady.AddItem(this.Spells[0].GlobalID, 1);
 
-                        this.SpellIDs.RemoveAt(0);
+                    this.SpellIDs.RemoveAt(0);
 
-                        this.Start();
-                    }
-                    else
-                    {
-                        this.Finish();
-                    }
+                    this.Start();
+                }
+                else
+                {
+                    this.Finish();
                 }
             }
         }

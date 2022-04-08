@@ -5,6 +5,7 @@
     using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
+    using Supercell.Life.Titan.Helpers;
 
     internal class LoginOkMessage : PiranhaMessage
     {
@@ -35,8 +36,8 @@
 
             this.Stream.WriteString(this.Connection.GameMode.Avatar.Token);
 
-            this.Stream.WriteString(null);
-            this.Stream.WriteString(null);
+            this.Stream.WriteString(this.Connection.GameMode.Avatar.Facebook.Identifier);
+            this.Stream.WriteString(null); // GameCenter ID
 
             this.Stream.WriteInt(LogicVersion.Major);
             this.Stream.WriteInt(LogicVersion.Build);
@@ -45,14 +46,14 @@
             this.Stream.WriteString(LogicVersion.ServerType);
 
             this.Stream.WriteInt(this.Connection.GameMode.Avatar.TotalSessions++); // Total Session
-            this.Stream.WriteInt(this.Connection.GameMode.Avatar.TimePlayed); // Played Time
-            this.Stream.WriteInt(0); // Played Time in day
+            this.Stream.WriteInt(this.Connection.GameMode.Avatar.TimePlayed.Seconds); // Played Time
+            this.Stream.WriteInt(this.Connection.GameMode.Avatar.TimePlayed.Days); // Days Since Creation
 
-            this.Stream.WriteString(null); // Facebook ID
-            this.Stream.WriteString(string.Empty);
+            this.Stream.WriteString(null); // Facebook Application ID
+            this.Stream.WriteString(Timestamp.Milliseconds.ToString()); // Server Time
             this.Stream.WriteString(string.Empty);
 
-            this.Stream.WriteInt(00); // Remaining time before all functionality
+            this.Stream.WriteInt(0); // Remaining time before all functionality
         }
     }
 }
