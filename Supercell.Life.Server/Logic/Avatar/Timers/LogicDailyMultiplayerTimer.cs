@@ -7,6 +7,7 @@
     using Supercell.Life.Titan.Logic.Math;
 
     using Supercell.Life.Server.Logic.Avatar;
+    using Supercell.Life.Server.Logic.Game;
 
     internal class LogicDailyMultiplayerTimer
     {
@@ -14,7 +15,11 @@
 
         internal LogicTime Time;
 
+        internal bool BonusPVPAvailable;
+
         [JsonProperty] internal JArray HeroUsedInDaily;
+
+        [JsonProperty] internal bool BonusFreePlayUsed;
 
         [JsonProperty] internal LogicTimer Timer;
 
@@ -58,8 +63,10 @@
                 return;
             }
 
-            this.Timer.StartTimer(this.Time, 3600 * 24);
+            this.BonusFreePlayUsed = false;
             this.HeroUsedInDaily.Clear();
+
+            this.Timer.StartTimer(this.Time, 60 * 60 * Globals.FreePVPRegenerateHours);
         }
 
         /// <summary>
@@ -88,6 +95,8 @@
         /// </summary>
         internal void Tick()
         {
+            this.BonusPVPAvailable = !this.BonusFreePlayUsed && this.Timer.RemainingSecs <= (60 * 60 * Globals.FreePVPRegenerateHours) - (60 * 60 * Globals.PVPBonusTimerHours);
+
             if (this.Timer.RemainingSecs <= 0)
             {
                 this.Finish();
@@ -108,8 +117,9 @@
         internal void Save(LogicJSONObject json)
         {
             json.Put("freePvp", new LogicJSONNumber(this.Timer.RemainingSecs));
+            json.Put("bonusPvp", new LogicJSONNumber(this.BonusPVPAvailable ? 1 : 0));
 
-            var heroUsedInDaily = new LogicJSONArray();
+            LogicJSONArray heroUsedInDaily = new LogicJSONArray();
 
             foreach (int hero in this.HeroUsedInDaily.ToObject<int[]>())
             {

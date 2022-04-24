@@ -4,6 +4,7 @@
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
+    using System.Threading.Tasks;
 
     using Supercell.Life.Titan.Helpers;
 
@@ -32,9 +33,17 @@
                 return;
             }
 
-            if (!Directory.Exists("Logs"))
+            DirectoryInfo logDirectory = new DirectoryInfo("Logs");
+            logDirectory.CreateIfNotExists();
+
+            FileInfo[] logs = logDirectory.GetFiles();
+
+            if (logs.Length >= 20)
             {
-                Directory.CreateDirectory("Logs");
+                Parallel.ForEach(logs, file =>
+                {
+                    file.Delete();
+                });
             }
 
             Debugger.File = new FileInfo($"Logs/{DateTime.Now.ToString("s").Replace(":", ".")}.log");

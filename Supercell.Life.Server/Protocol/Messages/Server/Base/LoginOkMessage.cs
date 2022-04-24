@@ -43,7 +43,7 @@
             this.Stream.WriteInt(LogicVersion.Build);
             this.Stream.WriteInt(LogicVersion.Minor);
 
-            this.Stream.WriteString(LogicVersion.ServerType);
+            this.Stream.WriteString(LogicVersion.ServerEnvironment);
 
             this.Stream.WriteInt(this.Connection.GameMode.Avatar.TotalSessions++); // Total Session
             this.Stream.WriteInt(this.Connection.GameMode.Avatar.TimePlayed.Seconds); // Played Time

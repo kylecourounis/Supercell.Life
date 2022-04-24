@@ -11,7 +11,7 @@
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
 
-    internal class PiranhaMessage
+    internal abstract class PiranhaMessage
     {
         private short Identifier;
         internal int Length;

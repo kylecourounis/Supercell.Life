@@ -1,6 +1,7 @@
 ﻿namespace Supercell.Life.Server.Protocol.Commands.Server
 {
     using Supercell.Life.Titan.DataStream;
+    using Supercell.Life.Titan.Logic.Enums;
 
     using Supercell.Life.Server.Helpers;
     using Supercell.Life.Server.Logic;
@@ -10,7 +11,6 @@
     using Supercell.Life.Server.Protocol.Enums;
     using Supercell.Life.Server.Protocol.Messages;
     using Supercell.Life.Server.Protocol.Messages.Server;
-    using Supercell.Life.Titan.Logic.Enums;
 
     internal class LogicDebugCommand : LogicServerCommand
     {

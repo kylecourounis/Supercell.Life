@@ -9,6 +9,11 @@
 
     internal class Enemy
     {
+        internal int Hitpoints;
+        internal int Damage;
+        internal int FirstAttackOnTurn;
+        internal int AttackTurnSeq;
+
         /// <summary>
         /// Gets the data.
         /// </summary>
@@ -48,11 +53,6 @@
         {
             get;
         }
-
-        internal int Hitpoints;
-        internal int Damage;
-        internal int FirstAttackOnTurn;
-        internal int AttackTurnSeq;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Enemy"/> class.

@@ -3,16 +3,16 @@
     using System.Linq;
     using System.Reflection;
 
-    using Supercell.Life.Server.Logic;
     using Supercell.Life.Titan.DataStream;
     using Supercell.Life.Titan.Helpers;
+    using Supercell.Life.Titan.Logic.Json;
     using Supercell.Life.Titan.Logic.Math;
-    
+
+    using Supercell.Life.Server.Logic;
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
-    using Supercell.Life.Titan.Logic.Json;
 
-    internal class LogicCommand
+    internal abstract class LogicCommand
     {
         private int Identifier;
 

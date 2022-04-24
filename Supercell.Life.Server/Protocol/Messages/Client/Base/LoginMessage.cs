@@ -117,17 +117,14 @@
                 }
                 else if (this.AvatarID.Low > 0)
                 {
-                    Debugger.Info($"{this.AvatarID} found! Logging in...");
-
                     this.Connection.GameMode.Avatar = Avatars.Get(this.Connection, this.AvatarID);
 
-                    if (this.Connection.GameMode.Avatar == null)
-                    {
-                        Debugger.Warning("Account missing! Recreating...");
-                        this.Connection.GameMode.Avatar = Avatars.Create(this.Connection, this.AvatarID);
-                    }
+                    Debugger.Info($"{this.AvatarID} found! Logging in...");
 
-                    this.Login();
+                    if (this.Connection.GameMode.Avatar != null)
+                    {
+                        this.Login();
+                    }
                 }
                 else
                 {
@@ -190,6 +187,7 @@
 
             new LoginOkMessage(this.Connection).Send();
             new OwnAvatarDataMessage(this.Connection).Send();
+            new AvatarStreamMessage(this.Connection).Send();
 
             if (this.Connection.GameMode.Avatar.IsInAlliance)
             {

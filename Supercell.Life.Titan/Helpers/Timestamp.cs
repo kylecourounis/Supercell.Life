@@ -13,7 +13,7 @@
         {
             get
             {
-                return DateTime.UtcNow.Subtract(Unix);
+                return DateTime.UtcNow.Subtract(Timestamp.Unix);
             }
         }
 

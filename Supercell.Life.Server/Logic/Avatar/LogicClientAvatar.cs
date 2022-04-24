@@ -2,6 +2,7 @@ namespace Supercell.Life.Server.Logic.Avatar
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
@@ -375,15 +376,18 @@ namespace Supercell.Life.Server.Logic.Avatar
 
             this.MapChestTimer.Save(json);
 
-            this.BonusChestRespawnTimer.Save(json);
-
-            this.DailyMultiplayerTimer.Save(json);
-
-            json.Put("pvp_chest", new LogicJSONNumber(this.Variables.GetCount(LogicVariables.ChestProgress.GlobalID)));
-
             this.SeasickTimer.Save(json);
             
             this.HeroUpgrade.Save(json);
+
+            json.Put("levels_played", new LogicJSONNumber(this.NpcProgress.Values.Select(slot => slot.Count).Count()));
+            json.Put("levels_failed", new LogicJSONNumber()); // TODO
+
+            json.Put("pvp_chest", new LogicJSONNumber(this.Variables.GetCount(LogicVariables.ChestProgress.GlobalID)));
+
+            this.BonusChestRespawnTimer.Save(json);
+
+            this.DailyMultiplayerTimer.Save(json);
 
             json.Put("tutorial_mask", new LogicJSONNumber(this.TutorialMask));
 

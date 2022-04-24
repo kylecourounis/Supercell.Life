@@ -53,6 +53,11 @@
                     if (this.Connection.GameMode.Avatar.DailyMultiplayerTimer.Started)
                     {
                         this.Connection.GameMode.Avatar.CommodityChangeCountHelper(CommodityType.Energy, -4);
+
+                        if (this.Connection.GameMode.Avatar.DailyMultiplayerTimer.BonusPVPAvailable)
+                        {
+                            this.Connection.GameMode.Avatar.DailyMultiplayerTimer.BonusFreePlayUsed = true;
+                        }
                     }
                 }
             }

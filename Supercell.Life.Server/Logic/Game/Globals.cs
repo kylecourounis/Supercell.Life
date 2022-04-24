@@ -13,7 +13,10 @@
         internal static int StartingDiamonds;
         internal static int InitialMaxEnergy;
         internal static int EnergyRegenerateSeconds;
-        
+
+        internal static int FreePVPRegenerateHours;
+        internal static int PVPBonusTimerHours;
+
         internal static LogicHeroData StartingCharacter;
         internal static LogicQuestData StartingQuest;
 
@@ -103,6 +106,9 @@
             Globals.StartingDiamonds                 = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("STARTING_DIAMONDS")).NumberValue;
             Globals.InitialMaxEnergy                 = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("INITIAL_MAX_ENERGY")).NumberValue;
             Globals.EnergyRegenerateSeconds          = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("ENERGY_REGENERATE_SECONDS")).NumberValue;
+            
+            Globals.FreePVPRegenerateHours           = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("FREE_PVP_REGENERATE_HOURS")).NumberValue;
+            Globals.PVPBonusTimerHours               = ((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("PVP_BONUS_TIMER_HOURS")).NumberValue;
 
             Globals.StartingCharacter                = (LogicHeroData)CSV.Tables.Get(Gamefile.Heroes).GetDataByName(((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("STARTING_CHARACTER")).TextValue);
             Globals.StartingQuest                    = (LogicQuestData)CSV.Tables.Get(Gamefile.Quests).GetDataByName(((LogicGlobalData)CSV.Tables.Get(Gamefile.Globals).GetDataByName("STARTING_QUEST")).TextValue);

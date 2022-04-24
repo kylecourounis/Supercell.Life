@@ -129,6 +129,9 @@
                 if (LogicCollisionHelper.CollideWithLevel(vector))
                 {
                     this.Level.Quest.Characters[this.Level.Quest.CharacterIndex].Bounces++;
+
+                    int newAngle = LogicMath.GetAngle(vector.X, vector.Y);
+                    Debugger.Debug(newAngle);
                 }
 
                 if (this.Enemies.Size > 0)
@@ -160,7 +163,7 @@
                         
                         if (enemyVector.GetAngleBetween(vector.X, vector.Y) <= enemy.Data.Radius + this.Level.Quest.Characters[this.Level.Quest.CharacterIndex].HeroData.Radius)
                         {
-                            this.HitEnemy(i);
+                            this.HitEnemy(enemy);
                         }
                     }
 
@@ -173,7 +176,7 @@
                         
                         if (obstacleVector.GetAngleBetween(vector.X, vector.Y) <= obstacle.Data.Radius)
                         {
-                            this.HitObstacle(i);
+                            this.HitObstacle(obstacle);
                         }
                     }
                 }
@@ -198,17 +201,15 @@
             /// <summary>
             /// Hits the <see cref="Enemy"/> at the specified index.
             /// </summary>
-            internal void HitEnemy(int idx)
+            internal void HitEnemy(Enemy enemy)
             {
-                Enemy enemy = this.Enemies[idx];
-
                 enemy.Hitpoints -= this.Level.Quest.Characters[this.Level.Quest.CharacterIndex].Damage;
 
                 if (enemy.Hitpoints <= 0)
                 {
                     Debugger.Debug($"Removed {enemy.Data.Name} ({enemy.Hitpoints + this.Level.Quest.Characters[this.Level.Quest.CharacterIndex].Damage} -> {enemy.Hitpoints})");
 
-                    this.Enemies.RemoveAt(idx);
+                    this.Enemies.Remove(enemy);
                     this.EnemiesKilled++;
                 }
             }
@@ -216,10 +217,8 @@
             /// <summary>
             /// Hits the <see cref="Obstacle"/> at the specified index.
             /// </summary>
-            internal void HitObstacle(int idx)
+            internal void HitObstacle(Obstacle obstacle)
             {
-                Obstacle obstacle = this.Obstacles[idx];
-                    
                 obstacle.Hits++;
                 this.Level.Quest.Characters[this.Level.Quest.CharacterIndex].Bounces++;
 
@@ -248,7 +247,7 @@
                 if (obstacle.Hits == obstacle.Data.Hitpoints)
                 {
                     Debugger.Debug($"Removed {obstacle.Data.Name}");
-                    this.Obstacles.RemoveAt(idx);
+                    this.Obstacles.Remove(obstacle);
                 }
             }
 
@@ -257,19 +256,12 @@
             /// </summary>
             internal void DamageCharacter(Enemy enemy, LogicVector2 heroVector, LogicVector2 enemyVector)
             {
-                if (this.Level.Quest.Characters.Size > 1)
-                {
-                    int angle = enemyVector.GetAngleBetween(heroVector.X, heroVector.Y);
+                int angle = enemyVector.GetAngleBetween(heroVector.X, heroVector.Y);
 
-                    if (angle <= enemy.Data.Radius)
-                    {
-                        LogicCharacter character = this.Level.Quest.Characters.Find(c => c.Position.IsEqual(heroVector));
-                        character?.HitCharacter(enemy.Damage);
-                    }
-                }
-                else
+                if (angle <= enemy.Data.Radius)
                 {
-                    this.Level.Quest.Characters[0].HitCharacter(enemy.Damage);
+                    LogicCharacter character = this.Level.Quest.Characters.Find(c => c.Position.IsEqual(heroVector));
+                    character?.HitCharacter(enemy.Damage);
                 }
             }
         }

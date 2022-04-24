@@ -1,7 +1,6 @@
 ﻿namespace Supercell.Life.Server.Logic.Game.Objects.Quests
 {
     using System;
-    using System.Linq;
 
     using Newtonsoft.Json;
 

@@ -21,7 +21,7 @@
 
         [JsonProperty] internal int PreviousReplayQuest;
 
-        [JsonProperty("timer")] internal LogicTimer Timer;
+        [JsonProperty("Timer")] internal LogicTimer Timer;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="LogicBonusChestRespawnTimer"/> has started.
@@ -57,9 +57,15 @@
         /// </summary>
         internal void Start()
         {
-            this.SetReplayQuest();
+            if (this.Avatar.ExpLevel >= Globals.ReplayChestAvailableOnXPLevel)
+            {
+                this.SetReplayQuest();
 
-            this.Timer.StartTimer(this.Time, 3600 * Globals.ReplayChestRespawnHours);
+                if (this.ReplayQuest != 0)
+                {
+                    this.Timer.StartTimer(this.Time, 3600 * Globals.ReplayChestRespawnHours);
+                }
+            }
         }
 
         /// <summary>
@@ -123,7 +129,7 @@
                         this.PreviousReplayQuest = this.ReplayQuest;
 
                         var completedQuests = basicQuests.Take(basicQuests.Count - 1).ToList();
-                        this.ReplayQuest    = completedQuests[this.Avatar.GameMode.Random.Rand(completedQuests.Count - 1)].Data.GlobalID;
+                        this.ReplayQuest = completedQuests[this.Avatar.GameMode.Random.Rand(completedQuests.Count - 1)].Data.GlobalID;
 
                         if (this.PreviousReplayQuest == 0)
                         {

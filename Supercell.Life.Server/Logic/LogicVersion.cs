@@ -26,7 +26,7 @@
         /// <summary>
         /// Gets the type of the server as a string.
         /// </summary>
-        internal static string ServerType
+        internal static string ServerEnvironment
         {
             get
             {

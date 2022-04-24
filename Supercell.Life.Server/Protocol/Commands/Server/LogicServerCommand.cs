@@ -5,7 +5,7 @@
     using Supercell.Life.Server.Network;
     using Supercell.Life.Server.Protocol.Enums;
 
-    internal class LogicServerCommand : LogicCommand
+    internal abstract class LogicServerCommand : LogicCommand
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LogicServerCommand"/> class.
