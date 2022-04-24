@@ -372,10 +372,9 @@
         /// </summary>
         internal static void ForEach(Action<Alliance> action)
         {
-            var pool = Alliances.Pool.Values;
             int count = 0;
 
-            Parallel.ForEach(pool, alliance =>
+            Parallel.ForEach(Alliances.Pool.Values, alliance =>
             {
                 action.Invoke(alliance);
                 count++;

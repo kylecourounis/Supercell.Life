@@ -59,14 +59,17 @@
         /// </summary>
         internal void Finish(int item)
         {
-            var timer = this.Items[item];
+            if (this.Started)
+            {
+                var timer = this.Items[item];
 
-            timer.StopTimer();
+                timer.StopTimer();
 
-            this.Avatar.ItemUnavailable.Remove(item);
-            this.Items.Remove(item);
+                this.Avatar.ItemUnavailable.Remove(item);
+                this.Items.Remove(item);
 
-            this.Avatar.Save();
+                this.Avatar.Save();
+            }
         }
 
         /// <summary>

@@ -54,10 +54,13 @@
         /// </summary>
         internal void Finish()
         {
-            this.Timer.StopTimer();
+            if (this.Started)
+            {
+                this.Timer.StopTimer();
 
-            this.Avatar.ShipLevel++;
-            this.Avatar.Save();
+                this.Avatar.ShipLevel++;
+                this.Avatar.Save();
+            }
         }
 
         /// <summary>

@@ -61,11 +61,14 @@
         /// </summary>
         internal void Finish()
         {
-            this.Timer.StopTimer();
+            if (this.Started)
+            {
+                this.Timer.StopTimer();
 
-            this.Avatar.Variables.Set(LogicVariables.SailRewardUnclaimed.GlobalID, 0);
+                this.Avatar.Variables.Set(LogicVariables.SailRewardUnclaimed.GlobalID, 0);
 
-            this.Avatar.Save();
+                this.Avatar.Save();
+            }
         }
 
         /// <summary>

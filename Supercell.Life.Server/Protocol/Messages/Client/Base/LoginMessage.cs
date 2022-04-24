@@ -187,7 +187,6 @@
 
             new LoginOkMessage(this.Connection).Send();
             new OwnAvatarDataMessage(this.Connection).Send();
-            new AvatarStreamMessage(this.Connection).Send();
 
             if (this.Connection.GameMode.Avatar.IsInAlliance)
             {

@@ -156,7 +156,7 @@
             this.Avatar.BonusChestRespawnTimer.Tick();
             this.Avatar.DailyMultiplayerTimer.Tick();
 
-            Debugger.Debug($"Energy Timer           : Started: {this.Avatar.EnergyTimer.Timer.Started}  : RemainingSecs: {this.Avatar.EnergyTimer.Timer.RemainingSecs}.");
+            Debugger.Debug($"Energy Timer : Started: {this.Avatar.EnergyTimer.Timer.Started} : RemainingSecs: {this.Avatar.EnergyTimer.Timer.RemainingSecs}.");
             
             if (this.Avatar.Alliance != null)
             {

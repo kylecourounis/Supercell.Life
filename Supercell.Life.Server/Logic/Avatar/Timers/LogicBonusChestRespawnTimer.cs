@@ -21,7 +21,7 @@
 
         [JsonProperty] internal int PreviousReplayQuest;
 
-        [JsonProperty("Timer")] internal LogicTimer Timer;
+        [JsonProperty] internal LogicTimer Timer;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="LogicBonusChestRespawnTimer"/> has started.

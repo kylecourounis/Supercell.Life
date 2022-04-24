@@ -21,7 +21,7 @@
         {
             encoder.WriteBoolean(true);
             encoder.WriteInt(this.Diamonds);
-            encoder.WriteString("");
+            encoder.WriteString(string.Empty); // Likely a transaction ID of some sort
 
             base.Encode(encoder);
         }

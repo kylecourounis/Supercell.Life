@@ -102,16 +102,19 @@
         /// </summary>
         internal void Finish()
         {
-            this.Timer.StopTimer();
-
-            foreach (var spell in this.Spells)
+            if (this.Started)
             {
-                this.Avatar.SpellsReady.AddItem(spell.GlobalID, 1);
+                this.Timer.StopTimer();
+
+                foreach (var spell in this.Spells)
+                {
+                    this.Avatar.SpellsReady.AddItem(spell.GlobalID, 1);
+                }
+
+                this.SpellIDs.Clear();
+
+                this.Avatar.Save();
             }
-
-            this.SpellIDs.Clear();
-
-            this.Avatar.Save();
         }
 
         /// <summary>
@@ -132,19 +135,22 @@
         /// </summary>
         internal void Tick()
         {
-            while (this.Timer.RemainingSecs <= 0)
+            if (this.Started)
             {
-                if (this.SpellIDs.Size > 0)
+                while (this.Timer.RemainingSecs <= 0)
                 {
-                    this.Avatar.SpellsReady.AddItem(this.Spells[0].GlobalID, 1);
+                    if (this.SpellIDs.Size > 0)
+                    {
+                        this.Avatar.SpellsReady.AddItem(this.Spells[0].GlobalID, 1);
 
-                    this.SpellIDs.RemoveAt(0);
+                        this.SpellIDs.RemoveAt(0);
 
-                    this.Start();
-                }
-                else
-                {
-                    this.Finish();
+                        this.Start();
+                    }
+                    else
+                    {
+                        this.Finish();
+                    }
                 }
             }
         }
