@@ -25,10 +25,7 @@ dotnet publish "Supercell.Life.Server.csproj" -c Release -o app
 
 When you download and run the installer for MongoDB, make sure to check the box in the installer that tells it to install MongoDB Compass. MongoDB Compass is the GUI for MongoDB. Then, open MongoDB Compass and create a database called `SmashLand`. The server will automatically create the collections on its first run.
 
-Since Apple decided to remove 32-bit app support for iOS 11 and above, to use this server, you must choose the correct IPA file for your device.
-
-* If you have a 32-bit iOS device, you can download [this 32-bit IPA](https://mega.nz/file/PlNlkCxa#-921zVTKWrTiWrkv4QQOX9Epl-6bX4aLZw3Qnz1gq9U).
-* If you have a 64-bit iOS device, you can download [this 64-bit IPA](https://mega.nz/file/2o0BxarL#v7ZMfta6IAfAxUWN_AUUNGYTZFuNM8RS2EW4d9-gEmM).
+Here is a link to the [IPA file](https://mega.nz/file/PlNlkCxa#-921zVTKWrTiWrkv4QQOX9Epl-6bX4aLZw3Qnz1gq9U) that you will need to sideload onto your device. It works on 32-bit and 64-bit iOS devices on iOS 7 and above.
 
 I recommend using [Sideloadly](https://sideloadly.io/) to sideload the IPA, as it is available for both Windows & Mac. However, you may use any method you feel comfortable with. One important thing to note is that if you are not using a paid Apple Developer account, you must change the bundle identifier of IPA in Sideloadly to something different. You can access this setting by clicking Advanced Options.
 
