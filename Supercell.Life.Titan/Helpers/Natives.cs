@@ -10,10 +10,13 @@
         /// </summary>
         public static void SetupConsole()
         {
-            var window = Natives.GetConsoleWindow();
+            if (Environment.OSVersion.Platform != PlatformID.Unix)
+            {
+                var window = Natives.GetConsoleWindow();
 
-            Natives.SetWindowLong(window, -20, (int)Natives.GetWindowLong(window, -20) ^ 0x80000);
-            Natives.SetLayeredWindowAttributes(window, 0, 227, 0x2);
+                Natives.SetWindowLong(window, -20, (int)Natives.GetWindowLong(window, -20) ^ 0x80000);
+                Natives.SetLayeredWindowAttributes(window, 0, 227, 0x2);
+            }
         }
 
         [DllImport("user32.dll")]
