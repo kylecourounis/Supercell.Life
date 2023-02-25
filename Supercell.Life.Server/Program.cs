@@ -22,16 +22,18 @@
         /// </summary>
         private static void Main()
         {
-            // Natives.SetupConsole();
+            Natives.SetupConsole();
 
             Console.Title = $"{Assembly.GetExecutingAssembly().GetName().Name} | {DateTime.Now.Year} ©";
 
             Console.SetOut(new Prefixed());
 
-            Console.SetWindowSize(Program.Width, Program.Height);
-            Console.SetBufferSize(Program.Width, Program.Height);
+            if (Environment.OSVersion.Platform != PlatformID.Unix)
+            {
+                Console.SetWindowSize(Program.Width, Program.Height);
+                Console.SetBufferSize(Program.Width, Program.Height);
 
-            Console.Write(@"
+                Console.Write(@"
      _____                     _      
     / ____|                   | |     
    | (___  _ __ ___   __ _ ___| |__   
@@ -39,7 +41,7 @@
     ____) | | | | | | (_| \__ \ | | |
    |_____/|_| |_| |_|\__,_|___/_| |_|", Color.Fuchsia);
 
-            Console.Write(@"
+                Console.Write(@"
         _                     _ 
        | |                   | |
        | |     __ _ _ __   __| |
@@ -49,7 +51,8 @@
 
             " + Environment.NewLine, Color.LimeGreen);
 
-            Console.ForegroundColor = Color.White;
+                Console.ForegroundColor = Color.White;
+            }
 
             Console.WriteLine("Starting..." + Environment.NewLine);
 
