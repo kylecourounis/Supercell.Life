@@ -13,7 +13,7 @@ For a list of features, you can visit [this page](https://kylecourounis.com/#sma
 ***Please note that this project is not for beginners. You'll need at least some experience with Supercell private servers and side-loading iOS apps.***
 
 To setup the project, you will need:
-* [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+* [.NET 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 * [MongoDB](https://www.mongodb.com/try/download/community)
 
 To build the project, run: 
