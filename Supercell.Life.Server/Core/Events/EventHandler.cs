@@ -41,8 +41,11 @@
                 return;
             }
 
-            EventsHandler.ExitHandler += EventsHandler.Exit;
-            EventsHandler.SetConsoleCtrlHandler(EventsHandler.ExitHandler, true);
+            if (Environment.OSVersion.Platform != PlatformID.Unix)
+            {
+                EventsHandler.ExitHandler += EventsHandler.Exit;
+                EventsHandler.SetConsoleCtrlHandler(EventsHandler.ExitHandler, true);
+            }
 
             EventsHandler.Initialized = true;
         }
