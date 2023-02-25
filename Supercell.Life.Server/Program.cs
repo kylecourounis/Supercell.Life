@@ -22,7 +22,7 @@
         /// </summary>
         private static void Main()
         {
-            Natives.SetupConsole();
+            // Natives.SetupConsole();
 
             Console.Title = $"{Assembly.GetExecutingAssembly().GetName().Name} | {DateTime.Now.Year} ©";
 
