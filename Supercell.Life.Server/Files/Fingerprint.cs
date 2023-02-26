@@ -37,7 +37,7 @@
             {
                 if (!Fingerprint.Patched)
                 {
-                    FileInfo file = new FileInfo($@"{Directory.GetCurrentDirectory()}\Gamefiles\fingerprint.json");
+                    FileInfo file = new FileInfo($@"Gamefiles\fingerprint.json");
 
                     if (file.Exists)
                     {
