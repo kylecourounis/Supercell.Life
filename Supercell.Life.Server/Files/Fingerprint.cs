@@ -37,7 +37,7 @@
             {
                 if (!Fingerprint.Patched)
                 {
-                    FileInfo file = new FileInfo($@"Gamefiles\fingerprint.json");
+                    FileInfo file = new FileInfo($@"Gamefiles/fingerprint.json");
 
                     if (file.Exists)
                     {
@@ -68,7 +68,7 @@
         {
             get
             {
-                FileInfo version = new FileInfo($@"{Directory.GetCurrentDirectory()}\Patch\VERSION");
+                FileInfo version = new FileInfo($@"{Directory.GetCurrentDirectory()}/Patch/VERSION");
 
                 if (version.Exists)
                 {
@@ -82,7 +82,7 @@
                         {
                             Fingerprint.Sha = lines[1];
                             
-                            FileInfo patchedFingerprint = new FileInfo($@"{Directory.GetCurrentDirectory()}\Patchs\{Fingerprint.Sha}\fingerprint.json");
+                            FileInfo patchedFingerprint = new FileInfo($@"{Directory.GetCurrentDirectory()}/Patchs/{Fingerprint.Sha}/fingerprint.json");
 
                             if (patchedFingerprint.Exists)
                             {
