@@ -119,12 +119,18 @@
                 {
                     this.Connection.GameMode.Avatar = Avatars.Get(this.Connection, this.AvatarID);
 
-                    Debugger.Info($"{this.AvatarID} found! Logging in...");
-
                     if (this.Connection.GameMode.Avatar != null)
                     {
-                        this.Login();
+                        Debugger.Info($"{this.AvatarID} found! Logging in...");
                     }
+                    else
+                    {
+                        Debugger.Info($"{this.AvatarID} not found! Creating...");
+
+                        this.Connection.GameMode.Avatar = Avatars.Create(this.Connection);
+                    }
+
+                    this.Login();
                 }
                 else
                 {
