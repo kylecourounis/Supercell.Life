@@ -127,7 +127,7 @@
                     {
                         Debugger.Info($"{this.AvatarID} not found! Creating...");
 
-                        this.Connection.GameMode.Avatar = Avatars.Create(this.Connection);
+                        this.Connection.GameMode.Avatar = Avatars.Create(this.Connection, this.AvatarID);
                     }
 
                     this.Login();
